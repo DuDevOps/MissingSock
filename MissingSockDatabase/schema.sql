@@ -27,14 +27,14 @@ CREATE TABLE base_sync (
 );
 
 CREATE TABLE base_station (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id int PRIMARY KEY AUTOINCREMENT,
   base_id TEXT ,
   nicename TEXT ,
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
 CREATE TABLE tag_name (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id int PRIMARY KEY AUTOINCREMENT,
   tag_id TEXT ,
   nicename TEXT ,
   FOREIGN KEY (user_id) REFERENCES user (id)
