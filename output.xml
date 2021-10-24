@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.2.2 (Python 3.6.1 on win32)" generated="20211013 15:44:39.515" rpa="false">
+<suite id="s1" name="Testing" source="C:\PycharmProjects\DuDevOps_MissingSock\Testing">
+<suite id="s1-s1" name="test MissingSockApi" source="C:\PycharmProjects\DuDevOps_MissingSock\Testing\test_MissingSockApi.robot">
+<test id="s1-s1-t1" name="Test Enviromental Variable for flask">
+<kw name="Start Process" library="Process" type="setup">
+<doc>Starts a new process on background.</doc>
+<arguments>
+<arg>python ../MissingSockApi/MissingSockApi_main.py</arg>
+</arguments>
+<msg timestamp="20211013 15:44:39.739" level="INFO">Starting process:
+"python ../MissingSockApi/MissingSockApi_main.py"</msg>
+<msg timestamp="20211013 15:44:39.742" level="FAIL">FileNotFoundError: [WinError 2] The system cannot find the file specified</msg>
+<status status="FAIL" starttime="20211013 15:44:39.739" endtime="20211013 15:44:39.742"></status>
+</kw>
+<kw name="Close Process" type="teardown">
+<msg timestamp="20211013 15:44:39.746" level="FAIL">No keyword with name 'Close Process' found.</msg>
+<status status="FAIL" starttime="20211013 15:44:39.746" endtime="20211013 15:44:39.746">No keyword with name 'Close Process' found.</status>
+</kw>
+<status status="FAIL" starttime="20211013 15:44:39.738" endtime="20211013 15:44:39.747" critical="yes">Setup failed:
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+Also teardown failed:
+No keyword with name 'Close Process' found.</status>
+</test>
+<doc>Suite description</doc>
+<status status="FAIL" starttime="20211013 15:44:39.540" endtime="20211013 15:44:39.750"></status>
+</suite>
+<status status="FAIL" starttime="20211013 15:44:39.517" endtime="20211013 15:44:39.752"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1">Critical Tests</stat>
+<stat pass="0" fail="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="0" fail="1" id="s1" name="Testing">Testing</stat>
+<stat pass="0" fail="1" id="s1-s1" name="test MissingSockApi">Testing.test MissingSockApi</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

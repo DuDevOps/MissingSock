@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.2.2 (Python 3.6.1 on win32)" generated="20211014 06:08:59.956" rpa="false">
+<suite id="s1" name="Robot Integration" source="C:\PycharmProjects\DuDevOps_MissingSock\Testing\robot_integration">
+<suite id="s1-s1" name="test MissingSockApi" source="C:\PycharmProjects\DuDevOps_MissingSock\Testing\robot_integration\test_MissingSockApi.robot">
+<test id="s1-s1-t1" name="Test check port 5001 is active">
+<kw name="Open home page">
+<kw name="Comment" library="BuiltIn">
+<doc>Displays the given messages in the log file as keyword arguments.</doc>
+<arguments>
+<arg>Learning keyword: open home page</arg>
+</arguments>
+<status status="PASS" starttime="20211014 06:09:00.196" endtime="20211014 06:09:00.197"></status>
+</kw>
+<kw name="Open Browser" library="SeleniumLibrary">
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<arguments>
+<arg>http://127.0.0.1:5001/</arg>
+<arg>headlessfirefox</arg>
+</arguments>
+<msg timestamp="20211014 06:09:00.197" level="INFO">Opening browser 'headlessfirefox' to base url 'http://127.0.0.1:5001/'.</msg>
+<msg timestamp="20211014 06:09:00.198" level="INFO">Firefox driver log is always forced to to: C:\PycharmProjects\DuDevOps_MissingSock\Testing\geckodriver-5.log</msg>
+<kw name="Capture Page Screenshot" library="SeleniumLibrary">
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<msg timestamp="20211014 06:09:03.328" level="INFO">Cannot capture screenshot because no browser is open.</msg>
+<status status="PASS" starttime="20211014 06:09:03.328" endtime="20211014 06:09:03.330"></status>
+</kw>
+<msg timestamp="20211014 06:09:03.331" level="FAIL">SessionNotCreatedException: Message: Expected browser binary location, but unable to find binary in default location, no 'moz:firefoxOptions.binary' capability provided, and no binary flag set on the command line
+</msg>
+<status status="FAIL" starttime="20211014 06:09:00.197" endtime="20211014 06:09:03.331"></status>
+</kw>
+<status status="FAIL" starttime="20211014 06:09:00.196" endtime="20211014 06:09:03.333"></status>
+</kw>
+<status status="FAIL" starttime="20211014 06:09:00.195" endtime="20211014 06:09:03.333" critical="yes">SessionNotCreatedException: Message: Expected browser binary location, but unable to find binary in default location, no 'moz:firefoxOptions.binary' capability provided, and no binary flag set on the command line
+</status>
+</test>
+<doc>Suite description</doc>
+<status status="FAIL" starttime="20211014 06:08:59.983" endtime="20211014 06:09:03.334"></status>
+</suite>
+<status status="FAIL" starttime="20211014 06:08:59.958" endtime="20211014 06:09:03.336"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1">Critical Tests</stat>
+<stat pass="0" fail="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="0" fail="1" id="s1" name="Robot Integration">Robot Integration</stat>
+<stat pass="0" fail="1" id="s1-s1" name="test MissingSockApi">Robot Integration.test MissingSockApi</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

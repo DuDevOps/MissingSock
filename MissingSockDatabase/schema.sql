@@ -1,3 +1,22 @@
+-- create database
+create database missingsock ;
+
+-- switch to database
+use missingsock ;
+
+-- check which databse you are connected on
+select database() ;
+
+-- Add users mis_read , mis_write , mis_create
+
+CREATE USER 'mis_create'@'missingsock' IDENTIFIED BY 'mis-mis-create';
+CREATE USER 'mis_write'@'missingsock' IDENTIFIED BY 'mis-mis-wite';
+CREATE USER 'mis_read'@'missingsock' IDENTIFIED BY 'mis-read';
+
+-- switch to mis_create user to create tables / grant insert,update,select ,delete to mis-write / grant select to mis-read
+-- before creating 
+select  user() ;
+
 -- Initialize the database.
 -- Drop any existing data and create empty tables.
 
