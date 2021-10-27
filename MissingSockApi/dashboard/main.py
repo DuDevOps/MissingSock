@@ -6,31 +6,56 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app)
 
-# get basestation from DB for user
-db = sqlite3.connect("missingsock.db")
-cursor = db.cursor()
+
 
 def get_sql(sql):
-    db = sqlite3.connect("missingsock.db")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    sql_result = cursor.fetchall()
+    # get basestation from DB for user
+    db_path = "missingsock.db"
+
+    db = sqlite3.connect(db_path)
+    cursor = db.execute(sql)
+
+    sql_result = []
+    column_names =[]
+
+    for col_name in cursor.description :
+        column_names.append(col_name[0])
+
+    for record in cursor.fetchall():
+        rec = {}
+        for idx, col in enumerate(column_names):
+            rec[col]=record[idx]
+
+        sql_result.append(rec)
+
     return sql_result
 
+def get_total_base_stations():
+    sql_query = " select count(*) count from base_station "
+    
+    result = get_sql(sql_query)
+    return result
+
 def get_total_tags():
-    sql_query = " select count(*) from tag_name "
+    sql_query = " select count(*) count from tag_name "
+    
+    result = get_sql(sql_query)
+    return result
+
+def get_total_assets():
+    sql_query = " select count(*) count from assets "
     
     result = get_sql(sql_query)
     return result
 
 def get_tags_at_basestation_date(base_id, dateto, datefrom):
     sql_query = '''
-        select count(*) from base_sync
+        select count(*) count from base_sync
         where  
     '''
     sql_query += f" base_id = '{base_id}' "
-    sql_query += f" and timestamp >= {dateto} "
-    sql_query += f" and timestamp <= {datefrom} "
+    sql_query += f" and timestamp >= strftime('%s','{dateto}') "
+    sql_query += f" and timestamp <= strftime('%s','{datefrom}') "
 
     result = get_sql(sql_query)
     return result
@@ -73,30 +98,45 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("index.html", loadHtml="dashboard")
+    total_stations = get_total_base_stations()
+    total_tags = get_total_tags()
+    total_assets = get_total_assets()
+
+    return render_template("index.html", loadHtml="dashboard", base_stations=total_stations[0], tag_count=total_tags[0], asset_count=total_assets[0] )
 
 @app.route("/basestations")
 def base_station():
-    sql_result = get_base_stations()
+    sql_return = get_base_stations()
     total_tags = get_total_tags()
 
+    date_1_hour_ago = datetime.now() - timedelta(days=7)
+    date_1_days_ago = datetime.now() - timedelta(days=7)
+    date_7_days_ago = datetime.now() - timedelta(days=7)
     
-    # date_1_hour_ago = datetime.now() - timedelta(days=7)
-    # date_1_days_ago = datetime.now() - timedelta(days=7)
-    # date_7_days_ago = datetime.now() - timedelta(days=7)
+    base_list=[]
 
-    # for x in sql_result:
-    #     hour_1 = get_tags_at_basestation_date(x[1],date_1_hour_ago,datetime.now())
-    #     days_1 = get_tags_at_basestation_date(x[1],date_1_days_ago,datetime.now())
-    #     days_7 = get_tags_at_basestation_date(x[1],date_1_days_ago,datetime.now())
+    for idx, record in enumerate(sql_return):
+        new_item = record
 
-    #     x.append({"hour_1":hour_1, "days_1":days_1, "days_7":days_7})
+        hour_1 = get_tags_at_basestation_date(record['base_id'],date_1_hour_ago,datetime.now())
+        days_1 = get_tags_at_basestation_date(record['base_id'],date_1_days_ago,datetime.now())
+        days_7 = get_tags_at_basestation_date(record['base_id'],date_7_days_ago,datetime.now())
+        
+        new_item['past_hour'] = hour_1[0]['count']
+        new_item['past_day_1'] = days_1[0]['count']
+        new_item['past_day_7'] = days_7[0]['count']
 
-    return render_template("index.html", loadHtml="basestations", base_stations=sql_result , total_tag=total_tags[0][0])
+        base_list.append(new_item)
+
+    return render_template("index.html", loadHtml="basestations", base_stations=base_list , total_tag=total_tags)
 
 @app.route("/tags")
 def tags():
     return render_template("index.html", loadHtml="tags")
+
+@app.route("/assets")
+def assets():
+    return render_template("index.html", loadHtml="assets")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5110)

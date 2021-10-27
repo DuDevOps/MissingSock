@@ -1,47 +1,43 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Base Stations</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-      <div class="btn-group me-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-      </div>
-      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
-      </button>
+  <h1 class="h2">Base Stations</h1>
+</div>
+
+
+
+<div class="row">
+  <div class="col-8">
+    <div class="table-responsive ">
+      <table class="table table-hover table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Base Id</th>
+            <th scope="col">Location</th>
+            <th scope="col">Last Tag</th>
+            <th scope="col">Tag Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for station in base_stations %}
+
+          <tr onmouseover="render_doughnut_graph('myBaseStationsChart', {{station['past_hour']}}, {{total_tag[0]['count']}}, '{{ station['nicename'] }}' )">
+            <td> {{ station['nicename'] }} </td>
+            <td> {{station['base_id']}} </td>
+            <td> <a
+                href="https://www.openstreetmap.org/?mlat={{station['GPS_lat']}}&mlon={{station['GPS_long']}}#map=12/{{station['GPS_lat']}}/{{station['GPS_long']}}">
+                 <i class="fa fa-street-view"></i> Street View </div> </a> </td>
+            <td> {{station['Tag_id']}} </td>
+            <td> {{station['timestamp']}} </td>
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+      </table>
     </div>
   </div>
-  
-  
-  
-  <div >  
-  <div class="table-responsive ">
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Base Id</th>
-          <th scope="col">Location</th>
-          <th scope="col">Last Tag</th>
-          <th scope="col">Tag Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for station in base_stations %}
-
-        <tr onmouseover="render_doughnut_graph('myBaseStationsChart', 3, {{total_tag}})" >
-            <td> {{ station[6] }} </td>
-            <td> {{station[1]}} </td>
-            <td> <a href="https://www.openstreetmap.org/?mlat={{station[7]}}&mlon={{station[8]}}#map=12/{{station[7]}}/{{station[8]}}">Loc Street View</a> </td> 
-            <td> {{station[2]}} </td>
-            <td> {{station[3]}} </td>
-        </tr>
-
-        {% endfor %}
-     
-      </tbody>
-    </table>
-
-    <canvas class="my-4 w-25 h-50" id="myBaseStationsChart" width="225" height="95"></canvas>
-    </div>
+  <div style="col-4">
+    <canvas class="my-2 w-100 h-100" id="myBaseStationsChart"></canvas>
   </div>
+
+</div>

@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Tags</h1>
+  </div>
+  
+  
+  
+  <div class="row">
+    <div class="col-8">
+      <div class="table-responsive ">
+        <table class="table table-hover table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Tag Id</th>
+              <th scope="col">Asset Id</th>
+              <th scope="col">Asset Name</th>
+              <th scope="col">last Location</th>
+              <th scope="col">Record Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for station in base_stations %}
+  
+            <tr onmouseover="render_doughnut_graph('myBaseStationsChart', {{station['past_hour']}}, {{total_tag[0]['count']}}, '{{ station['nicename'] }}' )">
+              <td> {{ station['nicename'] }} </td>
+              <td> {{station['base_id']}} </td>
+              <td> <a
+                  href="https://www.openstreetmap.org/?mlat={{station['GPS_lat']}}&mlon={{station['GPS_long']}}#map=12/{{station['GPS_lat']}}/{{station['GPS_long']}}">
+                   <i class="fa fa-street-view"></i> Street View </div> </a> </td>
+              <td> {{station['Tag_id']}} </td>
+              <td> {{station['timestamp']}} </td>
+            </tr>
+  
+            {% endfor %}
+  
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="col-4">
+      <canvas class="my-2 w-100 h-100" id="myBaseStationsChart"></canvas>
+    </div>
+  
+  </div>

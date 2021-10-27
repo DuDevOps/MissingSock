@@ -54,14 +54,14 @@ function loadGraph() {
   })
 }
 
-function render_doughnut_graph(canvas_id, tag_total, tags_seen){
+function render_doughnut_graph(canvas_id, tags_seen, tag_total, base_id ){
   
   ctx = document.getElementById(canvas_id)
 
   const data = {
     labels: [
-      'Total Tags',
-      'Tags Read'
+      'Total Tags('+tag_total+')',
+      ''+ base_id +' Reads('+tags_seen+')'
     ],
     datasets: [{
       label: 'Tags Read',
@@ -90,7 +90,7 @@ if ( document.getElementById('myChart') ) {
 
 // basestations.html render
 if ( document.getElementById('myBaseStationsChart') ) {
-  render_doughnut_graph('myBaseStationsChart',10,100)
+  render_doughnut_graph('myBaseStationsChart',10,100, 'Base')
 }
 
 //  dashboard.html  render
@@ -98,10 +98,10 @@ function load_dashboard() {
 console.log("start load dashboard ")
 
 if ( document.getElementById('ChartBaseStations') ) {
-  render_doughnut_graph('ChartBaseStations',10,100)
+  render_doughnut_graph('ChartBaseStations',10,100, 'Base')
 }
 
 if ( document.getElementById('ChartTags') ) {
-  render_doughnut_graph('ChartTags',10,100)
+  render_doughnut_graph('ChartTags',10,100, 'Base')
 }
 }
