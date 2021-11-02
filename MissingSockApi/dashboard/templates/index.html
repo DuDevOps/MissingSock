@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
     {% include "head.html" %}
-    <body>
-
+    <body onload='render_maps_charts("{{loadHtml}}", {{loadJson}} )'>
+     
         {% include "header.html" %}
         <div class="container-fluid">
             <div class="row">
@@ -13,7 +13,7 @@
                     {% if loadHtml == "dashboard" %}
                        {% include "dashboard.html" %}
                     
-                    {% elif loadHtml == "basestations" %}
+                    {% elif loadHtml == "base_stations" %}
                         {% include "basestations.html" %}
                     
                     {% elif loadHtml == "tags" %}
@@ -21,7 +21,10 @@
                     
                     {% elif loadHtml == "assets" %}
                         {% include "assets.html" %}
-            
+                    
+                    {% elif loadHtml == "report_last_at_basestation" %}
+                        {% include "report_last_at_basestation.html" %}
+                        
                     {% endif %}
                      
                 </main>
