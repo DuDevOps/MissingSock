@@ -1,0 +1,152 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Missing Sock</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="static/assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <!-- Add font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Custom styles for this template -->
+    <link href="static/dashboard.css" rel="stylesheet">
+
+     <!-- Leafletjs-->
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+     
+  <style type="text/css">/* Chart.js */
+@keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style></head>
+
+<body onload="render_maps_charts(&quot;dashboard&quot;, {&quot;base_stations&quot; : [{&quot;id&quot;: 167, &quot;sync_base_id&quot;: &quot;base_0&quot;, &quot;nickname&quot;: null, &quot;tag_count&quot;: 900, &quot;gps_lat&quot;: &quot;-25.557164&quot;, &quot;gps_long&quot;: &quot;28.49824&quot;}, {&quot;id&quot;: 168, &quot;sync_base_id&quot;: &quot;base_1&quot;, &quot;nickname&quot;: null, &quot;tag_count&quot;: null, &quot;gps_lat&quot;: &quot;-25.557527&quot;, &quot;gps_long&quot;: &quot;28.500515&quot;}, {&quot;id&quot;: 169, &quot;sync_base_id&quot;: &quot;base_2&quot;, &quot;nickname&quot;: null, &quot;tag_count&quot;: null, &quot;gps_lat&quot;: &quot;-25.559192&quot;, &quot;gps_long&quot;: &quot;28.500756&quot;}, {&quot;id&quot;: 170, &quot;sync_base_id&quot;: &quot;base_3&quot;, &quot;nickname&quot;: null, &quot;tag_count&quot;: null, &quot;gps_lat&quot;: &quot;-25.55866&quot;, &quot;gps_long&quot;: &quot;28.498444&quot;}] ,&quot;total_stations&quot;: 4 ,&quot;total_tags&quot;: [{&quot;count&quot;: 900}] ,&quot;total_hours_1&quot;: 900 ,&quot;total_days_1&quot;: 900 ,&quot;total_stations_days_1&quot;: 4 ,&quot;middle_point&quot;: {&quot;lat&quot;:&quot;-25.558178&quot;, &quot;long&quot;:&quot;28.499498&quot; },} )">
+
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Missing Sock</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="navbar-nav">
+      <div class="nav-item text-nowrap">
+        <a class="nav-link px-3" href="#">Sign out</a>
+      </div>
+    </div>
+  </header>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse ">
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column ">
+      <li class="nav-item">
+        <a class="nav-link" href="dashboard"> <i class="fa fa-tachometer"></i> Dashboard </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="report_no_read_tag_hour"> <i class="fa fa-flag-o"></i> Report - Tags No Reads
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="report_no_read_base_hour"> <i class="fa fa-flag-o"></i> Report - Base Station No Reads
+        </a>
+      </li>
+      
+    </ul>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Config</span>
+      
+    </h6>
+    <ul class="nav flex-column ">
+      <li class="nav-item">
+        <a class="nav-link" href="basestations"> <i class="fa fa-laptop "></i> Base Stations </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="tags"> <i class="fa fa-bluetooth"></i>Tags </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="assets"> <i class="fa fa-paw"></i>Assets </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+                
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Dash Board  - Current state @ 03 November 2021 08:44:36</h1>
+</div>
+
+<div class=" row ">
+  <div class=" col-8 mt-2">
+    <div id="div_map_dashboard" class="mh-100 w-100 leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="width: 600px; height: 620px; position: relative;" tabindex="0"> <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 100; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37956/37582?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(388px, -292px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37956/37583?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(388px, 220px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37955/37582?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(-124px, -292px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37957/37582?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(900px, -292px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37955/37583?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(-124px, 220px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/16/37957/37583?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(900px, 220px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-shadow-pane"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(360px, 205px, 0px);"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(573px, 242px, 0px);"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(595px, 415px, 0px);"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(380px, 360px, 0px);"></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="1146" height="744" viewBox="-95 -62 1146 744" style="transform: translate3d(-95px, -62px, 0px);"><g><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f03" fill-opacity="1" fill-rule="evenodd" d="M332.4894435554743,204.97423094511032a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f03" fill-opacity="0" fill-rule="evenodd" d="M544.5348124429584,242.4778658375144a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f03" fill-opacity="0" fill-rule="evenodd" d="M566.9976405315101,414.5001263730228a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f03" fill-opacity="0" fill-rule="evenodd" d="M351.50362168997526,359.53539644926786a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0 "></path></g></svg></div><div class="leaflet-pane leaflet-marker-pane"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(360px, 205px, 0px); z-index: 205;"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(573px, 242px, 0px); z-index: 242;"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(595px, 415px, 0px); z-index: 415;"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(380px, 360px, 0px); z-index: 360;"></div><div class="leaflet-pane leaflet-tooltip-pane"><div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-right" style="opacity: 0.9; transform: translate3d(376px, 161px, 0px);">base_0(null) : tags (900)</div><div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-right" style="opacity: 0.9; transform: translate3d(589px, 198px, 0px);">base_1(null) : tags (null)</div><div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-right" style="opacity: 0.9; transform: translate3d(611px, 371px, 0px);">base_2(null) : tags (null)</div><div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-right" style="opacity: 0.9; transform: translate3d(396px, 316px, 0px);">base_3(null) : tags (null)</div></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1.94336e+07px, 1.92426e+07px, 0px) scale(65536);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> | Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a></div></div></div></div>
+  </div>
+
+  <div class="col-4">
+    <div class="row"><div col="12" onclick="window.location.href='/report_no_read_tag_hour'"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+      <canvas class="my-2 w-100 h-80 chartjs-render-monitor" id="rep_Chart_1" style="display: block;" width="300" height="150"></canvas>
+      <label class="font-italic"> Tags not read : past 1 hour</label>
+      <hr>
+    </div></div>
+    <div class="row"><div col="12" onclick="window.location.href='/report_no_read_tag_hour'"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+      <canvas class="my-2 w-100 h-80 chartjs-render-monitor" id="rep_Chart_2" width="300" height="150" style="display: block;"></canvas>
+        <label class="font-italic"> Tags not read : past 1 Day</label>
+        <hr>
+    </div></div>
+    <div class="row"><div col="12" onclick="window.location.href='/report_no_read_base_hour'"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+      <canvas class="my-2 w-100 h-80 chartjs-render-monitor" id="rep_Chart_3" width="300" height="150" style="display: block;"></canvas>
+        <label class="font-italic"> Stations with no reads : past 1 Day</label>
+        <hr>
+    </div></div>
+  </div>
+</div>
+
+                
+
+            </main>
+
+        </div>
+        <!--- end row-->
+    </div> <!-- end container-->
+
+    <!-- Add js scripts -->
+    <!-- the order is important  -->
+<script src="static/assets/js/jquery-3.6.0.min.js"></script>
+<!-- <script src="static/assets/js/feather.min.js"></script> -->
+      
+<script src="static/assets/js/bootstrap.bundle.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script> -->
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+
+ <!-- Leafletjs-->
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+ 
+<script src="static/dashboard.js"></script>
+
+
+
+
+</body></html>
