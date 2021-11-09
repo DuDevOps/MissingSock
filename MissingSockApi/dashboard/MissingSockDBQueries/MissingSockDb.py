@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 def run_sql(sql_statement):
 
     mydb = mysql.connector.connect(
-    host="192.168.0.118",
+    host="192.168.0.109",
     user="iodynami_script1",
-    password="pass@script1",
+    password="koosK##S",
     db="missingsock"
     )
 
@@ -42,7 +42,7 @@ def run_sql(sql_statement):
 def run_commit_sql(sql_statement):
 
     mydb = mysql.connector.connect(
-    host="192.168.0.118",
+    host="192.168.0.109",
     user="iodynami_script1",
     password="pass@script1",
     db="missingsock"
@@ -50,7 +50,7 @@ def run_commit_sql(sql_statement):
 
     cursor = mydb.cursor()
 
-    #print(f"run_commit_sql = {sql_statement}")
+    print(f"run_commit_sql = {sql_statement}")
 
     cursor.execute(sql_statement)
 
@@ -182,7 +182,7 @@ def get_base_station_tag_current():
     sql = f"select a.id , a.sync_base_id , a.nickname, b.tag_count , c.gps_lat, c.gps_long"
     sql += f" from base_station a"          
     sql += f" left join (select distinct base_station_id , count(*) tag_count "
-    sql += f" from tag_current ) b on a.id =  b.base_station_id "
+    sql += f" from tag_current group by base_station_id ) b on a.id =  b.base_station_id "
     sql += f" left join base_station_current c on a.id = c.id "
 
     sql_result = run_sql(sql)

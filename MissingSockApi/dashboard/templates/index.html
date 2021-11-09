@@ -11,7 +11,19 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-                {% if loadHtml == "dashboard" %}
+                {% if loadHtml == "home" %}
+                {% include "home.html" %}
+
+                {% elif loadHtml == "register" %}
+                {% include "register.html" %}
+
+                {% elif loadHtml == "login" %}
+                {% include "login.html" %}
+
+                {% elif loadHtml == "asset_record" %}
+                {% include "asset_record.html" %}
+
+                {% elif loadHtml == "dashboard" %}
                 {% include "dashboard.html" %}
 
                 {% elif loadHtml == "base_stations" %}
@@ -19,9 +31,6 @@
 
                 {% elif loadHtml == "tags" %}
                 {% include "tags.html" %}
-
-                {% elif loadHtml == "assets" %}
-                {% include "assets.html" %}
 
                 {% elif loadHtml == "report_last_at_basestation" %}
                 {% include "report_last_at_basestation.html" %}

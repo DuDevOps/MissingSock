@@ -1,0 +1,19 @@
+<h1> let sell some cows </h1>
+<a href="/register" > Register first time users</a>
+<hr/>
+<a href="/login" > Login </a>
+<h5> to try first login with user(demo)/passwd (demo) </h5>
+
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+
+            <div class="alert alert-success w-50" role="alert">
+              <h4 class="alert-heading">Success!</h4>
+              <p> {{ message }} </p>
+              <hr>
+              <p class="mb-0">Thanks, Please start by adding your animals at <a href="/asset_record"><i class="fa fa-paw">Animal Register</i></a></p>
+            </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}

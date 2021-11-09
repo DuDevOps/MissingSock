@@ -1,26 +1,26 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Base Stations ( {{total_stations}} )</h1>
+  <h1 class="h2">Assets ( {{total_assets}} )  </h1>
   {% if method == "GET" %}
 
-  <form action="/basestations" method="post">
+  <form action="/assets" method="post">
     <button class="btn btn-danger" type="submit"><i class="fa fa-pencil-square-o">EDIT</i></button>
   </form>
   {% elif method == "POST" %}
-  
-    <div>
-      <form action="/basestations" method="GET">
-        <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
-          <i class="fa fa-undo">RESET</i> </button>
-      </form>
-  
-    </div>
-    <div>
-    <form action="javascript:addRow('tab_basestations')">
+
+  <div>
+    <form action="/assets" method="GET">
+      <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
+        <i class="fa fa-undo">RESET</i> </button>
+    </form>
+
+  </div>
+  <div>
+
+    <form action="javascript:addRowAssets('tab_assets')">
       <button class="btn btn-primary data-toggle='button' aria-pressed='false'" type="submit">
-        <i class="fa fa-plus">New</i></button>
+        <i class="fa fa-plus">NEW</i></button>
     </form>
   </div>
-  
 
   {% endif %}
 </div>
@@ -30,30 +30,28 @@
 <div class="row">
   <div class="col-8">
     <div class="table-responsive ">
-      <table id="tab_basestations" class="table table-hover table-sm">
+      <table id="tab_assets" class="table table-hover table-sm">
         <thead>
           <tr>
             {% if method == "POST" %}
             <th></th>
             <th></th>
             {% endif %}
-            
-            <th scope="col">Base name</th>
-            <th scope="col">nick name</th>
-            <th scope="col">Location </th>
+            <th scope="col">Asset name</th>
+            <th scope="col">Description </th>
           </tr>
         </thead>
         <tbody>
-          {% for station in base_stations %}
+         
+          {% for asset in asset_list %}
 
           <tr>
             <!-- Update / Delete -->
             {% if method == "POST" %}
             <td class="ah ">
 
-
               <form
-                action="javascript:crud_basestations('PUSH',{{station['id']}},'useID_to_get_value','useID_to_get_value')"
+                action="javascript:crud_assets('PUSH',{{asset['id']}},'useID_to_get_value','useID_to_get_value')"
                 method="PATCH">
                 <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'" type="submit">
                   <i class="fa fa-pencil-square-o"></i></button>
@@ -62,7 +60,7 @@
             <td>
               <!-- DELETE BUTTON -->
               <form
-                action="javascript:crud_basestations('DELETE',{{station['id']}},'useID_to_get_value','useID_to_get_value')"
+                action="javascript:crud_assets('DELETE',{{asset['id']}},'useID_to_get_value','useID_to_get_value')"
                 method="delete">
                 <button class="btn btn-danger btn-sm data-toggle='button' aria-pressed='false'" type="submit">
                   <i class="fa fa-minus"></i></button>
@@ -72,11 +70,11 @@
             {% endif %}
             <!-- end add buttons -->
 
-            {% for col in station %}
+            {% for col in asset %}
 
             <!-- filter columns  -->
             {% if col == "href_open_street_map" %}
-            <td><a href="{{station['href_open_street_map']}}">
+            <td><a href="{{tag['href_open_street_map']}}">
                 <i class="fa fa-street-view"> Street View</i></a></td>
 
             {% elif col == "id" %}
@@ -89,25 +87,25 @@
             {% else %}
             {% if method == "GET" %}
 
-            <td>{{ station[col] }} </td>
+            <td> {{ asset[col] }} </td>
 
             {% elif method == "POST" %}
 
 
-            {% if col == "nickname" %}
+            {% if col == "asset_name" %}
             <td>
-              {% set nickname_id = "input_text_" ~ station['id']  %}
-              <form> <input id={{nickname_id}} type="text" value="{{station[col]}}"></form>
+              {% set asset_id = "intxt_asset_id_" ~ asset['id']  %}
+              <form> <input id={{asset_id}} type="text" value="{{asset[col]}}"></form>
             </td>
 
-            {% elif col == "sync_base_id" %}
+            {% elif col == "asset_description" %}
             <td>
-              {% set base_id_id = "txtbox_base_id_" ~ station['id']  %}
-              <form> <input id={{base_id_id}} type="text" value="{{station[col]}}"></form>
+              {% set asset_desc_id = "intxt_asset_desc_" ~ asset['id']  %}
+              <form> <input id={{asset_desc_id}} type="text" value="{{asset[col]}}"></form>
             </td>
 
             {% else %}
-            <td>{{col}} {{ station[col] }} </td>
+            <td>{{col}} {{ asset[col] }} </td>
             {% endif %}
 
             {% endif %}
@@ -125,5 +123,5 @@
       </table>
     </div>
   </div>
-  
+
 </div>

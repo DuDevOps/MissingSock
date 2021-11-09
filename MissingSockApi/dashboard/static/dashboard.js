@@ -1,3 +1,8 @@
+$(document).ready(function () {
+  console.log("dashboard.js loaded")
+});
+
+
 /* globals Chart:false, feather:false */
 
 function render_maps_charts(loadHtml, loadJson) {
@@ -18,20 +23,22 @@ function render_maps_charts(loadHtml, loadJson) {
   }
 
   if (loadHtml == "report_no_read_tag_hour") {
+    var total_tags = loadJson.total_tags[0].count
 
     show_base_station_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Tags');
     render_doughnut_graph('rep_Chart_2', loadJson.total_days_1, total_tags, 'Tags');
-    render_doughnut_graph('rep_Chart_3', loadJson.total_stations_days_1, total_stations, 'Tags');
+    render_doughnut_graph('rep_Chart_3', loadJson.total_stations_days_1, loadJson.total_stations, 'Base');
 
   }
 
   if (loadHtml == "report_no_read_base_hour") {
+    var total_tags = loadJson.total_tags[0].count
 
     show_base_station_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Base');
     render_doughnut_graph('rep_Chart_2', loadJson.total_days_1, total_tags, 'Base');
-    render_doughnut_graph('rep_Chart_3', loadJson.total_stations_days_1, total_stations, 'Base');
+    render_doughnut_graph('rep_Chart_3', loadJson.total_stations_days_1, loadJson.total_stations, 'Base');
 
   }
 
@@ -91,21 +98,21 @@ function loadGraph() {
   })
 }
 
-function render_doughnut_graph(canvas_id, tags_seen, tag_total, base_id) {
+function render_doughnut_graph(canvas_id, tags_not_seen, tag_total, base_id) {
 
   ctx = document.getElementById(canvas_id)
 
   const data = {
     labels: [
-      ''+ base_id + ' not Read (' + (tag_total - tags_seen) + ')',
-      '' + base_id + ' Read (' + tags_seen + ')'
+      '' + base_id + ' Read (' + (tag_total - tags_not_seen) + ')',
+      '' + base_id + ' not Read (' + tags_not_seen + ')'
     ],
     datasets: [{
       label: base_id,
-      data: [(tag_total - tags_seen), tags_seen],
+      data: [(tag_total - tags_not_seen), tags_not_seen],
       backgroundColor: [
-        'rgb(222, 74, 51)',
-        'rgb(0, 255, 0)'
+        'rgb(0, 255, 0)',
+        'rgb(222, 74, 51)'
       ],
       hoverOffset: 4
     }]
@@ -120,28 +127,6 @@ function render_doughnut_graph(canvas_id, tags_seen, tag_total, base_id) {
 
 }
 
-// load bar chart 
-if (document.getElementById('myChart')) {
-  loadGraph()
-}
-
-// basestations.html render
-if (document.getElementById('myBaseStationsChart')) {
-  render_doughnut_graph('myBaseStationsChart', 10, 100, 'Base')
-}
-
-//  dashboard.html  render
-function load_dashboard() {
-  console.log("start load dashboard ")
-
-  if (document.getElementById('ChartBaseStations')) {
-    render_doughnut_graph('ChartBaseStations', 10, 100, 'Base')
-  }
-
-  if (document.getElementById('ChartTags')) {
-    render_doughnut_graph('ChartTags', 10, 100, 'Base')
-  }
-}
 
 // Add Maps
 function show_dashboard_map(loadJson) {

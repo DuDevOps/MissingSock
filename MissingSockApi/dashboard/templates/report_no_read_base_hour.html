@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Tags not seen in the past {{hour}} hour(s) </h1>
-    <form action="/report_no_read_tag_hour" method="post">
+    <h1 class="h2">Base Stations with no Tag reads in the past {{hour}} hour(s) : {{total_base}} </h1>
+    <form action="/report_no_read_base_hour" method="post">
       <label>Check hour : </label>
       <input type="text" placeholder="24" name="hours">
       <button type="submit">Ok</button>
@@ -10,19 +10,20 @@
   <div name="doughnut-bars" class="row">
     <div class="col-4">
   
-      <canvas class="my-2 w-85 h-85" id="rep_pasthour_Chart"></canvas>
-      <label class="font-italic"> Tags past 1 hour</label>
+        <canvas class="my-2 w-80 h-80" id="rep_Chart_3"></canvas>
+        <label class="font-italic"> Base Stations past {{hour}} hour(s)</label>
+      </div>
+    <div class="col-4">
+  
+      <canvas class="my-2 w-80 h-80" id="rep_Chart_1"></canvas>
+      <label class="font-italic"> Tags past  hour</label>
     </div>
     <div class="col-4">
   
-      <canvas class="my-2 w-85 h-85" id="rep_past_1_day_Chart"></canvas>
+      <canvas class="my-2 w-80 h-80" id="rep_Chart_2"></canvas>
       <label class="font-italic"> Tags past 1 Day</label>
     </div>
-    <div class="col-4">
-  
-      <canvas class="my-2 w-85 h-85" id="rep_past_7_day_Chart"></canvas>
-      <label class="font-italic"> Tags past 7 Days</label>
-    </div>
+    
   </div>
   
   <div class="row ">
@@ -31,23 +32,22 @@
         <table class="table table-hover table-sm">
           <thead>
             <tr>
-              <th scope="col">Tag Id</th>
+              <th scope="col">Base Station Id</th>
               <th scope="col">Nickname</th>
               <th scope="col">Last Location</th>
-              <th scope="col">Tag Date</th>
+              <th scope="col">Date</th>
             </tr>
           </thead>
           <tbody>
-            {% for tag in tag_list %}
+            {% for base in base_list %}
   
             <tr>
-              <td> {{ tag['id'] }} </td>
-              <td> {{tag['nickname']}} </td>
-              <td> <a
-                  href="https://www.openstreetmap.org/?mlat={{tag['GPS_lat']}}&mlon={{tag['GPS_long']}}#map=12/{{tag['GPS_lat']}}/{{tag['GPS_long']}}">
+              <td> {{ base['id'] }} </td>
+              <td> {{base['nickname']}} </td>
+              <td> <a  href="{{base['href_open_street_map']}}"> 
                   <i class="fa fa-street-view"></i> Street View
       </div> </a> </td>
-      <td> {{tag['timestamp']}} </td>
+      <td> {{base['timestamp']}} </td>
       </tr>
   
       {% endfor %}
