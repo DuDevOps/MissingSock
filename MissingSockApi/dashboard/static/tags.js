@@ -1,8 +1,8 @@
 $(document).ready(function () {  
-    console.log("tag.js loaded")
+    console.log("tags.js loaded")
      }) ;
 
-    function crud_tags(action, id, tag_id, nickname_id) {
+    function crud_tag(action, id, tag_id, nickname_id) {
 
         var url = "/tags"
         var data_in = []
@@ -102,7 +102,7 @@ $(document).ready(function () {
             element1.classList.add("btn-sm");
             element1.onclick = function () {
                 element1.classList.add("active-reset");
-                deleteRowTags(tableID);
+                deleteRowtag(tableID);
             }
             cell1.appendChild(element1);
 
@@ -130,7 +130,7 @@ $(document).ready(function () {
 
     }
 
-    function deleteRowTags(tableID) {
+    function deleteRowtag(tableID) {
         try {
             var table = document.getElementById(tableID);
             var rowCount = table.rows.length;

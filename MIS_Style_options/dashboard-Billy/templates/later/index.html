@@ -11,34 +11,7 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-                {% if loadHtml == "home" %}
-                {% include "home.html" %}
-
-                {% elif loadHtml == "register" %}
-                {% include "register.html" %}
-
-                {% elif loadHtml == "login" %}
-                {% include "login.html" %}
-
-                {% elif loadHtml == "rep_animal_register" %}
-                {% include "rep_animal_register.html" %}
-
-                {% elif loadHtml == "asset_registry" %}
-                {% include "asset_registry.html" %}
-
-                {% elif loadHtml == "asset_breeding" %}
-                {% include "asset_breeding.html" %}
-
-                {% elif loadHtml == "asset_medical" %}
-                {% include "asset_medical.html" %}
-
-                {% elif loadHtml == "asset_breeding" %}
-                {% include "asset_breeding.html" %}
-
-                {% elif loadHtml == "asset_offspring" %}
-                {% include "asset_offspring.html" %}
-
-                {% elif loadHtml == "dashboard" %}
+                {% if loadHtml == "dashboard" %}
                 {% include "dashboard.html" %}
 
                 {% elif loadHtml == "base_stations" %}
@@ -46,6 +19,9 @@
 
                 {% elif loadHtml == "tags" %}
                 {% include "tags.html" %}
+
+                {% elif loadHtml == "assets" %}
+                {% include "assets.html" %}
 
                 {% elif loadHtml == "report_last_at_basestation" %}
                 {% include "report_last_at_basestation.html" %}

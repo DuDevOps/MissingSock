@@ -1,29 +1,25 @@
-from flask import  Flask, render_template, request, url_for, redirect, flash
-from flask_cors import CORS
+from flask import  Flask, render_template, request, url_for, redirect, flash, jsonify
+# from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 
 from  werkzeug.security import generate_password_hash, check_password_hash
 
 import mysql
 import pymysql
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 import json
 
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
 from MissingSockDBQueries import MissingSockDb
-from MissingSockDBQueries.MissingSock_ORM import Users, Asset_registry
+from MissingSockDBQueries.MissingSock_ORM import sql_result_to_dict, Users, Asset_registry, \
+    Asset_medical, Asset_breeding, Asset_offspring
 
 app = Flask(__name__)
 
-# mydb = mysql.connector.connect(
-#     host="192.168.0.109",
-#     user="iodynami_script1",
-#     password="pass@script1",
-#     db="missingsock"
-#     )
 
 host="192.168.0.109"
 user="iodynami_script1"
@@ -38,7 +34,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-CORS(app)
+# CORS(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -98,7 +94,6 @@ def login():
     
         user = Users.query.filter_by(email=email).first()
         
-        print(f"user = {user}")
         #Email doesn't exist or password incorrect.
         if not user:
             flash("That email does not exist, please try again.")
@@ -119,7 +114,6 @@ def login():
 def logout():
     logout_user()
     return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
-
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -152,31 +146,149 @@ def register():
 
     return render_template("index.html", loadHtml="register", logged_in=current_user.is_authenticated)
 
-@app.route("/asset_record", methods=["GET","POST"]) 
+@app.route("/rep_animal_register", methods=["GET","POST"]) 
 @login_required
-def asset_record():
+def rep_animal_register():
     if request.method == "POST":
         pass
     
     #get List of assets for current user
-    # current_user_id = 
-    print(f"login = {current_user} , type = {type(current_user)}")
-    print(f" _get_current_object() = {type(current_user._get_current_object())}")
-    print(f" _get_current_object() = {current_user.id}")
+   
+    asset_result = Asset_registry.query.filter_by(users_id=current_user.id).all()
+    
+    #Change to dict
+    asset_dict = sql_result_to_dict(asset_result)
+    #     for breed_rec in row.asset_breeding:
+    #         new_breed_rec = breed_rec.__dict__
+    #         new_breed_rec['timestamp'] = breed_rec.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    #         list_breed_rec.append(new_breed_rec)
+            
+        
+    #     # add join col:val list to row dict
+    #     asset_record['asset_breeding'] = list_breed_rec
 
-    #get List of assets for current user
-    asset_list = Asset_registry.query.filter_by(users_id=current_user.id).all()
+    #     asset_dict.append(asset_record)
 
-    print(f"asset list = {asset_list}")
+ 
 
-    for x in asset_list:
-        for key in x.__mapper__.c.keys() :
-            print(f"{key}")
+    # add  age Years / months
+    for record in asset_dict :
+        birth = datetime.strptime(record['date_of_birth'],'%Y-%m-%d %H:%M:%S')
+        # birth = record['date_of_birth']
+        now = date.today()
+        record['age_year'] = now.year - birth.year
+        record['age_month'] = now.month - birth.month  
+        record['birth_year'] = birth.year
+        record['birth_month'] = birth.month
 
+        # get medical record
+        asset_medical_result = Asset_medical.query.filter(Asset_medical.asset_registry_id == record['id']).all()
+        asset_medical_dict = sql_result_to_dict(asset_medical_result)
 
-    return render_template("index.html", loadHtml="asset_record",\
+        record['asset_medical'] = asset_medical_dict
+
+        # get Breeding info
+        asset_breeding_result = Asset_breeding.query.\
+            filter(or_(Asset_breeding.asset_registry_father_id == record['id'], Asset_breeding.asset_registry_mother_id == record['id']) ).all()
+        asset_breeding_dict = sql_result_to_dict(asset_breeding_result)
+
+        # # get breeding detail
+        for breed in asset_breeding_dict:
+            father_detail_list = []
+
+            father_detail = Asset_registry.query.filter(Asset_registry.id == breed['asset_registry_father_id']).all()
+            father_detail_dict = sql_result_to_dict(father_detail)
+            father_detail_list.append(father_detail_dict[0])
+            breed['father_detail'] = father_detail_list
+
+            mother_detail_list = []
+
+            mother_detail = Asset_registry.query.filter(Asset_registry.id == breed['asset_registry_mother_id']).all()
+            mother_detail_dict = sql_result_to_dict(mother_detail)
+            mother_detail_list.append(mother_detail_dict[0])
+            breed['mother_detail'] = mother_detail_list
+            
+
+        record['asset_breeding'] = asset_breeding_dict
+
+        # get offspring info
+        asset_offspring_result = Asset_offspring.query.\
+            filter(or_(Asset_offspring.asset_father_id == record['id'], Asset_offspring.asset_mother_id == record['id']) ).all()
+        asset_offspring_dict = sql_result_to_dict(asset_offspring_result)
+
+        
+
+        # # get offspring detail
+        for rec in asset_offspring_dict:
+            offspring_detail_list = []
+
+            off_asset_result = Asset_registry.query.filter(Asset_registry.id == rec['asset_offspring_id']).all()
+            off_asset_dict = sql_result_to_dict(off_asset_result)
+            offspring_detail_list.append(off_asset_dict[0])
+            rec['offspring_detail'] = offspring_detail_list
+
+            father_detail_list = []
+
+            father_detail = Asset_registry.query.filter(Asset_registry.id == rec['asset_father_id']).all()
+            father_detail_dict = sql_result_to_dict(father_detail)
+            father_detail_list.append(father_detail_dict[0])
+            rec['father_detail'] = father_detail_list
+
+            mother_detail_list = []
+
+            mother_detail = Asset_registry.query.filter(Asset_registry.id == rec['asset_mother_id']).all()
+            mother_detail_dict = sql_result_to_dict(mother_detail)
+            mother_detail_list.append(mother_detail_dict[0])
+            rec['mother_detail'] = mother_detail_list
+
+        record['asset_offspring'] = asset_offspring_dict
+      
+
+    return render_template("index.html", loadHtml="rep_animal_register",\
          logged_in=current_user.is_authenticated,\
-             asset_list=asset_list)
+             asset_list=asset_dict , total_assets=len(asset_dict) )
+
+@app.route("/asset_registry", methods=["GET","POST","PUSH","PUT","DELETE"]) 
+@login_required
+def asset_registry():
+    if request.method == "POST":
+        print(f"POST {request.get_json()}")
+
+    if request.method == "PUSH":
+        print(f"PUSH {request.get_json()}")
+
+    if request.method == "PUT":
+        print(f"PUT {request.get_json()}")
+
+    if request.method == "DELETE":
+        print(f"DELETE {request.get_json()}")
+
+    record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
+    record_dict = sql_result_to_dict(record_list)
+
+    list_of_columns=list(record_dict[0].keys())
+    
+    
+    print(f"{type(list_of_columns)}")
+
+    return render_template("index.html", loadHtml="asset_registry", \
+        logged_in=current_user.is_authenticated, record_list=record_dict,\
+        rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
+
+@app.route("/asset_medical", methods=["GET","POST"]) 
+@login_required
+def asset_medical():
+    return render_template("index.html", loadHtml="asset_medical")
+
+@app.route("/asset_breeding", methods=["GET","POST"]) 
+@login_required
+def asset_breeding():
+    return render_template("index.html", loadHtml="asset_breeding")
+
+@app.route("/asset_offspring", methods=["GET","POST"]) 
+@login_required
+def asset_offspring():
+    return render_template("index.html", loadHtml="asset_offspring")
 
 @app.route("/dashboard")
 @login_required
@@ -232,7 +344,6 @@ def base_station():
 
     try: 
         recv_json = request.get_json()
-        print(f"{method} = {recv_json}")
     except :
         pass
 
@@ -266,8 +377,6 @@ def base_station():
     base_stations = json.loads(loadJson)["base_stations"]
     count = len(base_stations)
     
-    print(f"method = {method}")
-
     return render_template("index.html", loadHtml="base_stations",logged_in=current_user.is_authenticated, method=method, loadJson=loadJson, base_stations=base_stations , total_stations=count)
 
 @app.route("/tags", methods=["GET","POST","PUT","PUSH","DELETE"])
