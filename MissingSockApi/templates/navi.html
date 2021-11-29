@@ -1,0 +1,98 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse ">
+                             
+  <div class="position-sticky pt-3">
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Home</span>
+
+    </h6>
+    <ul class="nav flex-column ">
+      <li class="nav-item">
+        <a class="nav-link" href="home"> <i class="fa fa-home"></i> Home </a>
+      </li>
+
+      {% if not logged_in: %}
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="login"> <i class="fa fa-sign-in"></i> Login </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="register"> <i class="fa fa-registered"></i> Register </a>
+      </li>
+
+
+      {% else %}
+    </ul>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Animal Report</span>
+    </h6>
+    <ul class="nav flex-column ">
+
+      <li class="nav-item">
+        <a class="nav-link" href="rep_animal_register"> <i class="fa fa fa-paw"></i> Animal Register </a>
+      </li>
+
+    </ul>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Animal config</span>
+    </h6>
+    <ul class="nav flex-column ">
+
+      <li class="nav-item">
+        <a class="nav-link" href="asset_registry"> <i class="fa fa-paw"></i> Animal Registry </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="asset_medical"> <i class="fa fa-paw"></i> Animal Medical </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="asset_breeding"> <i class="fa fa-paw"></i> Animal Breeding </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="asset_offspring"> <i class="fa fa-paw"></i> Animal Offspring </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="asset_produce"> <i class="fa fa-paw"></i> Animal Produce </a>
+      </li>
+
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Tag Report </span>
+    </h6>
+
+    <ul class="nav flex-column ">
+      <li class="nav-item">
+        <a class="nav-link" href="dashboard"> <i class="fa fa-bluetooth"></i> Overview  </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="report_no_read_tag_hour"> <i class="fa fa-bluetooth"></i> Tags No Reads
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="report_no_read_base_hour"> <i class="fa fa-bluetooth"></i> Base Station No Reads
+        </a>
+      </li>
+
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span> Tag Tracking - Config</span>
+    </h6>
+
+    <ul class="nav flex-column ">
+      <li class="nav-item">
+        <a class="nav-link" href="base_station"> <i class="fa fa-laptop "></i> Base Stations </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="tag"> <i class="fa fa-bluetooth"></i>Tags </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="asset_registry"> <i class="fa fa-paw"></i>Link Asset to Tag </a>
+      </li>
+    </ul>
+    {% endif %}
+  </div>
+  
+</nav>

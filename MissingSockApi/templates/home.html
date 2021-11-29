@@ -1,0 +1,50 @@
+<h1> Farming Technology Solution Management</h1>
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+
+            <div class="alert alert-success w-50" role="alert">
+              <h4 class="alert-heading">Success!</h4>
+              <p> {{ message }} </p>
+              <hr>
+              
+              <p class="mb-0">Thanks, Please start by adding your animals at <a href="/asset_record"><i class="fa fa-paw">Animal Register</i></a></p>
+            </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="container px-4 py-5" id="custom-cards">
+      <h2 class="pb-2 border-bottom">Features:</h2>
+  
+      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-black bg-dark rounded-5 shadow-lg" style="background-image: url('static/images/asset_register.png');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-black text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Record Animals</h3>
+              
+            </div>
+          </div>
+        </div>
+  
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-black bg-dark rounded-5 shadow-lg" style="background-image: url('static/images/asset_register_detail.png');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-black text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Record Detail for each</h3>
+              
+            </div>
+          </div>
+        </div>
+  
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-black bg-dark rounded-5 shadow-lg" style="background-image: url('static/images/tag_overview.png');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-black text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Keep track of each using tracking</h3>
+              
+            </div>
+          </div>
+        </div>
+
+        <h5> Login with Demo account - demo@demo.com / 123 </h5>
+
+      </div>
+    </div>

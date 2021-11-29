@@ -26,10 +26,10 @@ def get_new_base_sync_scan_date():
 
 def get_gps_base_station () :
     # side markers
-    marker1 = (-25.557164, 28.49824)
-    marker2 = (-25.557527, 28.500515)
-    marker3 = (-25.559192, 28.500756)   
-    marker4 = (-25.55866, 28.498444)
+    marker1 = (-25.53338, 28.502952)
+    marker2 = (-25.528885, 28.510806)
+    marker3 = (-25.547359, 28.518661)   
+    marker4 = (-25.54461, 28.510635)
 
 
 def create_base_sync(days=10, user_name="famer1@gmail.com", tags=900 ):

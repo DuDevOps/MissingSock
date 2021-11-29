@@ -1,0 +1,5 @@
+INSERT INTO `base_sync` (`id`, `base_id`, `tag_id`, `GPS_lat`, `GPS_long`, `RSSI`, `sync_id`, `timestamp`) VALUES
+(NULL,	'base1',	'tag1',	'25',	'23',	222,	'weew',	'2021-10-28 21:10:07')
+
+insert into ('base_id', 'tag_id', 'gps_lat', 'gps_long', 'rssi', 'sync_id', 'timestamp')  
+values('base_0001', 'tag_0001', '-24.6', '29.2', 1, 'tag_0001', '2021-10-28 22:08:30')
