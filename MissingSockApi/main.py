@@ -15,7 +15,7 @@ import json
 
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
-from MissingSockDBQueries import MissingSockDb
+from MissingSockDBQueries import MissingSock_sql
 from MissingSockDBQueries.MissingSock_orm_models import sql_result_to_dict, Users, Asset_registry, \
     Asset_medical, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce
 
@@ -30,7 +30,7 @@ def shutdown_session(exception=None):
 
 
 
-app.config['SECRET_KEY'] = 'secret-key-goes-here'
+app.config['SECRET_KEY'] = 'mySuperDoeperSecretWord'
 
 # CORS(app)
 
@@ -45,7 +45,7 @@ def load_user(user_id):
     return new_user
 
 def get_base_stations():
-    base_station_current = MissingSockDb.get_base_station()
+    base_station_current = MissingSock_sql.get_base_station()
     count = len(base_station_current)
 
     # find middle point of base stations
@@ -688,14 +688,14 @@ def asset_produce():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    total_stations = MissingSockDb.get_total_base_stations()
-    total_tags = MissingSockDb.get_total_tags()
+    total_stations = MissingSock_sql.get_total_base_stations()
+    total_tags = MissingSock_sql.get_total_tags()
     
-    total_hours_1 = MissingSockDb.count_tags_not_read_past_hours(1)
-    total_days_1 = MissingSockDb.count_tags_not_read_past_days(1)
-    total_stations_days_1 = MissingSockDb.count_base_not_read_past_days(1)
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
+    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
+    total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
 
-    base_station_current = MissingSockDb.get_base_station_tag_current()
+    base_station_current = MissingSock_sql.get_base_station_tag_current()
 
     # find middle point of base stations
     long_list = []
@@ -727,7 +727,7 @@ def dashboard():
     loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
     loadJson += "}"
     
-    sql_return = MissingSockDb.get_tag()
+    sql_return = MissingSock_sql.get_tag()
 
     timeNow = datetime.now().strftime("%d %B %Y %H:%M:%S")
 
@@ -887,14 +887,14 @@ def report_no_read_tag_hour_1(get_hours=1):
     if int(get_hours) > 1 :
         hour = get_hours
     
-    total_stations = MissingSockDb.get_total_base_stations()
-    total_tags = MissingSockDb.get_total_tags()
+    total_stations = MissingSock_sql.get_total_base_stations()
+    total_tags = MissingSock_sql.get_total_tags()
     
-    total_hours_1 = MissingSockDb.count_tags_not_read_past_hours(hour)
-    total_days_1 = MissingSockDb.count_tags_not_read_past_days(1)
-    total_stations_days_1 = MissingSockDb.count_base_not_read_past_days(1)
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(hour)
+    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
+    total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
 
-    all_tags = MissingSockDb.tags_not_read_past_hours(hour)
+    all_tags = MissingSock_sql.tags_not_read_past_hours(hour)
 
 
     for station in all_tags:
@@ -925,13 +925,13 @@ def report_no_read_base_hour_1(get_hours=1):
     if int(get_hours) > 1 :
         hour = get_hours
     
-    total_stations = MissingSockDb.get_total_base_stations()
-    total_tags = MissingSockDb.get_total_tags()
+    total_stations = MissingSock_sql.get_total_base_stations()
+    total_tags = MissingSock_sql.get_total_tags()
     
-    total_hours_1 = MissingSockDb.count_tags_not_read_past_hours(1)
-    total_days_1 = MissingSockDb.count_tags_not_read_past_days(1)
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
+    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
 
-    all_base = MissingSockDb.base_not_read_past_hours(hour)
+    all_base = MissingSock_sql.base_not_read_past_hours(hour)
     for station in all_base:
         station["href_open_street_map"] = f"https://www.openstreetmap.org/?mlat={station['gps_lat']}&mlon={station['gps_long']}#map=12/{station['gps_lat']}/{station['gps_long']}"
     
