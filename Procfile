@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath MissingSockApi main:app
+web: gunicorn main:app
