@@ -6,8 +6,8 @@ from sqlalchemy.orm import close_all_sessions
 
 from  werkzeug.security import generate_password_hash, check_password_hash
 
-import mysql
-import pymysql
+# import mysql
+# import pymysql
 
 from datetime import datetime, timedelta, date
 
