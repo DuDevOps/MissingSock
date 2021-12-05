@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_base_station(action, id, column_list) {
 
-    var url = "/base_station";
+    var url = "base_station";
     var data_in = {
         'id': id
     };

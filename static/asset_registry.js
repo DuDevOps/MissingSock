@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_asset_registry(action, id, column_list) {
 
-    var url = "/asset_registry";
+    var url = "asset_registry";
     var data_in = {
         'id': id
     };

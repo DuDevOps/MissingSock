@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_asset_produce(action, id, column_list) {
 
-    var url = "/asset_produce";
+    var url = "asset_produce";
     var data_in = {
         'id': id
     };

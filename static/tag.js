@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_tag(action, id, column_list) {
 
-    var url = "/tag";
+    var url = "tag";
     var data_in = {
         'id': id
     };

@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_asset_breeding(action, id, column_list) {
 
-    var url = "/asset_breeding";
+    var url = "asset_breeding";
     var data_in = {
         'id': id
     };

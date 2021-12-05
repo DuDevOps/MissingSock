@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function crud_assets(action, id, asset_id, asset_desc_id) {
 
-        var url = "/assets"
+        var url = "assets"
         var data_in = []
 
         if (action == "DELETE") {

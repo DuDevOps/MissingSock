@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_asset_offspring(action, id, column_list) {
 
-    var url = "/asset_offspring";
+    var url = "asset_offspring";
     var data_in = {
         'id': id
     };

@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function crud_asset_medical(action, id, column_list) {
 
-    var url = "/asset_medical";
+    var url = "asset_medical";
     var data_in = {
         'id': id
     };
