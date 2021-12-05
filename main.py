@@ -955,5 +955,5 @@ def report_no_read_base_hour_1(get_hours=1):
     return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base, total_base=count, hour=hour)
 
 if __name__ == "__main__":
-    app.run(port=5110, debug=True)
+    app.run()
 
