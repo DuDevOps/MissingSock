@@ -3,14 +3,14 @@
 
   {% if method == "GET" %}
 
-  <form action="/asset_breeding" method="POST">
+  <form action="asset_breeding" method="POST">
       <button class="btn btn-danger" type="submit"><i class="fa fa-pencil-square-o">EDIT</i></button>
   </form>
 
   {% elif method == "POST" %}
 
   <div>
-      <form action="/asset_breeding" method="GET">
+      <form action="asset_breeding" method="GET">
           <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
               <i class="fa fa-undo">RESET</i> </button>
       </form>

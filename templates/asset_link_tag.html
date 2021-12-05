@@ -2,13 +2,13 @@
   <h1 class="h2">Assets ( {{total_assets}} )  </h1>
   {% if method == "GET" %}
 
-  <form action="/assets" method="post">
+  <form action="assets" method="post">
     <button class="btn btn-danger" type="submit"><i class="fa fa-pencil-square-o">EDIT</i></button>
   </form>
   {% elif method == "POST" %}
 
   <div>
-    <form action="/assets" method="GET">
+    <form action="assets" method="GET">
       <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
         <i class="fa fa-undo">RESET</i> </button>
     </form>
