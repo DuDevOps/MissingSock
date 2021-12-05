@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+import os
+
 import mysql
 import pymysql
 
@@ -16,10 +18,18 @@ import pymysql
 
 # db = SQLAlchemy(app)
 
-host="192.168.0.116"
-user="iodynami_script1"
-password="koosK##S"
-data_base="missingsock"
+web_env = os.getenv('web_env')
+
+if web_env == "prod" :
+    host="localhost"
+    user="dudevops_sql_c"
+    password="titanium is here"
+    data_base="dudevops_missingsock" 
+else: 
+    host="192.168.0.107"
+    user="iodynami_script1"
+    password="koosK##S"
+    data_base="missingsock"  
 
 engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{data_base}')
 db_session = scoped_session(sessionmaker(autocommit=False,

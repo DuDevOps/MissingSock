@@ -1,7 +1,10 @@
-print(f"hello world")
+from flask import Flask
 
-def app():
-    print(f"hello2")
-	
-if __name__ == "__main__" :
-	app()
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return f"hello w", 200
+    
+if __name__ == "__main__":
+    app.run()

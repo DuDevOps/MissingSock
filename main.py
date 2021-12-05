@@ -73,9 +73,6 @@ def get_base_stations():
     return loadJson
 
 @app.route("/")
-def test_deploy():
-    return "Hello World"
-
 @app.route("/home")
 @app.route("/index")
 def home():
