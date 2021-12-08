@@ -140,18 +140,20 @@ def get_base_station_by_base_id (base_id):
 
     return sql_result
 
-def get_base_station_current():
-    sql = f"select * from base_station_current "
+def get_base_station_current(user_id):
+    sql = f"select * from base_station_current a, base_station b  "
+    sql += f" where a.id = b.id and b.user_id = {user_id} "
     sql_result = run_sql(sql)
 
     return sql_result
 
-def get_base_station_tag_current():
-    sql = f"select a.id , a.sync_base_id , a.nickname, b.tag_count , c.gps_lat, c.gps_long"
+def get_base_station_tag_current(user_id):
+    sql = f" select a.id , a.sync_base_id , a.nickname, b.tag_count , c.gps_lat, c.gps_long"
     sql += f" from base_station a"          
     sql += f" left join (select distinct base_station_id , count(*) tag_count "
     sql += f" from tag_current group by base_station_id ) b on a.id =  b.base_station_id "
     sql += f" left join base_station_current c on a.id = c.id "
+    sql += f" where a.users_id = {user_id} and c.gps_lat is not null "
 
     sql_result = run_sql(sql)
 
@@ -189,56 +191,11 @@ def get_total_tags():
 
 # ========= copied from dashboard.main ==========
 
-def get_total_base_stations():
-    sql_query = " select count(*) count from base_station "
+def get_total_base_stations(user_id):
+    sql_query = f" select count(*) count from base_station where users_id = {user_id}"
     
     result = run_sql(sql_query)
     return result
-
-def get_tags_at_basestation_date(base_id, dateStart):
-    sql_query = '''
-        select count(*) count from base_sync
-        where  
-    '''
-    sql_query += f" base_id = '{base_id}' "
-    sql_query += f" and timestamp >= convert('{dateStart}', DATETIME) "
-    
-    #print(f"{sql_query}")
- 
-    result = run_sql(sql_query)
-    return result
-
-def get_dashboard():
-
-    # Get Base Stations + location + last tag 
-    
-    sql_query = '''
-select a.id, a.asset_name, a.asset_description, a.tag_id, a.old_tag_id ,
-    b.tag_id , b.nickname, 
-    c.base_id, c.max_time,
-    c.GPS_lat, c.GPS_long 
-from assets a 
-left join tag b on a.tag_id = b.id
-left join tag_last_recv c on b.tag_id = c.tag_id 
-            '''
-
-    result = run_sql(sql_query)
-    return result
-
-def get_report_last_at_basestation():
-
-    # Get Base Stations + location + last tag 
-    
-    sql_query = '''
-    select a.base_id, a.tag_id, a.max_time,
-           b.nickname, a.gps_lat, a.gps_long
-    from base_sync_last_recv a
-    left join base_station b on a.base_id = b.base_id
-            '''
-
-    result = run_sql(sql_query)
-    return result
-
 
 def tags_not_read_past_hours(HOURS):
 

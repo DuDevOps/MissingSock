@@ -78,6 +78,11 @@ def get_base_stations():
 def home():
     return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
 
+@app.route("/favicon.ico")
+def favicon():
+    return render_template("favicon.ico")
+
+
 @app.route("/login", methods=["GET","POST"]) 
 def login():
     if request.method == "POST":
@@ -120,7 +125,7 @@ def register():
             #User already exists
             flash("Email is already registered, please log in")
             
-            return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
+            return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="register")
         
         hash_and_salted_password = generate_password_hash(
             request.form.get('password'),
@@ -685,53 +690,6 @@ def asset_produce():
         logged_in=current_user.is_authenticated, record_list=record_dict,\
         rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
 
-@app.route("/dashboard")
-@login_required
-def dashboard():
-    total_stations = MissingSock_sql.get_total_base_stations()
-    total_tags = MissingSock_sql.get_total_tags()
-    
-    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
-    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
-    total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
-
-    base_station_current = MissingSock_sql.get_base_station_tag_current()
-
-    # find middle point of base stations
-    long_list = []
-    lat_list = []
-    for station in base_station_current:
-        lat_list.append(station['gps_lat'])
-        long_list.append(station['gps_long'])
-    
-    lat_list.sort()
-    long_list.sort()
-    
-    # lat_middle = float(lat_list[0]) - (float(lat_list[0]) - float(lat_list[len(lat_list)-1]) )
-    # long_middle = float(long_list[0]) - (float(long_list[0]) - float(long_list[len(long_list)-1]) )
-
-    lat_middle = round(((float(lat_list[0]) + float(lat_list[len(lat_list)-1])) / 2),6)
-    long_middle = round(((float(long_list[0]) + float(long_list[len(long_list)-1])) / 2),6)
-    
-    # load up for javascript in JSON format
-    # JSON.dumps convert dict to string
- 
-
-    loadJson ="{"
-    loadJson += f'"base_stations" : {json.dumps(base_station_current)} ,'
-    loadJson += f'"total_stations": {total_stations[0]["count"]} ,'
-    loadJson += f'"total_tags": {json.dumps(total_tags)} ,'
-    loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
-    loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
-    loadJson += f'"total_stations_days_1": {total_stations_days_1[0]["count"]} ,'
-    loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
-    loadJson += "}"
-    
-    sql_return = MissingSock_sql.get_tag()
-
-    timeNow = datetime.now().strftime("%d %B %Y %H:%M:%S")
-
-    return render_template("index.html", loadHtml="dashboard", logged_in=current_user.is_authenticated, loadJson=loadJson, tag_count=total_tags, timeNow=timeNow )
 
 @app.route("/base_station", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required
@@ -758,7 +716,7 @@ def base_station():
         db_session.commit() 
         #db_session.close()
 
-    if request.method == "PUT":
+    if request.method == "PUT": # insert
 
         recv_rec = request.get_json()
         new_rec = Base_station()
@@ -790,6 +748,18 @@ def base_station():
         db_session.commit() 
         #db_session.close()
 
+    # Get all row at least 1 row must exist
+    try:
+        record_list = db_session.query(Base_station).filter(Base_station.users_id == current_user.id).all()
+    finally:
+        # if table has no records add first default rec - else nothing works right
+        if len(record_list) == 0 :
+            new_rec = Base_station()
+            new_rec.users_id  = current_user.id
+            new_rec.sync_base_id = "base_station_1"
+
+            db_session.add(new_rec)
+            db_session.commit()
 
     record_list = db_session.query(Base_station).filter(or_(Base_station.users_id == current_user.id, Base_station.users_id == None)).all()
     #db_session.close()
@@ -876,6 +846,75 @@ def tag():
         logged_in=current_user.is_authenticated, record_list=record_dict,\
         rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
 
+@app.route("/dashboard")
+@login_required
+def dashboard():
+
+    # Check if user has at least 1 base_stations
+    base_station_list = db_session.query(Base_station).filter(Base_station.users_id == current_user.id).all()
+    base_station_dict = sql_result_to_dict(base_station_list)
+
+    if len(base_station_dict) == 0 :
+        flash("Report not available - Please add at least 1 basestation ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_base_station")
+ 
+    # Check if user has at least 1 tag
+    tag_list = db_session.query(Tag).filter(Tag.users_id == current_user.id).all()
+    tag_dict = sql_result_to_dict(tag_list)
+
+    if len(tag_dict) == 0 :
+        flash("Report not available - Please add at least 1 tag ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
+ 
+    
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
+    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
+    total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
+
+    base_station_current = MissingSock_sql.get_base_station_tag_current(current_user.id)
+
+    if len(base_station_current) == 0 :
+        flash("Report not available - no tracking data found ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="dashboard_no_data")
+
+
+    # find middle point of base stations
+    long_list = []
+    lat_list = []
+    for station in base_station_current:
+        lat_list.append(station['gps_lat'])
+        long_list.append(station['gps_long'])
+    
+    lat_list.sort()
+    long_list.sort()
+    
+    # lat_middle = float(lat_list[0]) - (float(lat_list[0]) - float(lat_list[len(lat_list)-1]) )
+    # long_middle = float(long_list[0]) - (float(long_list[0]) - float(long_list[len(long_list)-1]) )
+
+    lat_middle = round(((float(lat_list[0]) + float(lat_list[len(lat_list)-1])) / 2),6)
+    long_middle = round(((float(long_list[0]) + float(long_list[len(long_list)-1])) / 2),6)
+    
+    # load up for javascript in JSON format
+    # JSON.dumps convert dict to string
+ 
+
+    loadJson ="{"
+    loadJson += f'"base_stations" : {json.dumps(base_station_current)} ,'
+    loadJson += f'"total_stations": {len(base_station_dict)} ,'
+    loadJson += f'"total_tags": {len(tag_dict)} ,'
+    loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
+    loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
+    loadJson += f'"total_stations_days_1": {total_stations_days_1[0]["count"]} ,'
+    loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
+    loadJson += "}"
+    
+    sql_return = MissingSock_sql.get_tag()
+
+    timeNow = datetime.now().strftime("%d %B %Y %H:%M:%S")
+
+    return render_template("index.html", loadHtml="dashboard", logged_in=current_user.is_authenticated, loadJson=loadJson, tag_count=len(tag_dict), timeNow=timeNow )
+
+
 @app.route("/report_no_read_tag_hour", methods=["GET","POST"])
 @login_required
 def report_no_read_tag_hour_1(get_hours=1):
@@ -886,9 +925,23 @@ def report_no_read_tag_hour_1(get_hours=1):
     
     if int(get_hours) > 1 :
         hour = get_hours
-    
-    total_stations = MissingSock_sql.get_total_base_stations()
-    total_tags = MissingSock_sql.get_total_tags()
+
+    # Check if user has at least 1 base_stations
+    base_station_list = db_session.query(Base_station).filter(Base_station.users_id == current_user.id).all()
+    base_station_dict = sql_result_to_dict(base_station_list)
+
+    if len(base_station_dict) == 0 :
+        flash("Report not available - Please add at least 1 basestation ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_base_station")
+ 
+    # Check if user has at least 1 tag
+    tag_list = db_session.query(Tag).filter(Tag.users_id == current_user.id).all()
+    tag_dict = sql_result_to_dict(tag_list)
+
+    if len(tag_dict) == 0 :
+        flash("Report not available - Please add at least 1 tag ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
+
     
     total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(hour)
     total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
@@ -905,8 +958,8 @@ def report_no_read_tag_hour_1(get_hours=1):
     
     loadJson ="{"
     loadJson += get_base_stations() + ","
-    loadJson += f'"total_stations": {total_stations[0]["count"]} ,'
-    loadJson += f'"total_tags": {json.dumps(total_tags)} ,'
+    loadJson += f'"total_stations": {len(base_station_dict)} ,'
+    loadJson += f'"total_tags": {len(tag_dict)} ,'
     loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
     loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
     loadJson += f'"total_stations_days_1": {total_stations_days_1[0]["count"]} ,'
@@ -925,8 +978,22 @@ def report_no_read_base_hour_1(get_hours=1):
     if int(get_hours) > 1 :
         hour = get_hours
     
-    total_stations = MissingSock_sql.get_total_base_stations()
-    total_tags = MissingSock_sql.get_total_tags()
+    # Check if user has at least 1 base_stations
+    base_station_list = db_session.query(Base_station).filter(Base_station.users_id == current_user.id).all()
+    base_station_dict = sql_result_to_dict(base_station_list)
+
+    if len(base_station_dict) == 0 :
+        flash("Report not available - Please add at least 1 basestation ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_base_station")
+ 
+    # Check if user has at least 1 tag
+    tag_list = db_session.query(Tag).filter(Tag.users_id == current_user.id).all()
+    tag_dict = sql_result_to_dict(tag_list)
+
+    if len(tag_dict) == 0 :
+        flash("Report not available - Please add at least 1 tag ")
+        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
+
     
     total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
     total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
@@ -942,8 +1009,8 @@ def report_no_read_base_hour_1(get_hours=1):
 
     loadJson ="{"
     loadJson += get_base_stations() + ","
-    loadJson += f'"total_stations": {total_stations[0]["count"]} ,'
-    loadJson += f'"total_tags": {json.dumps(total_tags)} ,'
+    loadJson += f'"total_stations": {len(base_station_dict)} ,'
+    loadJson += f'"total_tags": {len(tag_dict)} ,'
     loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
     loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
     loadJson += f'"total_stations_days_1": {total_stations_days_1} ,'
@@ -952,5 +1019,5 @@ def report_no_read_base_hour_1(get_hours=1):
     return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base, total_base=count, hour=hour)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
 

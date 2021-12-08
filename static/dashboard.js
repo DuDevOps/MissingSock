@@ -8,7 +8,7 @@ $(document).ready(function () {
 function render_maps_charts(loadHtml, loadJson) {
 
   if (loadHtml == "dashboard") {
-    var total_tags = loadJson.total_tags[0].count
+    var total_tags = loadJson.total_tags
 
     show_dashboard_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Tags');
@@ -23,7 +23,7 @@ function render_maps_charts(loadHtml, loadJson) {
   }
 
   if (loadHtml == "report_no_read_tag_hour") {
-    var total_tags = loadJson.total_tags[0].count
+    var total_tags = loadJson.total_tags
 
     show_base_station_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Tags');
@@ -33,7 +33,7 @@ function render_maps_charts(loadHtml, loadJson) {
   }
 
   if (loadHtml == "report_no_read_base_hour") {
-    var total_tags = loadJson.total_tags[0].count
+    var total_tags = loadJson.total_tags
 
     show_base_station_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Base');
@@ -131,7 +131,7 @@ function render_doughnut_graph(canvas_id, tags_not_seen, tag_total, base_id) {
 // Add Maps
 function show_dashboard_map(loadJson) {
 
-  var total_tag = loadJson.total_tags[0].count
+  var total_tag = loadJson.total_tags
   var fillOpacity_value = 0
   var map_dashboard = L.map('div_map_dashboard').setView([loadJson.middle_point.lat, loadJson.middle_point.long], 15);
 
