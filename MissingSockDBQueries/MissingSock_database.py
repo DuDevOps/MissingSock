@@ -26,7 +26,7 @@ if web_env == "prod" :
     password="titanium is here"
     data_base="dudevops_missingsock" 
 else: 
-    host="192.168.0.120"
+    host="192.168.0.113"
     user="iodynami_script1"
     password="koosK##S"
     data_base="missingsock"  

@@ -944,7 +944,7 @@ def report_no_read_tag_hour_1(get_hours=1):
         return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
 
     
-    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(hour)
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(hour, current_user.id)
     total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
     total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
 
