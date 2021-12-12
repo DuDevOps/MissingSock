@@ -96,6 +96,23 @@ class Asset_produce(UserMixin, Base):
     note = Column(String(255), nullable=True)
     users_id = Column(Integer, nullable=True)
 
+class Tag_current(UserMixin, Base):
+    __tablename__ = 'tag_current'
+
+    id = Column(Integer, primary_key=True)	
+    gps_lat = Column(String(255), nullable=False)
+    gps_long = Column(String(255), nullable=False)
+    timestamp = Column(DateTime, nullable=True)
+    base_station_id = Column(Integer, nullable=True)
+
+class Base_station_current(UserMixin, Base):
+    __tablename__ = 'base_station_current'
+
+    id = Column(Integer, primary_key=True)	
+    gps_lat = Column(String(255), nullable=False)
+    gps_long = Column(String(255), nullable=False)
+    timestamp = Column(DateTime, nullable=True)
+
  
 def sql_result_to_json(sql_result):
     result = [

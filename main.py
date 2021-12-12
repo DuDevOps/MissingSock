@@ -17,7 +17,8 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 
 from MissingSockDBQueries import MissingSock_sql
 from MissingSockDBQueries.MissingSock_orm_models import sql_result_to_dict, Users, Asset_registry, \
-    Asset_medical, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce
+    Asset_medical, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
+    Base_station_current    
 
 from MissingSockDBQueries.MissingSock_database import db_session
 
@@ -867,7 +868,7 @@ def dashboard():
         return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
  
     
-    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
+    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1, current_user.id)
     total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
     total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
 
@@ -971,7 +972,7 @@ def report_no_read_tag_hour_1(get_hours=1):
 @login_required
 def report_no_read_base_hour_1(get_hours=1):
     try :
-        hour = request.form["hours"]
+        hour = int(request.form["hours"])
     except :
         hour = 1
     
@@ -994,29 +995,56 @@ def report_no_read_base_hour_1(get_hours=1):
         flash("Report not available - Please add at least 1 tag ")
         return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
 
-    
-    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1)
-    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
+    # Get all tags not scanned in the past hour
+    hour_1 = datetime.now() - timedelta(hours=1)
 
-    all_base = MissingSock_sql.base_not_read_past_hours(hour)
-    for station in all_base:
+    total_hours_1_list = db_session.query(Tag_current, Tag).filter(Tag_current.id == Tag.id,\
+         Tag.users_id == current_user.id,\
+         Tag_current.timestamp < hour_1).all()
+
+    total_hours_1_dict = total_hours_1_list[0][0].__dict__
+    total_hours_1 = len(total_hours_1_dict)
+
+    # get all Tags not scanned in the past day
+    day_1 = datetime.now() - timedelta(days=1)
+
+    total_days_1_list = db_session.query(Tag_current, Tag).filter(Tag_current.id == Tag.id,\
+         Tag.users_id == current_user.id,\
+         Tag_current.timestamp < day_1).all()
+    total_days_1_dict = total_days_1_list[0][0].__dict__
+    total_days_1 = len(total_days_1_dict)
+
+    # get all Base_stations with no reads in the past <var:hour> hours
+    hour_var = datetime.now() - timedelta(hours=hour)
+
+    all_base_query_result = db_session.query(Base_station_current, Base_station).\
+        filter(Base_station.id == Base_station_current.id,\
+        Base_station.users_id == current_user.id,\
+        Base_station_current.timestamp < hour_var).all()
+    
+    all_base_current_dict = []
+
+    # get each row , Base_station_current table result convert to dict
+    for row in all_base_query_result :
+        all_base_current_dict.append(row.Base_station_current.__dict__)
+
+    for station in all_base_current_dict:
         station["href_open_street_map"] = f"https://www.openstreetmap.org/?mlat={station['gps_lat']}&mlon={station['gps_long']}#map=12/{station['gps_lat']}/{station['gps_long']}"
     
-    count = len(all_base)
-
-    total_stations_days_1 = count
-
+    total_stations_days_1 = len(all_base_current_dict)
 
     loadJson ="{"
     loadJson += get_base_stations() + ","
     loadJson += f'"total_stations": {len(base_station_dict)} ,'
     loadJson += f'"total_tags": {len(tag_dict)} ,'
-    loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
-    loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
+    loadJson += f'"total_hours_1": {total_hours_1} ,'
+    loadJson += f'"total_days_1": {total_days_1} ,'
     loadJson += f'"total_stations_days_1": {total_stations_days_1} ,'
-    loadJson += "}"                  
+    loadJson += "}"     
 
-    return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base, total_base=count, hour=hour)
+    print(f"{loadJson}")             
+
+    return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base_current_dict, total_base=len(all_base_current_dict), hour=hour)
 
 if __name__ == "__main__":
     app.run(debug=True)

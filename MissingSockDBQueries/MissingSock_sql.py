@@ -231,10 +231,10 @@ def base_not_read_past_days(DAYS):
 
 # ===================================================
 
-def count_tags_not_read_past_hours(HOURS):
+def count_tags_not_read_past_hours(HOURS, user_id):
 
-    sql_query = "select count(*) count from tag_current "
-    sql_query += f" where timestamp  <  NOW() - INTERVAL {HOURS} HOUR "
+    sql_query = "select count(*) count from tag_current  "
+    sql_query += f" where timestamp  <  NOW() - INTERVAL {HOURS} HOUR "    
     
     result = run_sql(sql_query)
     return result
