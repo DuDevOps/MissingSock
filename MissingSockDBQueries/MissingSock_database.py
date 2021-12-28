@@ -20,16 +20,21 @@ import pymysql
 
 web_env = os.getenv('web_env')
 
-if web_env == "prod" :
-    host="localhost"
-    user="dudevops_sql_c"
-    password="titanium is here"
-    data_base="dudevops_missingsock" 
-else: 
-    host="192.168.0.113"
-    user="iodynami_script1"
-    password="koosK##S"
-    data_base="missingsock"  
+# if web_env == "prod" :
+#     host="localhost"
+#     user="dudevops_sql_c"
+#     password="titanium is here"
+#     data_base="dudevops_missingsock" 
+# else: 
+#     host="192.168.0.113"
+#     user="iodynami_script1"
+#     password="koosK##S"
+#     data_base="missingsock"  
+
+host="localhost"
+user="dudevops_sql_c"
+password="titanium is here"
+data_base="dudevops_missingsock" 
 
 engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{data_base}')
 db_session = scoped_session(sessionmaker(autocommit=False,

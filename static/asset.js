@@ -40,7 +40,7 @@ $(document).ready(function () {
             type: action,
             url: url,
             data: data_json,
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json; charset=utf-16",
             dataType: "json",
             success: function (data) {
                 console.log("success for " + data_in);

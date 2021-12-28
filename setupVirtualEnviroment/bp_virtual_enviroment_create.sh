@@ -16,3 +16,5 @@ activate.bat
 # Install virtual enviroment with requirements.txt
 # pip freeze > requirements.txt
 # python -m pip install -r requirements.txt
+
+python -m main.py
