@@ -4,6 +4,9 @@ from flask import  Flask, render_template, request, url_for, redirect, flash, js
 from sqlalchemy import or_
 from sqlalchemy.orm import close_all_sessions
 
+import logging
+import os
+
 from  werkzeug.security import generate_password_hash, check_password_hash
 
 # import mysql
@@ -73,11 +76,34 @@ def get_base_stations():
 
     return loadJson
 
+@app.before_first_request
+def before_first_request():
+    log_level = logging.INFO
+ 
+    for handler in app.logger.handlers:
+        app.logger.removeHandler(handler)
+ 
+    root = os.path.dirname(os.path.abspath(__file__))
+    logdir = os.path.join(root, 'logs')
+    if not os.path.exists(logdir):
+        os.mkdir(logdir)
+    log_file = os.path.join(logdir, 'app.log')
+    handler = logging.FileHandler(log_file)
+    handler.setLevel(log_level)
+    app.logger.addHandler(handler)
+ 
+    app.logger.setLevel(log_level)
+
+    defaultFormatter = logging.Formatter('[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
+    handler.setFormatter(defaultFormatter)
+
+
 @app.route("/")
 @app.route("/home")
 @app.route("/index")
 def home():
     return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
+
 
 @app.route("/favicon.ico")
 def favicon():
@@ -271,6 +297,10 @@ def rep_animal_register():
 @app.route("/asset_registry", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required
 def asset_registry():
+
+    app.logger.info(f"Method recv: {request.method}")
+    app.logger.info(f"json: {request.get_json()}")
+
     #close_all_sessions()
     if request.method == "POST":
         pass
@@ -1047,5 +1077,14 @@ def report_no_read_base_hour_1(get_hours=1):
     return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base_current_dict, total_base=len(all_base_current_dict), hour=hour)
 
 if __name__ == "__main__":
+
+    before_first_request()
+
+    app.logger.debug("debug")
+    app.logger.info("info")
+    app.logger.warning("warning")
+    app.logger.error("error")
+    app.logger.critical("critical")
+
     app.run(debug=True)
 
