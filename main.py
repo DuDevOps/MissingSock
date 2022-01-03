@@ -298,52 +298,86 @@ def rep_animal_register():
 @login_required
 def asset_registry():
 
-    app.logger.info(f"Method recv: {request.method}")
-    app.logger.info(f"json: {request.get_json()}")
-
+    
     #close_all_sessions()
     if request.method == "POST":
         pass
+    
+    # --- Push does not work on chemicloud fnw 
+    # if request.method == "PUSH": # Update
+    #     recv_rec = request.get_json()
+    #     new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
+    #     db_session.commit()
+    #     #db_session.close()
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
+    #     for key, val in recv_rec.items():
+    #         # change all '' to None which will be added as Null
+    #         if len(val) == 0 :
+    #             val = None
+    #         elif val == 'None':
+    #             val = None
             
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
+    #         # convert JSON str types to int
+    #         setattr(new_rec, key, val)
 
-        db_session.commit() 
-        #db_session.close()
+    #     db_session.commit() 
+    #     #db_session.close()
+
+    # Insert/update
 
     if request.method == "PUT":
 
+        app.logger.info(f"Method recv: {request.method}")
+        app.logger.info(f"json: {request.get_json()}")
+
         recv_rec = request.get_json()
-        new_rec = Asset_registry()
+        
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
-                setattr(new_rec, key, val)
+        app.logger.info(f"json - id : {recv_rec['id']}")
+        
+        # Check if this is insert or update
+        if recv_rec['id'] == "ins_4" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        db_session.add(new_rec)
-        db_session.commit()
+        if db_action == "INSERT":
+            app.logger.info(f"Insert : {recv_rec['id']}")
+            new_rec = Asset_registry()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
+        
+        if db_action == "UPDATE":
+            app.logger.info(f"Update : {recv_rec['id']}")
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
+            db_session.commit()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
+                setattr(new_rec, key, val) 
+
+            db_session.commit() 
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
