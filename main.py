@@ -336,7 +336,7 @@ def asset_registry():
         app.logger.info(f"json - id : {recv_rec['id']}")
         
         # Check if this is insert or update
-        if recv_rec['id'] == "ins_4" :
+        if str(recv_rec['id'])[:4] == "ins_" :
             db_action = "INSERT"
         else :
             db_action = "UPDATE"
@@ -1114,12 +1114,12 @@ if __name__ == "__main__":
 
     before_first_request()
 
-    app.logger.debug("debug")
-    app.logger.info("info")
-    app.logger.warning("warning")
-    app.logger.error("error")
-    app.logger.critical("critical")
+    app.logger.debug("START : LOG SHOW debug")
+    app.logger.info("START : LOG SHOW info")
+    app.logger.warning("START : LOG SHOW warning")
+    app.logger.error("START : LOG SHOW error")
+    app.logger.critical("START : LOG SHOW critical")
 
     app.run(debug=True)
-    #version 0.0.0.1
+    # version 0.0.0.2
 

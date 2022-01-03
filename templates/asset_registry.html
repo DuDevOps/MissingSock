@@ -63,7 +63,7 @@
 
                             <!-- UPDATE button -->
                             <form
-                                action="javascript:crud_asset_registry('PUT','{{rec['id']}}', {{list_of_columns}})"
+                                action="javascript:crud_asset_registry('PUT',{{rec['id']}}', {{list_of_columns}})"
                                 method="PUT">
                                 <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
                                     type="submit">
@@ -73,7 +73,7 @@
                         <td>
                             <!-- DELETE BUTTON -->
                             <form
-                                action="javascript:crud_asset_registry('DELETE', '{{rec['id']}}', {{list_of_columns}})"'
+                                action="javascript:crud_asset_registry('DELETE','{{rec['id']}}', {{list_of_columns}})"'
                                 method="delete">
                                 <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
                                     type=" submit">
