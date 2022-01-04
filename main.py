@@ -298,42 +298,14 @@ def rep_animal_register():
 @login_required
 def asset_registry():
 
-    
     #close_all_sessions()
     if request.method == "POST":
         pass
-    
-    # --- Push does not work on chemicloud fnw 
-    # if request.method == "PUSH": # Update
-    #     recv_rec = request.get_json()
-    #     new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
-    #     db_session.commit()
-    #     #db_session.close()
 
-    #     for key, val in recv_rec.items():
-    #         # change all '' to None which will be added as Null
-    #         if len(val) == 0 :
-    #             val = None
-    #         elif val == 'None':
-    #             val = None
-            
-    #         # convert JSON str types to int
-    #         setattr(new_rec, key, val)
-
-    #     db_session.commit() 
-    #     #db_session.close()
-
-    # Insert/update
-
+    # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
-        app.logger.info(f"Method recv: {request.method}")
-        app.logger.info(f"json: {request.get_json()}")
-
         recv_rec = request.get_json()
-        
-
-        app.logger.info(f"json - id : {recv_rec['id']}")
         
         # Check if this is insert or update
         if str(recv_rec['id'])[:4] == "ins_" :
@@ -422,46 +394,63 @@ def asset_medical():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Asset_medical).filter(Asset_medical.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
+    # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Asset_medical()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Asset_medical).filter(Asset_medical.id == int(recv_rec['id'])).first()
+            db_session.commit()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
-        #db_session.close()
+            db_session.commit() 
+
+        if db_action == "INSERT":
+
+            # Check if this is insert or update
+            if str(recv_rec['id'])[:4] == "ins_" :
+                db_action = "INSERT"
+            else :
+                db_action = "UPDATE"
+
+            if db_action == "INSERT":
+                app.logger.info(f"Insert : {recv_rec['id']}")
+
+                recv_rec = request.get_json()
+                new_rec = Asset_medical()
+
+                for key, val in recv_rec.items():
+                    # change all '' to None which will be added as Null
+                    if len(val) == 0 :
+                        val = None
+                    
+                    # convert JSON str types to int
+                    if key == "id": # don't add ID for insert
+                        pass
+                    elif key == "users_id":
+                        new_rec.users_id  = current_user.id
+                    else:
+                        setattr(new_rec, key, val)
+
+                db_session.add(new_rec)
+                db_session.commit()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
@@ -505,45 +494,56 @@ def asset_breeding():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Asset_breeding).filter(Asset_breeding.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
+        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Asset_breeding()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Asset_breeding).filter(Asset_breeding.id == int(recv_rec['id'])).first()
+            db_session.commit()
+            #db_session.close()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
+            db_session.commit() 
+            #db_session.close()
+
+        if db_action == "INSERT":
+
+            recv_rec = request.get_json()
+            new_rec = Asset_breeding()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
@@ -587,45 +587,54 @@ def asset_offspring():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Asset_offspring).filter(Asset_offspring.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
+        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Asset_offspring()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Asset_offspring).filter(Asset_offspring.id == int(recv_rec['id'])).first()
+            db_session.commit()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
+            db_session.commit() 
+
+        if db_action == "INSERT":
+
+            recv_rec = request.get_json()
+            new_rec = Asset_offspring()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
@@ -673,46 +682,55 @@ def asset_produce():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Asset_produce).filter(Asset_produce.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
+        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Asset_produce()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Asset_produce).filter(Asset_produce.id == int(recv_rec['id'])).first()
+            db_session.commit()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
-        #db_session.close()
+            db_session.commit()
+
+        if db_action == "INSERT":
+
+            recv_rec = request.get_json()
+            new_rec = Asset_produce()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
+            #db_session.close()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
@@ -762,46 +780,56 @@ def base_station():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Base_station).filter(Base_station.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
-    if request.method == "PUT": # insert
+        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
+    if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Base_station()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Base_station).filter(Base_station.id == int(recv_rec['id'])).first()
+            db_session.commit()
+            #db_session.close()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
-        #db_session.close()
+            db_session.commit() 
+            #db_session.close()
+
+        if db_action == "INSERT": # insert
+
+            recv_rec = request.get_json()
+            new_rec = Base_station()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()
@@ -846,45 +874,54 @@ def tag():
     if request.method == "POST":
         pass
 
-    if request.method == "PUSH": # Update
-        recv_rec = request.get_json()
-        new_rec = db_session.query(Tag).filter(Tag.id == int(recv_rec['id'])).first()
-        db_session.commit()
-        #db_session.close()
-
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            elif val == 'None':
-                val = None
-            
-            # convert JSON str types to int
-            setattr(new_rec, key, val)
-
-        db_session.commit() 
-        #db_session.close()
-
+        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
     if request.method == "PUT":
 
         recv_rec = request.get_json()
-        new_rec = Tag()
+        
+        # Check if this is insert or update
+        if str(recv_rec['id'])[:4] == "ins_" :
+            db_action = "INSERT"
+        else :
+            db_action = "UPDATE"
 
-        for key, val in recv_rec.items():
-            # change all '' to None which will be added as Null
-            if len(val) == 0 :
-                val = None
-            
-            # convert JSON str types to int
-            if key == "id": # don't add ID for insert
-                pass
-            elif key == "users_id":
-                new_rec.users_id  = current_user.id
-            else:
+        if db_action == "UPDATE": # Update
+            recv_rec = request.get_json()
+            new_rec = db_session.query(Tag).filter(Tag.id == int(recv_rec['id'])).first()
+            db_session.commit()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                elif val == 'None':
+                    val = None
+                
+                # convert JSON str types to int
                 setattr(new_rec, key, val)
 
-        db_session.add(new_rec)
-        db_session.commit()
+            db_session.commit() 
+
+        if db_action == "INSERT":
+
+            recv_rec = request.get_json()
+            new_rec = Tag()
+
+            for key, val in recv_rec.items():
+                # change all '' to None which will be added as Null
+                if len(val) == 0 :
+                    val = None
+                
+                # convert JSON str types to int
+                if key == "id": # don't add ID for insert
+                    pass
+                elif key == "users_id":
+                    new_rec.users_id  = current_user.id
+                else:
+                    setattr(new_rec, key, val)
+
+            db_session.add(new_rec)
+            db_session.commit()
 
     if request.method == "DELETE":
         recv_rec = request.get_json()

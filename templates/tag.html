@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Base station ( {{rec_list_count}} )</h1>
+  <h1 class="h2">Tags ( {{rec_list_count}} )</h1>
 
   {% if method == "GET" %}
 
@@ -63,7 +63,7 @@
 
                           <!-- UPDATE button -->
                           <form
-                              action="javascript:crud_tag('PUSH','{{rec['id']}}', {{list_of_columns}})"
+                              action="javascript:crud_tag('PUT','{{rec['id']}}', {{list_of_columns}})"
                               method="PUSH">
                               <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
                                   type="submit">
