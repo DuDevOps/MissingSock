@@ -1,0 +1,17 @@
+body {
+    background-color: white;
+}
+
+div {
+    border-radius: 25px;
+    background-color: azure;
+    border: .5px solid aqua;
+}
+
+div.row {
+    border: 1px solid black;
+}
+
+div.col {
+    border: 1px solid red;
+}
