@@ -1,37 +1,229 @@
-/* h1 {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 42;
-}
-h2 {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 32;
-}
-h3 {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 24;
-}
-h4 {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 18;
-}
-h5 {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 16;
-}
 body {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
-    font-size: 14;
+    font-family: Poppins;
+
+
+/* User ID:	Poppins Regular 22px
+Table Headings:	Poppins Medium 14px
+Table Content:		Poppins Regular 14px
+Form Headings:	Poppins Regular 16px
+Form Fields:	Poppins Regular 14px
+Button Text:	Poppins Regular 16px UPPERCASE
+Blue Colour: #006fa9
+Light Grey: # edf0f5
+Normal Text:	#000000
+Active Status on text links:  #006fa9
+Button Background: #006fa9
+Button Text: #ffffff
+Footer Background: #343433 */
 }
 
-div {
-    background-color: rgb(237, 240, 245);
-} */
+/* HEADER */
+header {
+    background-color: #006fa9 ;
+    position: flex ;
+    flex-direction: row;
 
-main {
-    background-image: url("images/light_blue_back.jpg") ;
-    background-color: rgb(155, 234, 236);
+    color: white ;
 }
+
+header .column-1 {
+    position: flex ;
+    flex-direction: column ;
+}
+
+header .column-1 .shortname{
+    font-size: xx-large;
+}
+
+header .column-1 .fullname{
+    font-size: small;
+}
+
+header .column-2{
+    font-size: xx-large ;
+    white-space: nowrap;
+    margin-top: auto ;
+}
+
+
+/* =========== END : HEADER ============= */
+
+/* FOOTER */
+
+footer {
+    position: flex ;
+    flex-direction: column ;
+
+    background-color: rgb(68, 67, 67);
+    color: white ;
+
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+
+}
+
+/* =========== END : FOOTER ============= */
+
+/* Navigation bar */
 nav {
-    background-image: url("images/white_wood_2.jpg") ;
-    background-color: rgb(138, 236, 245,.1); /* opacity .5 = 5% */
+    background-color: #edf0f5;     /* light grey */
+
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+
+}
+
+/* ---- Headings */
+nav h6 span {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    /* semi bold */
+}
+
+/* ---- sub headings */
+nav a {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+    /* semi bold */
+}
+
+
+/* Main section of body next to navigation bar */
+main {
+    background-color: white;
+
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+}
+
+main h1 {
+    font-size: 32px;
+    font-weight: 600;  /* semi-bold */
+}
+
+main table {
+    background-color: #edf0f5;  /* light grey */
+}
+
+main table thead {
+    color: white;
+    background-color: #006fa9; /* blue */
+}
+
+main .row .col {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* regular shadow */
+}
+
+button {
+ font-size: 22px;
+}
+
+/* Main ->  login page */
+#login-page {  /* form id */
+    position: flex;
+}
+
+#login-page div{
+    box-shadow: 0 0rem 0rem rgba(0, 0, 0, 0); /* remove shadow */
+    }
+
+#login-page .login-div{
+    margin-top: 5% ;
+    padding: 1% 5% 3% ;   /* top right bottom */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* regular shadow */
+}
+
+#login-page .login-div h1 {
+    margin: 1% ;
+    text-align: center;
+}
+
+#login-page .login-div label {
+    margin-top: 2% ;
+    margin-bottom: 1%;
+
+    font-weight: 600 ;
+}
+
+#login-page .login-div input {
+    margin-bottom: 3%;
+}
+
+#login-page .login-div .forgot-link {
+    text-align:right ;
+}
+
+#login-page .login-div .forgot-link a {    
+    color: black;
+}
+
+#login-page .login-div button {
+    margin-top: 4%;
+}
+
+/* Main ->  Register page */
+#register-page {
+    background-color: white;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* regular shadow */
+}
+
+#register-page .col-md-6 {
+    display: flex;
+    flex-direction: column ;
+    padding-left:10% ;
+    padding-top: 2% ;
+    padding-bottom: 2% ;
+    align-items:flex-start ;
+
+}
+
+#register-page label {
+    font-weight:bold ;
+}
+
+#register-page label, #register-page input, #register-page select {
+    font-size: 18px;
+}
+
+#register-page input, #register-page select {
+    border: 0px;
+    width: 70%; 
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px ;
+}
+
+#register-page button {
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 30% ;
+}
+
+#register-page button, #login-page button {
+    font-size: 22px;
+    color: white;
+    background-color: #006fa9; /* blue */
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

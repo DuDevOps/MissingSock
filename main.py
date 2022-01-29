@@ -45,7 +45,6 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     new_user = Users.query.get(int(user_id))
-    #db_session.close()
     return new_user
 
 def get_base_stations():
@@ -112,6 +111,9 @@ def favicon():
 
 @app.route("/login", methods=["GET","POST"]) 
 def login():
+
+    app.logger.info(f"func(login): received {request.method} for request.form.get('email')")
+
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')

@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Assets ( {{total_assets}} )  </h1>
+  <h1 >Assets ( {{total_assets}} )  </h1>
   {% if method == "GET" %}
 
   <form action="assets" method="post">
@@ -30,7 +30,7 @@
 <div class="row">
   <div class="col-8">
     <div class="table-responsive ">
-      <table id="tab_assets" class="table table-hover table-sm">
+      <table id="tab_assets" class="table table-hover table-sm shadow">
         <thead>
           <tr>
             {% if method == "POST" %}

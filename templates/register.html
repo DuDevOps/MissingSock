@@ -1,60 +1,60 @@
+<h1>Register</h1>
 
-<style>
-    .form-signin {
-     width: 100%;
-     max-width: 330px;
-     padding: 15px;
-     margin: auto;
-   }
-   
-   .form-signin .form-floating:focus-within {
-     z-index: 2;
-   }
-   
-   .form-signin input[type="email"] {
-     margin-bottom: -1px;
-     border-bottom-right-radius: 0;
-     border-bottom-left-radius: 0;
-   }
-   
-   .form-signin input[type="password"] {
-     margin-bottom: 10px;
-     border-top-left-radius: 0;
-     border-top-right-radius: 0;
-   }   
-   </style>
-<div class="box">
-    <h1>Register</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-success w-50" role="alert">
-              <h4 class="alert-heading">Well done!</h4>
-              <p>{{ message }}</p>
-              <hr>
-              <p class="mb-0"></p>
-            </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+<form id="register-page" class="flex">
+  <div class="form-row">
+    <div id="col-left" class="form-group col-md-6 ">
+      <label for="fname">First name:</label>
+      <input type="text" class="form-control" id="fname" name="fname">
 
-   <div class="form-signin w-80">
-   
-       <form action="register" method="post">
-         <div class="form-floating">
-           <label for="floatingInput">Email address</label>
-           <input type="email" name="email" class="form-control"  placeholder="name@example.com" required="required">
-           
-         </div>
-         <div class="form-floating">
-           <label for="floatingPassword">Password</label>
-           <input type="password" name="password" class="form-control" placeholder="Password" required="required">
-           
-         </div>
-   
-         <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
-         
-       </form>
-   </div>
-   
-</div>
+      <label for="phone">Contact Number:</label>
+      <input type="tel" class="form-control"  id="phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">
+
+      <label for="company_name">Company/Farm name</label>
+      <input type="text" class="form-control" id="company_name">
+
+      <label for="Address1">Address:</label>
+      <input type="text" class="form-control" id="Address1">
+      <input type="text" class="form-control" id="Address2">
+
+      <label for="province">Province</label>
+      <select name="province" class="form-control"  id="province">
+        <option value="Free_State">Free State</option>
+        <option value="Gauteng">Gauteng</option>
+        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+        <option value="Limpopo">Limpopo</option>
+        <option value="Mpumalanga">Mpumalanga</option>
+        <option value="Northern_Cape">Northern Cape</option>
+        <option value="North_West">North West</option>
+      </select>
+
+      <label for="area">Area</label>
+      <input type="text" class="form-control" id="area" name="area">
+
+      <label for="postal_code">Postal Code</label>
+      <input type="tel" class="form-control"  id="postal_code" name="postal_code" pattern="[0-9]{4}" placeholder="0002">
+
+    </div> <!-- end div col-left-->
+
+    <div id="col-right" class="form-group col-md-6">
+      <label for="Surname">Surname:</label>
+      <input type="text" class="form-control" id="Surname" name="Surname">
+
+      <label for="floatingInput">Email address</label>
+      <input type="email" class="form-control"  name="email" class="form-control" placeholder="name@example.com" required="required">
+
+
+      <label for="Coordinates">Coordinates (center of property)</label>
+      <input type="text" class="form-control" id="register-latitude">
+      <input type="text" class="form-control" id="register-longtitude">
+
+      <label for="floatingPassword">Password</label>
+      <input type="password" class="form-control"  name="password" class="form-control" placeholder="Password" required="required">
+
+
+      <button class="w-25 btn btn-lg btn-primary" type="submit">Register</button>
+
+
+
+    </div> <!-- end div col-right -->
+  </div> <!-- end row 1 -->
+</form>
