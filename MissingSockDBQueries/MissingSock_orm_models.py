@@ -11,6 +11,19 @@ class Users(UserMixin, Base):
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), unique=True, nullable=False)
+    name = Column(String(255),  nullable=True)
+    surname = Column(String(255),  nullable=True)
+    phone = Column(String(15),  nullable=True)
+    farm_name = Column(String(255),  nullable=True)
+    address_1 = Column(String(255),  nullable=True)
+    address_2 = Column(String(255),  nullable=True)
+    province = Column(String(20),  nullable=True)
+    area = Column(String(255),  nullable=True)
+    postal_code = Column(String(8),  nullable=True)
+    gps_lat = Column(String(20), nullable=True)
+    gps_long = Column(String(20), nullable=True) 
+
+
 
 class Base_station(UserMixin, Base):
     __tablename__ = 'base_station'
@@ -33,9 +46,9 @@ class Asset_registry(UserMixin, Base):
 
     id = Column(Integer, primary_key=True)	
     tag_id = Column(Integer, nullable=True)
+    name = Column(String(255), nullable=True)
     asset_type = Column(String(255), nullable=True)
-    asset_number = Column(String(255), nullable=True)	
-    group_number = Column(String(255), nullable=True)	
+    group_name = Column(String(255), nullable=True)	
     date_of_birth = Column(DateTime, nullable=False, default=datetime.utcnow)
     gender = Column(String(255), nullable=True)	
     breed_type = Column(String(255), nullable=True)
@@ -91,7 +104,7 @@ class Asset_produce(UserMixin, Base):
     asset_registry_id = Column(Integer,  nullable=False)
     type = Column(String(255), nullable=False)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
-    produce_yield = Column(Float	, nullable=False)	
+    quantity = Column(Float	, nullable=False)	
     measurement = Column(String(255), nullable=False)
     note = Column(String(255), nullable=True)
     users_id = Column(Integer, nullable=True)
@@ -100,8 +113,8 @@ class Tag_current(UserMixin, Base):
     __tablename__ = 'tag_current'
 
     id = Column(Integer, primary_key=True)	
-    gps_lat = Column(String(255), nullable=False)
-    gps_long = Column(String(255), nullable=False)
+    gps_lat = Column(String(20), nullable=False)
+    gps_long = Column(String(20), nullable=False)
     timestamp = Column(DateTime, nullable=True)
     base_station_id = Column(Integer, nullable=True)
 
@@ -109,8 +122,8 @@ class Base_station_current(UserMixin, Base):
     __tablename__ = 'base_station_current'
 
     id = Column(Integer, primary_key=True)	
-    gps_lat = Column(String(255), nullable=False)
-    gps_long = Column(String(255), nullable=False)
+    gps_lat = Column(String(20), nullable=False)
+    gps_long = Column(String(20), nullable=False)
     timestamp = Column(DateTime, nullable=True)
 
  

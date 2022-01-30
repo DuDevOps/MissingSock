@@ -1,4 +1,4 @@
-<form id="login-page" >
+<form id="login-page" href="login" method="POST">
   <div class="row">
     <div class="col-2"></div>
     <div class="col-4 login-div ">
@@ -18,18 +18,3 @@
 
 </form>
 
-<!-- error message -->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-{% for message in messages %}
-
-<div class="alert alert-warning w-50" role="alert">
-  <h4 class="alert-heading">Oh no , something went wrong!</h4>
-  <p> {{ message }} </p>
-  <hr>
-  <p class="mb-0"></p>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
-<!-- error message -->
