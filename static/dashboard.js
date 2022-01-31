@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  console.log("dashboard.js loaded")
+  console.log("dashboard.js loaded");
 });
 
 

@@ -1,0 +1,66 @@
+<div id="new_animal_div">
+    <h1>Animal Registration</h1>
+
+    <form id="animal_details" class="flex input" href="new_animal_detail" method="POST">
+        <h3>Animal Details </h3>
+        <div class="form-row">
+            <div id="col-left" class="form-group col-md-6 ">
+                <label for="fname">Animal Reg No</label>
+                <input type="text" class="form-control" name="animal_reg_no">
+
+                <label for="type">Type</label>
+                <select name="type" class="form-control">
+                    <option value="Merino">Merino</option>
+                    <option value="Doper">Doper</option>
+                </select>
+
+                <label for="type">Gender</label>
+                <select name="gender" class="form-control">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <label for="father_id">Father ID:</label>
+                <input type="text" class="form-control" name="father_id">
+
+                <label for="father_note">Father note:</label>
+                <input type="text" class="form-control" name="father_note">
+
+            </div> <!-- end div col-left-->
+
+            <div id="col-right" class="form-group col-md-6">
+
+                <label for="group" class="form-label">Group</label>
+                <input class="form-control" list="groupOptions" placeholder="Type to search...">
+                <datalist id="groupOptions">
+                    <option value="Sheep">
+                    <option value="Cattle">
+                    <option value="Chickens">
+                    <option value="Pigs">
+                    <option value="Buck">
+                    <option value="Horses">
+                    <option value="Other">
+                </datalist>
+
+                <label for="birthday">Birthday:</label>
+                <input type="date" class="form-control" id="birthday" name="birthday">
+
+                <label for="father_id">Mother ID:</label>
+                <input type="text" class="form-control" name="mother_id">
+
+                <label for="father_note">Mother note:</label>
+                <input type="text" class="form-control" name="mother_note">
+
+
+
+            </div> <!-- end div col-right -->
+
+            <div class="row w-100">
+                <div class="col-9">
+                    <button  type="submit">Insert </button>
+                </div>
+            </div>
+        </div> <!-- end row 1 -->
+    </form>
+
+</div> <!-- new_animal_div -->
