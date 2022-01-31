@@ -96,9 +96,9 @@ def before_first_request():
 def login_error():
     return render_template("index.html", loadHtml="login_error")
 
-@app.route("/")
-@app.route("/home")
-@app.route("/index")
+@app.route("/" , methods=["GET","POST"])
+@app.route("/home" , methods=["GET","POST"])
+@app.route("/index" , methods=["GET","POST"])
 @app.route("/login", methods=["GET","POST"]) 
 def login():
 
