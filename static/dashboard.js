@@ -143,41 +143,41 @@ function show_dashboard_map(loadJson) {
     zoomOffset: -1
   }).addTo(map_dashboard);
 
-  // add base station markers
+  // add tag markers
 
-  stations = loadJson.base_stations;
+  tags = loadJson.tags;
+  tag_count = loadJson.tags.length
 
-  for (let index = 0; index < loadJson.base_stations.length; ++index) {
+  for (let index = 0; index < loadJson.tags.length; ++index) {
 
     fillOpacity_value = 0;
 
-    var base_id = stations[index].id
-    var nickname = stations[index].nickname
-    var gps_lat = stations[index].gps_lat
-    var gps_long = stations[index].gps_long
-    var sync_base_id = stations[index].sync_base_id
-    var tag_count = stations[index].tag_count
+    var asset_base_id = tags[index].base_station_id
+    var asset_name = tags[index].name
+    var asset_type = tags[index].asset_type
+    var gps_lat = tags[index].gps_lat
+    var gps_long = tags[index].gps_long
 
 
     var marker = L.marker([parseFloat(gps_lat), parseFloat(gps_long)]).addTo(map_dashboard);
 
     // add on click popup
-    marker.bindPopup("Station :" + sync_base_id + "(" + nickname + ") @" + "GPS: lat " + gps_lat + " / long " + gps_long);
+    marker.bindPopup("Name :" + asset_name + "(" + asset_type + ") @" + "GPS: lat " + gps_lat + " / long " + gps_long);
 
     // Add label
-    marker.bindTooltip("" + sync_base_id + "(" + nickname + ") : tags (" + tag_count + ")", {
+    marker.bindTooltip("" + asset_name + "(" + asset_type + ") : tags (" + tag_count + ")", {
       permanent: true,
       direction: 'right'
     });
 
     // add circle
-    var tagcount = loadJson.base_stations[index].tag_count;
+    var tagcount = loadJson.tags.length;
 
     if (parseFloat(tagcount)) {
       fillOpacity_value = parseFloat(tagcount) / parseFloat(total_tag);
     }
 
-    var circle = L.circle([parseFloat(stations[index].gps_lat), parseFloat(stations[index].gps_long)], {
+    var circle = L.circle([parseFloat(tags[index].gps_lat), parseFloat(tags[index].gps_long)], {
       color: 'red',
       fillColor: '#f03',
       fillOpacity: fillOpacity_value,

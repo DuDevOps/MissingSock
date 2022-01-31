@@ -46,7 +46,7 @@ def run_sql(sql_statement):
         # print(f"{record}")
         
         for idx, col in enumerate(column_names):
-            # print(f"col {col} for rec at index {idx} {record[idx]}")
+            #print(f"col {col} for rec at index {idx} {record[idx]}")
             rec[col]=record[idx]
 
         sql_result.append(rec)
@@ -201,6 +201,26 @@ def tags_not_read_past_hours(HOURS):
 
     sql_query = "select * from tag_current "
     sql_query += f" where timestamp  <  NOW() - INTERVAL {HOURS} HOUR "
+    
+    result = run_sql(sql_query)
+    return result
+
+def tags_not_read_past_hours_by_userid(HOURS, USER_ID):
+
+    sql_query = "select * from tag_current "
+    sql_query += f" where timestamp  <  NOW() - INTERVAL {HOURS} HOUR "
+    sql_query += f" and id in (select tag_id from asset_registry where users_id = {USER_ID}) "
+    
+    result = run_sql(sql_query)
+    return result
+
+def tags_last_location_by_userid(USER_ID):
+
+    sql_query = " select a.id, a.name, a.asset_type , b.base_station_id, "
+    sql_query += " b.gps_lat, b.gps_long "
+    sql_query += " from asset_registry a , tag_current b "
+    sql_query += " where b.id = a.tag_id "
+    sql_query += f" and a.users_id = {USER_ID}"
     
     result = run_sql(sql_query)
     return result

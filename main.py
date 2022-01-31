@@ -882,6 +882,10 @@ def dashboard(get_hours=24):
     
     lat_middle = user_dict[0]['gps_lat']
     long_middle = user_dict[0]['gps_long']
+
+    # tag location + detail 
+    sql_return = MissingSock_sql.tags_last_location_by_userid(current_user.id)
+    print(f"TAGS = {sql_return}")
     
     # load up for javascript in JSON format
     # JSON.dumps convert dict to string
@@ -891,10 +895,9 @@ def dashboard(get_hours=24):
     loadJson += f'"total_tags": {len(tag_dict)} ,'
     loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
     loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
+    loadJson += f'"tags": {sql_return} ,'
     loadJson += "}"
     
-    sql_return = MissingSock_sql.get_tag()
-
     timeNow = datetime.now().strftime("%d %B %Y %H:%M:%S")
 
     return render_template("index.html", loadHtml="dashboard", \
