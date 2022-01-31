@@ -92,17 +92,13 @@ def before_first_request():
     handler.setFormatter(defaultFormatter)
 
 
-@app.route("/")
-@app.route("/home")
-@app.route("/index")
-def home():
-    return render_template("index.html", loadHtml="login", logged_in=current_user.is_authenticated)
-
 @app.route("/login_error")
 def login_error():
     return render_template("index.html", loadHtml="login_error")
 
-
+@app.route("/")
+@app.route("/home")
+@app.route("/index")
 @app.route("/login", methods=["GET","POST"]) 
 def login():
 
