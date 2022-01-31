@@ -96,7 +96,7 @@ def before_first_request():
 @app.route("/home")
 @app.route("/index")
 def home():
-    return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
+    return render_template("index.html", loadHtml="login", logged_in=current_user.is_authenticated)
 
 @app.route("/login_error")
 def login_error():
@@ -114,8 +114,6 @@ def login():
     
         user = Users.query.filter_by(email=email).first()
         db_session.commit()
-        #db_session.close()
-
         
         #Email doesn't exist or password incorrect.
         if not user:
@@ -128,7 +126,7 @@ def login():
         
         else:
             login_user(user)
-            return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated)
+            return render_template("index.html", loadHtml="rep_animal_register", logged_in=current_user.is_authenticated)
         
     return render_template("index.html", loadHtml="login")
 
@@ -136,9 +134,11 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return render_template("index.html", loadHtml="login")
+    flash('user is now logged out ')
+    return render_template("index.html", loadHtml="login_error")
 
-@app.route("/my_profile", methods=["GET","POST"])
+
+
 @app.route("/register", methods=["GET","POST"])
 def register():
 
@@ -186,6 +186,39 @@ def register():
         return render_template("index.html", loadHtml="login_error")
 
     return render_template("index.html", loadHtml="register", logged_in=current_user.is_authenticated)
+
+@app.route("/my_profile", methods=["GET","POST"])
+def my_profile():
+
+    app.logger.info(f"my_profile : {request.method} ")
+
+    if request.method == "POST":
+        recv_rec = request.get_json()
+        update_rec = db_session.query(Users).filter(Users.id == current_user.id).first()
+        
+        update_rec.email=request.form.get('email'),
+        update_rec.name = request.form.get('fname'),
+        update_rec.surname = request.form.get('surname'),
+        update_rec.phone = request.form.get('phone'),
+        update_rec.farm_name = request.form.get('farm_name'),
+        update_rec.address_1 = request.form.get('address_1'),
+        update_rec.address_2 = request.form.get('address_2'),
+        update_rec.province = request.form.get('province'),
+        update_rec.area = request.form.get('area'),
+        update_rec.postal_code = request.form.get('postal_code'),
+        update_rec.gps_lat = request.form.get('gps_lat'),
+        update_rec.gps_long = request.form.get('gps_long')
+
+        db_session.commit() 
+        
+        app.logger.info(f"my_profile : update user : {current_user.id} ")
+
+    user_list = db_session.query(Users).filter(Users.id == current_user.id).all()
+    user_dict = sql_result_to_dict(user_list)
+
+    return render_template("index.html", loadHtml="my_profile", \
+        user_detail=user_dict[0], \
+        logged_in=current_user.is_authenticated)
 
 @app.route("/activities", methods=["GET","POST"])
 @app.route("/new_animal_register", methods=["GET","POST"])
@@ -949,7 +982,6 @@ def tag():
 
 
     record_list = db_session.query(Tag).filter(or_(Tag.users_id == current_user.id, Tag.users_id == None)).all()
-    #db_session.close()
     record_dict = sql_result_to_dict(record_list)
 
     try:
@@ -964,7 +996,7 @@ def tag():
 
 @app.route("/dashboard")
 @login_required
-def dashboard(get_hours=1):
+def dashboard(get_hours=24):
 
     # Get all row at least 1 row must exist
     try:
@@ -999,61 +1031,31 @@ def dashboard(get_hours=1):
 
     # info for row 3 map/chart
 
-    # Check if user has at least 1 base_stations
-    base_station_list = db_session.query(Base_station).filter(Base_station.users_id == current_user.id).all()
-    base_station_dict = sql_result_to_dict(base_station_list)
-
-    if len(base_station_dict) == 0 :
-        flash("Report not available - Please add at least 1 basestation ")
-        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_base_station")
- 
     # Check if user has at least 1 tag
     tag_list = db_session.query(Tag).filter(Tag.users_id == current_user.id).all()
     tag_dict = sql_result_to_dict(tag_list)
 
     if len(tag_dict) == 0 :
         flash("Report not available - Please add at least 1 tag ")
-        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="no_tag")
+        return render_template("index.html", loadHtml="error_page", logged_in=current_user.is_authenticated, flash_type="no_tag")
  
     
     total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1, current_user.id)
-    total_days_1 = MissingSock_sql.count_tags_not_read_past_days(1)
-    total_stations_days_1 = MissingSock_sql.count_base_not_read_past_days(1)
 
-    base_station_current = MissingSock_sql.get_base_station_tag_current(current_user.id)
-
-    if len(base_station_current) == 0 :
-        flash("Report not available - no tracking data found ")
-        return render_template("index.html", loadHtml="home", logged_in=current_user.is_authenticated, flash_type="dashboard_no_data")
-
-
-    # find middle point of base stations
-    long_list = []
-    lat_list = []
-    for station in base_station_current:
-        lat_list.append(station['gps_lat'])
-        long_list.append(station['gps_long'])
+    # find middle point for map
+    user_list = db_session.query(Users).filter(Users.id == current_user.id).all()
+    user_dict = sql_result_to_dict(user_list)
     
-    lat_list.sort()
-    long_list.sort()
-    
-    # lat_middle = float(lat_list[0]) - (float(lat_list[0]) - float(lat_list[len(lat_list)-1]) )
-    # long_middle = float(long_list[0]) - (float(long_list[0]) - float(long_list[len(long_list)-1]) )
-
-    lat_middle = round(((float(lat_list[0]) + float(lat_list[len(lat_list)-1])) / 2),6)
-    long_middle = round(((float(long_list[0]) + float(long_list[len(long_list)-1])) / 2),6)
+    lat_middle = user_dict[0]['gps_lat']
+    long_middle = user_dict[0]['gps_long']
     
     # load up for javascript in JSON format
     # JSON.dumps convert dict to string
  
 
     loadJson ="{"
-    loadJson += f'"base_stations" : {json.dumps(base_station_current)} ,'
-    loadJson += f'"total_stations": {len(base_station_dict)} ,'
     loadJson += f'"total_tags": {len(tag_dict)} ,'
     loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
-    loadJson += f'"total_days_1": {total_days_1[0]["count"]} ,'
-    loadJson += f'"total_stations_days_1": {total_stations_days_1[0]["count"]} ,'
     loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
     loadJson += "}"
     

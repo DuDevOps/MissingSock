@@ -1,0 +1,73 @@
+<h1>Register</h1>
+
+<form id="register-page" class="flex" href="my_profile" method="POST">
+  <div class="form-row">
+    <div id="col-left" class="form-group col-md-6 ">
+      <label for="fname">First name:</label>
+      <input type="text" class="form-control" 
+             id="fname" name="fname" value="{{user_detail.name}}">
+
+      <label for="phone">Contact Number:</label>
+      <input type="tel" class="form-control"  
+             id="phone" name="phone"
+             placeholder="+27 82 999 9999" 
+             pattern="+[0-9]{2} [0-9]{2} [0-9]{3} [0-9]{4}"
+             value="{{user_detail.phone}}">
+
+      <label for="farm_name">Company/Farm name</label>
+      <input type="text" class="form-control"
+      name="farm_name" value="{{user_detail.farm_name}}">
+
+      <label for="Address1">Address:</label>
+      <input type="text" class="form-control" 
+      name="address_1" value="{{user_detail.address_1}}">
+      <input type="text" class="form-control"  
+      name="address_2" value="{{user_detail.address_2}}">
+
+      <label for="province">Province</label>
+      <input type="text" class="form-control" 
+       name="province" value="{{user_detail.province}}" >
+        
+
+      <label for="area">Area</label>
+      <input type="text" class="form-control" id="area" 
+      name="area" value="{{user_detail.area}}">
+
+      <label for="postal_code">Postal Code</label>
+      <input type="tel" class="form-control"  
+      name="postal_code" pattern="[0-9]{4}" placeholder="0002"
+      value="{{user_detail.postal_code}}">
+
+    </div> <!-- end div col-left-->
+
+    <div id="col-right" class="form-group col-md-6">
+      <label for="Surname">Surname:</label>
+      <input type="text" class="form-control"  
+      name="surname" value="{{user_detail.surname}}">
+
+      <label for="floatingInput">Email address</label>
+      <input type="email" class="form-control"  name="email" 
+      class="form-control" placeholder="name@example.com" required="required"
+      value="{{user_detail.email}}">
+
+
+      <label for="Coordinates">Coordinates (Latitude/ Longtitude of property middle point)</label>
+      <input type="text" class="form-control" 
+             name="gps_lat" placeholder="-25.547359 (Latitude)" 
+             pattern="-[0-9]{2}.[0-9]{6}"
+             value="{{user_detail.gps_lat}}">
+      <input type="text" class="form-control"
+             name="gps_long" placeholder="28.518661 (Longtitude)"
+             pattern="0-9]{2}.[0-9]{6}"
+             value="{{user_detail.gps_long}}">
+
+      <a href="reset_password"  class="fw-bold p-3 fs-1">reset passwd ?</a>
+
+
+      <button class="w-25 btn btn-lg btn-primary" type="submit">Update </button>
+
+
+
+    </div> <!-- end div col-right -->
+  </div> <!-- end row 1 -->
+</form>

@@ -12,8 +12,6 @@ function render_maps_charts(loadHtml, loadJson) {
 
     show_dashboard_map(loadJson);
     render_doughnut_graph('rep_Chart_1', loadJson.total_hours_1, total_tags, 'Tags');
-    render_doughnut_graph('rep_Chart_2', loadJson.total_days_1, total_tags, 'Tags');
-    render_doughnut_graph('rep_Chart_3', loadJson.total_stations_days_1, loadJson.total_stations, 'Base');
   }
 
   if (loadHtml == "base_stations") {

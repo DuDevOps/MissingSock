@@ -20,6 +20,12 @@
                 {% elif loadHtml == "login" %}
                 {% include "login.html" %}
 
+                {% elif loadHtml == "login_error" %}
+                {% include "login_error.html" %}
+
+                {% elif loadHtml == "error_page" %}
+                {% include "error_page.html" %}
+
                 {% elif loadHtml == "rep_animal_register" %}
                 {% include "rep_animal_register.html" %}
 
@@ -58,6 +64,9 @@
 
                 {% elif loadHtml == "report_no_read_base_hour" %}
                 {% include "report_no_read_base_hour.html" %}
+
+                {% elif loadHtml == "my_profile" %}
+                {% include "my_profile.html" %}
 
                 {% endif %}
 

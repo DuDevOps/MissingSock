@@ -19,6 +19,7 @@ Footer Background: #343433 */
 
 /* HEADER */
 header {
+    font-family: Poppins;
     background-color: #006fa9 ;
     position: flex ;
     flex-direction: row;
@@ -27,11 +28,13 @@ header {
 }
 
 header .column-1 {
+    font-family: Poppins;
     position: flex ;
     flex-direction: column ;
 }
 
 header .column-1 .shortname{
+    font-family: Poppins;
     font-size: xx-large;
 }
 
@@ -290,3 +293,10 @@ button {
 
 
 /* ============= end DASHBOARD ======== */
+
+/* ============= rep_animal_register ======== */
+#accordionAssets button {
+    background-color: #006fa9; /* blue */
+}
+
+/* ============= end rep_animal_register ======== */
