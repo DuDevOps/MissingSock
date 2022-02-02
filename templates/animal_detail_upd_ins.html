@@ -1,0 +1,96 @@
+<form id="animal_details" class="flex input" href="animal_detail_upd_ins" method="POST">
+    <h3>Animal Details : {{animal_reg_no}} {{asset_id}}</h3>
+    <div class="form-row">
+        <div class="hidden">
+            <input type="text" name="id"                    
+                    {% if record_dict %} 
+                    value="{{record_dict.id}}" 
+                    {% else %}
+                    value="new"
+                    {% endif %}  
+            > 
+            <input type="text" name="mode" value="update">  
+        </div>
+        <div class="form-group col-md-6 ">
+            <label for="fname">Animal Reg No</label>
+            <input type="text" class="form-control" name="animal_reg_no"                    
+                    {% if record_dict %} value="{{record_dict.animal_reg_no}}" {% endif %}  
+            >
+
+            <label for="asset_type">Type</label>
+            <select name="asset_type" class="form-control">
+                <option value="Merino">Merino</option>
+                <option value="Doper">Doper</option>
+                {% if record_dict %} 
+                <option selected value="{{record_dict.asset_type}}" > {{record_dict.asset_type}} </option>
+                {% endif %}
+            </select>
+
+            <label for="gender">Gender</label>
+            <select name="gender" class="form-control">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                {% if record_dict %} 
+                <option selected value="{{record_dict.gender}}" > {{record_dict.gender}} </option>
+                {% endif %}
+            </select>
+
+            <label for="father_id">Father ID</label>
+            <input type="text" class="form-control" name="father_id"
+            {% if record_dict %} value="{{record_dict.father_id}}" {% endif %}
+            >
+
+            <label for="father_note">Father note</label>
+            <input type="text" class="form-control" name="father_note"
+            {% if record_dict %} value="{{record_dict.father_note}}" {% endif %}
+            >
+
+        </div> <!-- end div col-left-->
+
+        <div class="form-group col-md-6">
+
+            <label for="group_name" class="form-label">Group</label>
+            <input class="form-control" name="group_name" list="groupOptions" placeholder="Type to search...">
+            <datalist  id="groupOptions">
+                <option value="Sheep">
+                <option value="Cattle">
+                <option value="Chickens">
+                <option value="Pigs">
+                <option value="Buck">
+                <option value="Horses">
+                <option value="Other">
+                {% if record_dict %} 
+                <option selected value="{{record_dict.group_name}}" > {{record_dict.group_name}} </option>
+                {% endif %}
+            </datalist>
+
+            <label for="date_of_birth">Birthday</label>
+            <input type="date" class="form-control"  name="date_of_birth"
+            {% if record_dict %} value="{{record_dict.date_of_birth}}" {% endif %}
+            >
+
+            <label for="asset_breeding_id">Breeding id</label>
+            <input type="text" class="form-control" name="asset_breeding_id"
+            {% if record_dict %} value="{{record_dict.asset_breeding_id}}" {% endif %}
+            >
+
+            <label for="mother_id">Mother ID</label>
+            <input type="text" class="form-control" name="mother_id"
+            {% if record_dict %} value="{{record_dict.mother_id}}" {% endif %}
+            >
+
+            <label for="mother_note">Mother note</label>
+            <input type="text" class="form-control" name="mother_note"
+            {% if record_dict %} value="{{record_dict.mother_note}}" {% endif %}
+            >
+
+        </div> <!-- end div col-right -->
+
+        <div class="row w-100">
+            <div class="col-10 my-1">
+                <button  type="submit">Save </button>
+            </div>
+            
+        </div>
+    </div> <!-- end row 1 -->
+</form> <!-- END Animal Details -->

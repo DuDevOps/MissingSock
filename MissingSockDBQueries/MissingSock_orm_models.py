@@ -57,6 +57,7 @@ class Asset_registry(UserMixin, Base):
     mother_id = Column(Integer, nullable=True)
     mother_note = Column(String(255), nullable=True)
     users_id = Column(Integer, nullable=True)
+    asset_breeding_id = Column(Integer, nullable=True)
 
 
 class Asset_medical(UserMixin, Base):

@@ -9,7 +9,7 @@
         <div class="row">
             {% include "navi.html" %}
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" >
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
                 {% if loadHtml == "home" %}
                 {% include "login.html" %}
@@ -28,9 +28,6 @@
 
                 {% elif loadHtml == "rep_animal_register" %}
                 {% include "rep_animal_register.html" %}
-
-                {% elif loadHtml == "new_animal_register" %}
-                {% include "new_animal_register.html" %}
 
                 {% elif loadHtml == "asset_registry" %}
                 {% include "asset_registry.html" %}
@@ -71,22 +68,28 @@
                 {% elif loadHtml == "my_profile" %}
                 {% include "my_profile.html" %}
 
+                {% elif loadHtml == "animal_detail_upd_ins" %}
+                <div class="upd_ins_container ">
+                    <h1>Detail</h1>
+                    {% include "animal_detail_upd_ins.html" %}
+                </div>
+
                 {% elif loadHtml == "animal_produce_upd_ins" %}
                 <div class="upd_ins_container ">
                     <h1>Produce</h1>
-                {% include "animal_produce_upd_ins.html" %}
-                 </div>
+                    {% include "animal_produce_upd_ins.html" %}
+                </div>
 
                 {% elif loadHtml == "animal_medical_upd_ins" %}
                 <div class="upd_ins_container ">
                     <h1>Medical </h1>
-                {% include "animal_medical_upd_ins.html" %}
+                    {% include "animal_medical_upd_ins.html" %}
                 </div>
 
                 {% elif loadHtml == "animal_breeding_upd_ins" %}
                 <div class="upd_ins_container ">
                     <h1>Breeding </h1>
-                {% include "animal_breeding_upd_ins.html" %}
+                    {% include "animal_breeding_upd_ins.html" %}
                 </div>
 
                 {% endif %}
@@ -102,8 +105,8 @@
 
     <!-- Add js scripts -->
     {% include "js_scripts.html" %}
-
-
 </body>
+
+
 
 </html>

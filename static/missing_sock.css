@@ -163,6 +163,10 @@ label {
     font-size: 18px;
 }
 
+datalist option {
+    background-color: chocolate;
+}
+
 /* Main ->  login page */
 #login-page {
     /* form id */
@@ -336,11 +340,11 @@ label {
 /* ============= end rep_animal_register ======== */
 
 /* ============= new_animal_register ======== */
-#new_animal_div {
+.new_animal_div {
     background-color: white;
 }
 
-#new_animal_div form {
+.new_animal_div form {
     padding: 1%;
     width: 90%;
     margin: 1.5%;
@@ -349,7 +353,7 @@ label {
     /* regular shadow */
 }
 
-#new_animal_div button {
+.new_animal_div button {
     width: 10%;
     margin-left: 100% !important;
 }

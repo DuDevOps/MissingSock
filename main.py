@@ -1,3 +1,4 @@
+from random import random
 from flask import  Flask, render_template, request, url_for, redirect, flash, jsonify
 from sqlalchemy import or_
 from sqlalchemy.orm import close_all_sessions
@@ -343,72 +344,13 @@ def rep_animal_register():
              asset_list=asset_dict , total_assets=len(asset_dict) )
 
 
-@app.route("/asset_registry", methods=["GET","POST","PUSH","PUT","DELETE"]) 
+@app.route("/asset_registry", methods=["GET"]) 
 @login_required
 def asset_registry():
 
     #close_all_sessions()
     if request.method == "POST":
         pass
-
-    # Insert/update both on PUT --- Push does not work on chemicloud fnw 
-    if request.method == "PUT":
-
-        recv_rec = request.get_json()
-        
-        # Check if this is insert or update
-        if str(recv_rec['id'])[:4] == "ins_" :
-            db_action = "INSERT"
-        else :
-            db_action = "UPDATE"
-
-        if db_action == "INSERT":
-            app.logger.info(f"Insert : {recv_rec['id']}")
-            new_rec = Asset_registry()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                
-                # convert JSON str types to int
-                if key == "id": # don't add ID for insert
-                    pass
-                elif key == "users_id":
-                    new_rec.users_id  = current_user.id
-                else:
-                    setattr(new_rec, key, val)
-
-            db_session.add(new_rec)
-            db_session.commit()
-        
-        if db_action == "UPDATE":
-            app.logger.info(f"Update : {recv_rec['id']}")
-            recv_rec = request.get_json()
-            new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
-            db_session.commit()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                elif val == 'None':
-                    val = None
-                
-                # convert JSON str types to int
-                setattr(new_rec, key, val) 
-
-            db_session.commit() 
-
-    if request.method == "DELETE":
-        recv_rec = request.get_json()
-         
-        new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == int(recv_rec['id'])).first()
-        
-        #
-        db_session.delete(new_rec)
-        db_session.commit() 
-        #db_session.close()
 
     # Get all row at least 1 row must exist
     list_of_columns = [Asset_registry.id,
@@ -434,7 +376,6 @@ def asset_registry():
         "mother_id"
         ]
 
-
     try:
         sql_result = db_session.query(
             *list_of_columns
@@ -455,17 +396,100 @@ def asset_registry():
         rec_list_count= len(record_dict), method=request.method,\
              list_of_columns=col_list)
 
+@app.route("/animal_detail_upd_ins", methods=["GET","POST"]) 
+@login_required
+def animal_registration_upd_ins():
+
+    mode = request.form.get('mode')
+    asset_id = request.form.get('lineid')
+    animal_reg_no = request.form.get('animal_reg_no')
+
+    if mode == "display" :
+
+        sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
+
+        record_dict = sql_result_to_dict(sql_result)
+
+        return render_template("index.html", loadHtml="animal_detail_upd_ins", \
+            logged_in=current_user.is_authenticated, \
+            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,\
+            record_dict = record_dict[0], \
+            user_id=current_user.id )
+
+    if mode == "delete" :
+        print(f" ENTER DELETE !!!!!! {mode}")
+        asset_id = request.form.get('lineid')
+        
+        new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
+         
+        # delete record
+        db_session.delete(new_rec)
+        db_session.commit()
+
+        # redirect to asset_registry list
+        return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
+
+    if mode == "update" :
+        print(f" ENTER UPDATE !!!!!! {mode}")
+        asset_id = request.form.get('id')
+
+        record_upd = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
+        
+        if bool(record_upd) == False :
+            # new record : insert blank line and then update
+            app.logger.info(f"Insert : new record")
+            randnum = random()
+            new_rec = Asset_registry()
+            new_rec.users_id  = current_user.id
+            random_animal_name = f"{current_user.id}{randnum}"
+            new_rec.animal_reg_no  = random_animal_name
+            db_session.add(new_rec)
+            db_session.commit()
+
+            record_upd = db_session.query(Asset_registry).filter(Asset_registry.animal_reg_no  == random_animal_name).first()
+        
+        record_upd.users_id  = current_user.id
+        record_upd.animal_reg_no  = request.form.get('animal_reg_no')
+        record_upd.asset_type  = request.form.get('asset_type')
+        record_upd.group_name  = request.form.get('group_name')
+        # record_upd.date_of_birth  = request.form.get('date_of_birth')
+        record_upd.gender  = request.form.get('gender')
+        record_upd.father_id  = check_null(request.form.get('father_id'))
+        record_upd.father_note  = request.form.get('father_note')
+        record_upd.mother_id  = check_null(request.form.get('mother_id'))
+        record_upd.mother_note  = request.form.get('mother_note')
+
+        db_session.commit()
+
+        # redirect to asset_registry list
+        return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
+
+    #  Default empty return 
+    return render_template("index.html", loadHtml="animal_detail_upd_ins", \
+                logged_in=current_user.is_authenticated, \
+                asset_id=f"", animal_reg_no="",\
+                user_id=current_user.id )
+
+
 @app.route("/animal_medical_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_medical_upd_ins():
 
     asset_id = request.form.get('lineid')
     animal_reg_no = request.form.get('animal_reg_no')
+    mode = request.form.get('mode')
 
-    return render_template("index.html", loadHtml="animal_medical_upd_ins", \
-        logged_in=current_user.is_authenticated, \
-        asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
-        user_id=current_user.id )
+    if mode == "display" :
+
+        return render_template("index.html", loadHtml="animal_medical_upd_ins", \
+            logged_in=current_user.is_authenticated, \
+            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+            user_id=current_user.id )
+    
+    if mode == "update" :
+
+        return redirect(url_for('asset_medical', loadHtml="asset_medical", logged_in=current_user.is_authenticated))
+
 
 @app.route("/animal_produce_upd_ins", methods=["GET","POST"]) 
 @login_required
@@ -473,22 +497,36 @@ def animal_produce_upd_ins():
 
     asset_id = request.form.get('lineid')
     animal_reg_no = request.form.get('animal_reg_no')
+    mode = request.form.get('mode')
 
-    return render_template("index.html", loadHtml="animal_produce_upd_ins", \
-        logged_in=current_user.is_authenticated, \
-        asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
-        user_id=current_user.id)
+    if mode == "display" :
+        return render_template("index.html", loadHtml="animal_produce_upd_ins", \
+            logged_in=current_user.is_authenticated, \
+            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+            user_id=current_user.id)
+    
+    if mode == "update" :
+
+        return redirect(url_for('asset_produce', loadHtml="asset_produce", logged_in=current_user.is_authenticated))
+
 
 @app.route("/animal_breeding_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_breeding_upd_ins():
 
     asset_id = request.form.get('lineid')
+    mode = request.form.get('mode')
 
-    return render_template("index.html", loadHtml="animal_produce_upd_ins", \
-        logged_in=current_user.is_authenticated, \
-        asset_id=asset_id,
-        user_id=current_user.id)
+    if mode == "display" :
+        return render_template("index.html", loadHtml="animal_produce_upd_ins", \
+            logged_in=current_user.is_authenticated, \
+            asset_id=asset_id,
+            user_id=current_user.id)
+    
+    if mode == "update" :
+
+        return redirect(url_for('asset_breeding', loadHtml="asset_breeding", logged_in=current_user.is_authenticated))
+
 
 @app.route("/asset_medical", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required
@@ -933,7 +971,6 @@ def dashboard(get_hours=24):
 
     # tag location + detail 
     sql_return = MissingSock_sql.tags_last_location_by_userid(current_user.id)
-    print(f"TAGS = {sql_return}")
     
     # load up for javascript in JSON format
     # JSON.dumps convert dict to string
@@ -1084,10 +1121,18 @@ def report_no_read_base_hour_1(get_hours=1):
     loadJson += f'"total_days_1": {total_days_1} ,'
     loadJson += f'"total_stations_days_1": {total_stations_days_1} ,'
     loadJson += "}"     
-
-    print(f"{loadJson}")             
+         
 
     return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base_current_dict, total_base=len(all_base_current_dict), hour=hour)
+
+def check_null(val):
+
+    if len(val) == 0 :
+        val = None
+    elif val == 'None':
+        val = None
+
+    return val
 
 if __name__ == "__main__":
 

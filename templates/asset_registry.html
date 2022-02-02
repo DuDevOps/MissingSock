@@ -47,7 +47,7 @@
                         {% endif %}
                         <!-- end method-->
 
-                        
+
                         {% endfor %}
                         <!-- end loop COL -->
 
@@ -55,8 +55,13 @@
                         <td class="ah ">
 
                             <!-- UPDATE button -->
-                            <form action="javascript:crud_asset_registry('PUT','{{rec['id']}}', {{list_of_columns}})"
-                                method="PUT">
+                            <form action="animal_detail_upd_ins" method="POST">
+                                <input type="text" class="form-control hidden" name="mode" 
+                                    value="display">
+                                <input type="text" class="form-control hidden" name="lineid" 
+                                    value="{{rec['id']}}">
+                                <input type="text" class="form-control hidden" name="animal_reg_no"
+                                    value="{{rec['animal_reg_no']}}">
                                 <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
                                     type="submit">
                                     <i class="fa fa-pencil-square-o"></i></button>
@@ -64,8 +69,12 @@
                         </td>
                         <td>
                             <!-- DELETE BUTTON -->
-                            <form action="javascript:crud_asset_registry('DELETE','{{rec['id']}}', {{list_of_columns}})"
-                                method="DELETE">
+                            <form action="animal_detail_upd_ins"
+                                method="POST">
+                                <input type="text" class="form-control hidden" name="mode" 
+                                    value="delete">
+                                <input type="text" class="form-control hidden" name="lineid" 
+                                    value="{{rec['id']}}">
                                 <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
                                     type=" submit">
                                     <i class="fa fa-minus"></i></button>
@@ -74,10 +83,12 @@
                         </td>
                         <td>
                             <!-- medical BUTTON -->
-                            <form action="animal_medical_upd_ins"
-                                method="POST">
-                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}"> 
-                                <input type="text" class="form-control hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
+                            <form action="animal_medical_upd_ins" method="POST">
+                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}">
+                                <input type="text" class="form-control hidden" name="animal_reg_no"
+                                    value="{{rec['animal_reg_no']}}">
+                                <input type="text" class="form-control hidden" name="mode" 
+                                    value="display">
                                 <button class="btn btn-info btn-sm data-toggle=' button' aria-pressed='false'"
                                     type=" submit">
                                     <i class="fa fa fa-medkit"></i></button>
@@ -86,10 +97,12 @@
                         </td>
                         <td>
                             <!-- produce BUTTON -->
-                            <form action="animal_produce_upd_ins"
-                                method="POST">
-                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}"> 
-                                <input type="text" class="form-control hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
+                            <form action="animal_produce_upd_ins" method="POST">
+                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}">
+                                <input type="text" class="form-control hidden" name="animal_reg_no"
+                                    value="{{rec['animal_reg_no']}}">
+                                <input type="text" class="form-control hidden" name="mode" 
+                                    value="display">
                                 <button class="btn btn-info btn-sm data-toggle=' button' aria-pressed='false'"
                                     type=" submit">
                                     <i class="fa fa-cart-arrow-down"></i></button>
