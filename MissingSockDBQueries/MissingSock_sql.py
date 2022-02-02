@@ -216,7 +216,7 @@ def tags_not_read_past_hours_by_userid(HOURS, USER_ID):
 
 def tags_last_location_by_userid(USER_ID):
 
-    sql_query = " select a.id, a.name, a.asset_type , b.base_station_id, "
+    sql_query = " select a.id, a.animal_reg_no, a.asset_type , b.base_station_id, "
     sql_query += " b.gps_lat, b.gps_long "
     sql_query += " from asset_registry a , tag_current b "
     sql_query += " where b.id = a.tag_id "

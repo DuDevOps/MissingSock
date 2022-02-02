@@ -16,7 +16,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from MissingSockDBQueries import MissingSock_sql
 from MissingSockDBQueries.MissingSock_orm_models import sql_result_to_dict, Users, Asset_registry, \
     Asset_medical, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
-    Base_station_current    
+    Base_station_current, sql_result_column_list_to_dict   
 
 from MissingSockDBQueries.MissingSock_database import db_session
 
@@ -122,8 +122,8 @@ def login():
         
         else:
             login_user(user)
-            return render_template("index.html", loadHtml="rep_animal_register", logged_in=current_user.is_authenticated)
-        
+            return redirect(url_for('dashboard', loadHtml="animal_registry", logged_in=current_user.is_authenticated))
+
     return render_template("index.html", loadHtml="login")
 
 @app.route('/logout')
@@ -411,32 +411,84 @@ def asset_registry():
         #db_session.close()
 
     # Get all row at least 1 row must exist
+    list_of_columns = [Asset_registry.id,
+            Asset_registry.animal_reg_no,
+            Asset_registry.group_name,
+            Asset_registry.breed_type,
+            Asset_registry.gender,
+            Asset_registry.date_of_birth,
+            Asset_registry.tag_id,
+            Asset_registry.father_id,
+            Asset_registry.mother_id]
+
+    # columns headings
+    col_list = [
+        "id",
+        "animal_reg_no",
+        "group_name",
+        "breed_type",
+        "gender",
+        "date_of_birth",
+        "tag_id",
+        "father_id",
+        "mother_id"
+        ]
+
+
     try:
-        record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_registry.users_id == current_user.id).all()
     finally:
-        # if table has no records add first default rec - else nothing works right
-        if len(record_list) == 0 :
-            new_rec = Asset_registry()
-            new_rec.users_id  = current_user.id
+        # if table has no entries -> send to new animal register
+        if len(sql_result) == 0 :
+            return redirect(url_for('new_animal_register', \
+                loadHtml="new_animal_register", \
+                logged_in=current_user.is_authenticated,\
+                user_id=current_user.id))
 
-            db_session.add(new_rec)
-            db_session.commit()
-            record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
-
-
-    db_session.commit()
-    record_dict = sql_result_to_dict(record_list)
-
-    try:
-        list_of_columns=list(record_dict[0].keys())
-        list_of_columns.remove('id')
-    except:
-        pass
+    record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
     return render_template("index.html", loadHtml="asset_registry", \
-        logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), method=request.method,\
-             list_of_columns=list_of_columns)
+        logged_in=current_user.is_authenticated, \
+        user_id=current_user.id, record_list=record_dict,\
+        rec_list_count= len(record_dict), method=request.method,\
+             list_of_columns=col_list)
+
+@app.route("/animal_medical_upd_ins", methods=["GET","POST"]) 
+@login_required
+def animal_medical_upd_ins():
+
+    asset_id = request.form.get('lineid')
+    animal_reg_no = request.form.get('animal_reg_no')
+
+    return render_template("index.html", loadHtml="animal_medical_upd_ins", \
+        logged_in=current_user.is_authenticated, \
+        asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+        user_id=current_user.id )
+
+@app.route("/animal_produce_upd_ins", methods=["GET","POST"]) 
+@login_required
+def animal_produce_upd_ins():
+
+    asset_id = request.form.get('lineid')
+    animal_reg_no = request.form.get('animal_reg_no')
+
+    return render_template("index.html", loadHtml="animal_produce_upd_ins", \
+        logged_in=current_user.is_authenticated, \
+        asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+        user_id=current_user.id)
+
+@app.route("/animal_breeding_upd_ins", methods=["GET","POST"]) 
+@login_required
+def animal_breeding_upd_ins():
+
+    asset_id = request.form.get('lineid')
+
+    return render_template("index.html", loadHtml="animal_produce_upd_ins", \
+        logged_in=current_user.is_authenticated, \
+        asset_id=asset_id,
+        user_id=current_user.id)
 
 @app.route("/asset_medical", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required

@@ -46,7 +46,7 @@ class Asset_registry(UserMixin, Base):
 
     id = Column(Integer, primary_key=True)	
     tag_id = Column(Integer, nullable=True)
-    name = Column(String(255), nullable=True)
+    animal_reg_no = Column(String(255), nullable=True)
     asset_type = Column(String(255), nullable=True)
     group_name = Column(String(255), nullable=True)	
     date_of_birth = Column(DateTime, nullable=False, default=datetime.utcnow)
@@ -142,6 +142,21 @@ def sql_result_to_dict(sql_result):
            row2dict(row)
            for row in sql_result
     ]
+
+    return result
+
+def sql_result_column_list_to_dict(my_col_list, sql_result):
+    result = []
+    for row in sql_result:
+        dict_item = {}
+        counter=0
+
+        for value in row :
+            
+            dict_item[my_col_list[counter]] = value 
+            counter += 1
+        
+        result.append(dict_item)
 
     return result
 

@@ -71,6 +71,24 @@
                 {% elif loadHtml == "my_profile" %}
                 {% include "my_profile.html" %}
 
+                {% elif loadHtml == "animal_produce_upd_ins" %}
+                <div class="upd_ins_container ">
+                    <h1>Produce</h1>
+                {% include "animal_produce_upd_ins.html" %}
+                 </div>
+
+                {% elif loadHtml == "animal_medical_upd_ins" %}
+                <div class="upd_ins_container ">
+                    <h1>Medical </h1>
+                {% include "animal_medical_upd_ins.html" %}
+                </div>
+
+                {% elif loadHtml == "animal_breeding_upd_ins" %}
+                <div class="upd_ins_container ">
+                    <h1>Breeding </h1>
+                {% include "animal_breeding_upd_ins.html" %}
+                </div>
+
                 {% endif %}
 
             </main>
