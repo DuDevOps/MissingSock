@@ -1,6 +1,6 @@
 <form id="animal_medical_upd_ins" class="flex input" href="animal_medical_upd_ins" method="POST">
     <h3>Medical Details : Animal({{asset_id}}) {% if record_display %} Med Rec:{{record_display.id}} {%endif%} </h3>
-    {{record_display}}
+    
     <div class="hidden">
         <input type="hidden" name="line_id" 
             {% if record_display %} value="{{record_display.id}}" {% endif %}   > 
