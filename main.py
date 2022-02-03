@@ -348,10 +348,6 @@ def rep_animal_register():
 @login_required
 def asset_registry():
 
-    #close_all_sessions()
-    if request.method == "POST":
-        pass
-
     # Get all row at least 1 row must exist
     list_of_columns = [Asset_registry.id,
             Asset_registry.animal_reg_no,
@@ -409,15 +405,15 @@ def animal_registration_upd_ins():
         sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
 
         record_dict = sql_result_to_dict(sql_result)
+        date_of_birth = html_date(record_dict[0]["date_of_birth"])
 
         return render_template("index.html", loadHtml="animal_detail_upd_ins", \
             logged_in=current_user.is_authenticated, \
             asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,\
-            record_dict = record_dict[0], \
+            record_dict = record_dict[0], date_of_birth=date_of_birth, \
             user_id=current_user.id )
 
     if mode == "delete" :
-        print(f" ENTER DELETE !!!!!! {mode}")
         asset_id = request.form.get('lineid')
         
         new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
@@ -430,7 +426,6 @@ def animal_registration_upd_ins():
         return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
 
     if mode == "update" :
-        print(f" ENTER UPDATE !!!!!! {mode}")
         asset_id = request.form.get('id')
 
         record_upd = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
@@ -452,7 +447,7 @@ def animal_registration_upd_ins():
         record_upd.animal_reg_no  = request.form.get('animal_reg_no')
         record_upd.asset_type  = request.form.get('asset_type')
         record_upd.group_name  = request.form.get('group_name')
-        # record_upd.date_of_birth  = request.form.get('date_of_birth')
+        record_upd.date_of_birth  = request.form.get('date_of_birth')
         record_upd.gender  = request.form.get('gender')
         record_upd.father_id  = check_null(request.form.get('father_id'))
         record_upd.father_note  = request.form.get('father_note')
@@ -474,21 +469,82 @@ def animal_registration_upd_ins():
 @app.route("/animal_medical_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_medical_upd_ins():
-
-    asset_id = request.form.get('lineid')
-    animal_reg_no = request.form.get('animal_reg_no')
     mode = request.form.get('mode')
 
-    if mode == "display" :
+    if mode == "new_rec" : # req from asset_registry page
+
+        asset_id = request.form.get('Asset_id')
+        animal_reg_no = request.form.get('animal_reg_no')
 
         return render_template("index.html", loadHtml="animal_medical_upd_ins", \
             logged_in=current_user.is_authenticated, \
-            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+            asset_id=asset_id, animal_reg_no=animal_reg_no, \
             user_id=current_user.id )
     
-    if mode == "update" :
+    if mode == "display_rec" : # req from asset_registry page
+        
+        line_id = request.form.get('line_id')
 
+        record_obj = db_session.query(Asset_medical).filter(Asset_medical.id == line_id).all()
+
+        record_display = sql_result_to_dict(record_obj)
+
+        asset_id = record_display[0]["asset_registry_id"]
+        
+        # Special handling for date
+        html_timestamp = html_date(record_display[0]["timestamp"])
+        
+        return render_template("index.html", loadHtml="animal_medical_upd_ins", \
+            logged_in=current_user.is_authenticated, html_timestamp=html_timestamp, \
+            asset_id=asset_id, animal_reg_no="", \
+            record_display=record_display[0] ,\
+            user_id=current_user.id )
+
+    if mode == "update" :
+        line_id = request.form.get('id')
+
+        record_upd = db_session.query(Asset_medical).filter(Asset_medical.id == line_id).first()
+        
+        if bool(record_upd) == False :
+            # new record : insert blank line and then update
+            app.logger.info(f"Insert : new record")
+            randnum = random()
+            new_rec = Asset_medical()
+            new_rec.users_id  = current_user.id
+            random_animal_name = f"{current_user.id}{randnum}"
+            new_rec.reason  = random_animal_name
+            db_session.add(new_rec)
+            db_session.commit()
+
+            record_upd = db_session.query(Asset_medical).filter(Asset_medical.reason  == random_animal_name).first()
+        
+        record_upd.users_id  = current_user.id
+        record_upd.asset_registry_id  = request.form.get('animal_reg_no')
+        record_upd.timestamp  = check_date(request.form.get('Timestamp'))
+        record_upd.reason  = request.form.get('Reason')
+        record_upd.medicine  = request.form.get('Medicine')
+        record_upd.dosage  = check_null(request.form.get('Dosage'))
+        record_upd.note  = request.form.get('Note')
+        
+        db_session.commit()
+
+        # redirect to asset_registry list
+        return redirect(url_for('asset_medical', loadHtml="asset_medical", \
+            logged_in=current_user.is_authenticated))
+
+    if mode == "delete" :
+        line_id = request.form.get('line_id')
+        
+        new_rec = db_session.query(Asset_medical).filter(Asset_medical.id == line_id).first()
+         
+        # delete record
+        db_session.delete(new_rec)
+        db_session.commit()
+
+        # redirect to asset_registry list
         return redirect(url_for('asset_medical', loadHtml="asset_medical", logged_in=current_user.is_authenticated))
+
+    
 
 
 @app.route("/animal_produce_upd_ins", methods=["GET","POST"]) 
@@ -528,105 +584,51 @@ def animal_breeding_upd_ins():
         return redirect(url_for('asset_breeding', loadHtml="asset_breeding", logged_in=current_user.is_authenticated))
 
 
-@app.route("/asset_medical", methods=["GET","POST","PUSH","PUT","DELETE"]) 
+@app.route("/asset_medical", methods=["GET"]) 
 @login_required
 def asset_medical():
-    if request.method == "POST":
-        pass
 
-    # Insert/update both on PUT --- Push does not work on chemicloud fnw 
-    if request.method == "PUT":
+    # Get all row at least 1 row must exist
+    list_of_columns = [Asset_medical.id,
+            Asset_medical.timestamp,
+            Asset_medical.reason,
+            Asset_medical.medicine,
+            Asset_medical.dosage,
+            Asset_medical.note,
+            Asset_medical.asset_registry_id,
+            Asset_medical.users_id]
 
-        recv_rec = request.get_json()
-        
-        # Check if this is insert or update
-        if str(recv_rec['id'])[:4] == "ins_" :
-            db_action = "INSERT"
-        else :
-            db_action = "UPDATE"
-
-        if db_action == "UPDATE": # Update
-            recv_rec = request.get_json()
-            new_rec = db_session.query(Asset_medical).filter(Asset_medical.id == int(recv_rec['id'])).first()
-            db_session.commit()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                elif val == 'None':
-                    val = None
-                
-                # convert JSON str types to int
-                setattr(new_rec, key, val)
-
-            db_session.commit() 
-
-        if db_action == "INSERT":
-
-            # Check if this is insert or update
-            if str(recv_rec['id'])[:4] == "ins_" :
-                db_action = "INSERT"
-            else :
-                db_action = "UPDATE"
-
-            if db_action == "INSERT":
-                app.logger.info(f"Insert : {recv_rec['id']}")
-
-                recv_rec = request.get_json()
-                new_rec = Asset_medical()
-
-                for key, val in recv_rec.items():
-                    # change all '' to None which will be added as Null
-                    if len(val) == 0 :
-                        val = None
-                    
-                    # convert JSON str types to int
-                    if key == "id": # don't add ID for insert
-                        pass
-                    elif key == "users_id":
-                        new_rec.users_id  = current_user.id
-                    else:
-                        setattr(new_rec, key, val)
-
-                db_session.add(new_rec)
-                db_session.commit()
-
-    if request.method == "DELETE":
-        recv_rec = request.get_json()
-         
-        new_rec = db_session.query(Asset_medical).filter(Asset_medical.id == int(recv_rec['id'])).first()
-        
-        #
-        db_session.delete(new_rec)
-        db_session.commit() 
-        #db_session.close()
-
-
-     # Get all row at least 1 row must exist
+    # columns headings
+    col_list = [
+                "id",
+                "timestamp",
+                "reason",
+                "medicine",
+                "dosage",
+                "note",
+                "asset_registry_id",
+                "user_id"
+    ]
     try:
-        record_list = Asset_medical.query.filter(Asset_medical.users_id == current_user.id).all()
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_medical.users_id == current_user.id).all()
     finally:
-        # if table has no records add first default rec - else nothing works right
-        if len(record_list) == 0 :
-            new_rec = Asset_medical()
-            new_rec.users_id  = current_user.id
-            
-            db_session.add(new_rec)
-            db_session.commit()
-            record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
+        # if table has no entries -> send to asset registry
+        if len(sql_result) == 0 :
+            return redirect(url_for('asset_registry', \
+                loadHtml="asset_registry", \
+                logged_in=current_user.is_authenticated,\
+                user_id=current_user.id))
 
-    record_dict = sql_result_to_dict(record_list)
+    record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
-    try:
-        list_of_columns=list(record_dict[0].keys())
-        list_of_columns.remove('id')
-    except:
-        pass
 
     return render_template("index.html", loadHtml="asset_medical", \
         logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
+        rec_list_count= len(record_dict), method=request.method,\
+        column_list=col_list)
+
 
 @app.route("/asset_breeding", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required
@@ -718,7 +720,8 @@ def asset_breeding():
 
     return render_template("index.html", loadHtml="asset_breeding", \
         logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
+        rec_list_count= len(record_list), user_id=current_user.id, \
+            method=request.method, list_of_columns=list_of_columns)
 
 
 @app.route("/asset_offspring", methods=["GET","POST","PUSH","PUT","DELETE"]) 
@@ -1131,6 +1134,21 @@ def check_null(val):
         val = None
     elif val == 'None':
         val = None
+
+    return val
+
+def check_date(val):
+
+    if val == 'None':
+        today = date.today()
+        val = today.strftime("%Y-%m-%d")
+
+    return val
+
+def html_date(val):
+
+    date_time_obj = datetime.strptime(val, '%Y-%m-%d %H:%M:%S')
+    val = date_time_obj.strftime("%Y-%m-%d")
 
     return val
 

@@ -1,34 +1,52 @@
 <form id="animal_medical_upd_ins" class="flex input" href="animal_medical_upd_ins" method="POST">
-    <h3>Medical Details : {{animal_reg_no}} {{asset_id}}</h3>
+    <h3>Medical Details : Animal({{asset_id}}) {% if record_display %} Med Rec:{{record_display.id}} {%endif%} </h3>
+    {{record_display}}
     <div class="hidden">
-        <input type="text" class="form-control" name="id"> 
-        <input type="text" class="form-control" name="asset_registry_id"> 
-        <input type="text" class="form-control" name="user_id">
+        <input type="hidden" name="line_id" 
+            {% if record_display %} value="{{record_display.id}}" {% endif %}   > 
+        <input type="hidden" name="animal_reg_no" 
+            {% if record_display %} 
+                value="{{record_display.animal_reg_no}}"
+            {% else %}
+                value="{{asset_id}}"
+            {% endif %} 
+        > 
     </div>
     <div class="form-row">
         <div class="form-group col-md-6 ">
-            <label for="date">Date</label>
-            <input type="date" class="form-control" name="Date">
+            <label for="Timestamp">Date</label>
+            <input type="date" class="form-control" name="Timestamp" required="required" 
+            {% if record_display %} value="{{html_timestamp}}" {% endif %}
+            >
+            
 
             <label for="Medicine">Medicine</label>
-            <input type="text" class="form-control" name="Medicine">
+            <input type="text" class="form-control" name="Medicine"
+            {% if record_display %} value="{{record_display.medicine}}" {% endif %}
+            >
 
         </div> <!-- end div col-left-->
 
         <div class="form-group col-md-6">
 
             <label for="Reason">Reason</label>
-            <input type="text" class="form-control" name="Reason">
+            <input type="text" class="form-control" name="Reason"
+                {% if record_display %} value="{{record_display.reason}}" {% endif %}
+            >
 
             <label for="Dosage">Dosage</label>
-            <input type="text" class="form-control" name="Dosage">
+            <input type="number" class="form-control" name="Dosage" placeholder="10.0"
+                {% if record_display %} value="{{record_display.dosage}}" {% endif %}
+            >
 
         </div> <!-- end div col-right -->
 
         <div class="row w-100">
             <div class="col-10">
-                <label for="Notes">Notes</label>
-                <input type="text" class="form-control" name="Notes">
+                <label for="Note">Notes</label>
+                <input type="text" class="form-control" name="Note"
+                {% if record_display %} value="{{record_display.note}}" {% endif %}
+            >
             </div>
             <div class="col-10  my-3">
                 <button  type="submit">Save </button>

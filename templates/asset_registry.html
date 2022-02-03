@@ -51,7 +51,7 @@
                         {% endfor %}
                         <!-- end loop COL -->
 
-                        <!-- add 2 buttons if post request Update / Delete -->
+                        <!-- add 4 buttons if post request Update / Delete -->
                         <td class="ah ">
 
                             <!-- UPDATE button -->
@@ -67,6 +67,32 @@
                                     <i class="fa fa-pencil-square-o"></i></button>
                             </form>
                         </td>
+                        
+                        <td>
+                            <!-- medical BUTTON -->
+                            <form action="animal_medical_upd_ins" method="POST">
+                                <input type="hidden" name="Asset_id" value="{{rec['id']}}">
+                                <input type="hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
+                                <input type="hidden" name="mode"  value="new_rec">
+                                <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
+                                    type=" submit">
+                                    <i class="fa fa fa-medkit"></i></button>
+                            </form>
+
+                        </td>
+                        <td>
+                            <!-- produce BUTTON -->
+                            <form action="animal_produce_upd_ins" method="POST">
+                                <input type="hidden" name="asset_id" value="{{rec['id']}}">
+                                <input type="hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
+                                <input type="hidden" name="mode"  value="display">
+                                <button class="btn btn-success btn-sm data-toggle=' button' aria-pressed='false'"
+                                    type=" submit">
+                                    <i class="fa fa-cart-arrow-down"></i></button>
+                            </form>
+
+                        </td>
+                        <td>&nbsp;</td>
                         <td>
                             <!-- DELETE BUTTON -->
                             <form action="animal_detail_upd_ins"
@@ -81,35 +107,7 @@
                             </form>
 
                         </td>
-                        <td>
-                            <!-- medical BUTTON -->
-                            <form action="animal_medical_upd_ins" method="POST">
-                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}">
-                                <input type="text" class="form-control hidden" name="animal_reg_no"
-                                    value="{{rec['animal_reg_no']}}">
-                                <input type="text" class="form-control hidden" name="mode" 
-                                    value="display">
-                                <button class="btn btn-info btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa fa-medkit"></i></button>
-                            </form>
-
-                        </td>
-                        <td>
-                            <!-- produce BUTTON -->
-                            <form action="animal_produce_upd_ins" method="POST">
-                                <input type="text" class="form-control hidden" name="lineid" value="{{rec['id']}}">
-                                <input type="text" class="form-control hidden" name="animal_reg_no"
-                                    value="{{rec['animal_reg_no']}}">
-                                <input type="text" class="form-control hidden" name="mode" 
-                                    value="display">
-                                <button class="btn btn-info btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa-cart-arrow-down"></i></button>
-                            </form>
-
-                        </td>
-                        <!-- END add 2 buttons -->
+                        <!-- END add 4 buttons -->
 
 
                     </tr>

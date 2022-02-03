@@ -64,9 +64,9 @@
                 {% endif %}
             </datalist>
 
-            <label for="date_of_birth">Birthday</label>
-            <input type="date" class="form-control"  name="date_of_birth"
-            {% if record_dict %} value="{{record_dict.date_of_birth}}" {% endif %}
+            <label for="date_of_birth">Date of Birth </label>
+            <input type="date" class="form-control"  name="date_of_birth" required="required"
+            {% if record_dict %} value="{{date_of_birth}}" {% endif %}
             >
 
             <label for="asset_breeding_id">Breeding id</label>
