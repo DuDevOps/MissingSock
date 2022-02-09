@@ -7,7 +7,7 @@
 
 
 <div class="row">
-    <div class="col-10">
+    <div class="col-12">
         <div class="table-responsive ">
             <table id="tab_asset_registry" class="table table-hover table-sm shadow">
                 <thead>
@@ -55,55 +55,24 @@
                         <td class="ah ">
 
                             <!-- UPDATE button -->
-                            <form action="animal_detail_upd_ins" method="POST">
-                                <input type="text" class="form-control hidden" name="mode" 
-                                    value="display">
-                                <input type="text" class="form-control hidden" name="lineid" 
+                            <form action="animal_profile_page" method="POST">
+                                <input type="hidden" name="Animal_id" 
                                     value="{{rec['id']}}">
-                                <input type="text" class="form-control hidden" name="animal_reg_no"
-                                    value="{{rec['animal_reg_no']}}">
-                                <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
-                                    type="submit">
-                                    <i class="fa fa-pencil-square-o"></i></button>
+                                <button type="submit">
+                                    <i class="fa fa-pencil-square-o"> Update</i></button>
                             </form>
-                        </td>
-                        
-                        <td>
-                            <!-- medical BUTTON -->
-                            <form action="animal_medical_upd_ins" method="POST">
-                                <input type="hidden" name="Asset_id" value="{{rec['id']}}">
-                                <input type="hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
-                                <input type="hidden" name="mode"  value="new_rec">
-                                <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa fa-medkit"></i></button>
-                            </form>
-
-                        </td>
-                        <td>
-                            <!-- produce BUTTON -->
-                            <form action="animal_produce_upd_ins" method="POST">
-                                <input type="hidden" name="asset_id" value="{{rec['id']}}">
-                                <input type="hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
-                                <input type="hidden" name="mode"  value="display">
-                                <button class="btn btn-success btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa-cart-arrow-down"></i></button>
-                            </form>
-
                         </td>
                         <td>&nbsp;</td>
                         <td>
                             <!-- DELETE BUTTON -->
                             <form action="animal_detail_upd_ins"
                                 method="POST">
-                                <input type="text" class="form-control hidden" name="mode" 
+                                <input type="hidden" name="mode" 
                                     value="delete">
-                                <input type="text" class="form-control hidden" name="lineid" 
+                                <input type="hidden" name="lineid" 
                                     value="{{rec['id']}}">
-                                <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa-minus"></i></button>
+                                <button type=" submit">
+                                    <i class="fa fa-minus"></i> Delete</button>
                             </form>
 
                         </td>

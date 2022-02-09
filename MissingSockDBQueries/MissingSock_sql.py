@@ -282,3 +282,16 @@ def count_base_not_read_past_days(DAYS):
     
     result = run_sql(sql_query)
     return result
+
+def cnt_tags_at_each_base_station(userid):
+    sql_query = "select b.id , count(*) count "
+    sql_query += f"from tag_current a, base_station b "
+    sql_query += f"where a.base_station_id = b.id "
+    sql_query += f"and b.users_id = {userid} "
+    sql_query += f"group by b.id "
+    
+    result = run_sql(sql_query)
+    return result
+
+def cnt_tags_at_each_base_station_dates(userid, fromDate, toDate):
+    pass

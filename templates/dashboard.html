@@ -1,99 +1,27 @@
-<div id="dashboard-main-div" class="flex ">
+<div id="dashboard_id" class="container">
+  <h1>Dashboard</h1>
 
-  <div class="row dashboard-row dashboard-row-1">
-    <p>To scan your tags please download out app </p>
-
-    <a class="gb_de gb_oc gb_be" aria-label="Google Play Logo" href="https://play.google.com/store"
-      title="Google Play Logo">
-      <img class="gb_sc" src="static/images/Google_Play_180_54.png" alt=" aria-hidden=" true"
-        style="width:183px;height:39px" "
-         data-iml=" 834.8000000119209" data-atf="true"></a>
+  <div class="row" >
+    {% include "asset_registry.html" %}
   </div>
 
-  <div class=" row dashboard-row dashboard-row-2 ">
-    <h1>Asset Registry ( {{rec_list_count}} )</h1>
+  <div class="row">
+
+    <div class="col-sm-9">
+      <div id="div_map_rep_dashboard" class="mh-900 w-90" style="width: 500px; height: 520px; "> </div>
+    </div> <!-- end map-->
+    <div class="col-sm-9 col-lg-3">
+      <div class="row mb-auto ">  
+        <canvas class=" my-2 w-80 h-80" id="rep_dashboard_Chart_1"></canvas>
+        <label class="font-italic text-info font-weight-bold"> Base Stations Tag reads</label>
+      </div>
+      <div class="row mt-auto ">
+        <canvas class="my-2 w-80 h-80" id="rep_dashboard_Chart_2"></canvas>
+        <label class="font-italic text-info font-weight-bold"> Base Stations Tag reads - 48 hour(s)</label>
+      </div>
+    </div> <!-- end  chart-->
+
+  </div> <!-- row 2 -->
 
 
-   <table id="tab_asset_registry" class="table table-hover table-sm shadow">
-      <thead>
-        <tr>
-
-          {% for col in record_list[0] %}
-
-          <!-- filter columns ignore some columns -->
-          {% if col == "href_open_street_map" %}
-          <!-- do not display -->
-
-          {% else %}
-          <th scope="col">{{col}}</th>
-          {% endif %}
-
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for rec in record_list %}
-
-        <tr>
-          {% for col in rec %}
-
-          <!-- GENERAL filter columns exclude from table -->
-          {% if col == "href_open_street_map" %}
-          <!-- Exclude from Table -->
-
-          {% else %}
-          <!-- for get add td only-->
-          {% if method == "GET" %}
-          {% if col == "id" %}
-          <!-- special handle col-->
-          <!-- do not display add  class="visually-hidden"  !!! does not work-->
-          <td>{{ rec[col] }} </td>
-          {%else%}
-
-          <td>{{ rec[col] }} </td>
-          {%endif%}
-          <!-- special handle col-->
-
-          <!-- ======== POST =======-->
-          <!-- if POST replace td with form input text-->
-
-          {% endif %}
-          <!-- end method-->
-
-          {% endif %}
-          <!-- end rec-->
-
-          {% endfor %}
-          <!-- end loop COL -->
-
-
-        </tr>
-
-        {% endfor %}
-        <!-- end loop list-->
-
-      </tbody>
-    </table>
-  </div>
-
-
-</div> <!-- end div row 2-->
-
-
-<div class="row dashboard-row dashboard-row-3">
-  
-    <div class=" col-8 mt-2" >
-      <div id="div_map_dashboard" class="mh-100 w-100" style="width: 600px; height: 620px; " > </div>
-    </div>
-  
-    <div class="col-4" >      
-      <div class="row"><div col="12" onclick="window.location.href='report_no_read_tag_hour'">
-        <canvas class="my-2 w-100 h-80" id="rep_Chart_2"></canvas>
-          <label class="font-italic"> Tags not read : past 1 Day</label>
-          <hr>
-      </div></div>
-    </div>
- 
-</div><!-- end div row 3-->
-
-</div>
+</div> <!-- new_animal_div -->

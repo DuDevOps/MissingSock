@@ -4,9 +4,9 @@
     <div class="hidden">
         <input type="hidden" name="line_id" 
             {% if record_display %} value="{{record_display.id}}" {% endif %}   > 
-        <input type="hidden" name="animal_reg_no" 
+        <input type="hidden" name="asset_registry_id" 
             {% if record_display %} 
-                value="{{record_display.animal_reg_no}}"
+                value="{{record_display.asset_registry_id}}"
             {% else %}
                 value="{{asset_id}}"
             {% endif %} 
@@ -51,8 +51,7 @@
             <div class="col-10  my-3">
                 <button  type="submit">Save </button>
             </div>
-            <input type="text" class="form-control hidden" name="mode" 
-                                    value="update">
+            <input type="hidden" name="mode" value="update">
         </div>
         </div>
     </div> <!-- end row 1 -->

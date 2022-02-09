@@ -81,7 +81,7 @@ class Asset_breeding(UserMixin, Base):
     start_date = Column(DateTime, nullable=False, default=datetime.utcnow)
     end_date = Column(DateTime, nullable=True, default=datetime.utcnow)
     twin_number	= Column(String(255), nullable=True)
-    pregnant = Column(Integer, nullable=True)
+    pregnant = Column(String(255), nullable=True)
     asset_registry_father_id = Column(Integer, nullable=True)
     asset_registry_mother_id = Column(Integer, nullable=True)
     users_id = Column(Integer, nullable=True)

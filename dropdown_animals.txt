@@ -1,0 +1,59 @@
+Cattle
+	Nguni
+	Afrikaner
+	Bonsmara
+	Brahman
+	Aberedeen Angus
+	limousin
+	Simmental
+	Ankole-Watusi
+	Charolais
+	Boran
+	Beefmaster
+	
+Sheep 	
+    Merino
+	Dorper
+	Dohne Merino
+	Dormer
+	Black Headed Persian
+	Afrino
+	Suffolk
+	
+Goats 	
+    Angora
+	Boer
+	Lamancha
+	Nubian
+	Obehasli
+	Saanen
+	Toggenburg
+	
+Pigs	
+    Chester White
+	Duroc
+	Hampshire
+	Landrance
+	Poland China
+	Spotted
+	Yorkshire
+	
+Horse	
+    Abyssinian
+	Boerperd
+	Dongola
+	Nooitgedachter
+	Vlaamperd
+	
+Antelope {	
+    Wildebees
+	Eland
+	Waterbuck
+	Springbok
+	SteenBok
+	Duiker
+	ReedBuck
+	Impala
+	Sable
+	Gemsbok
+	Kudu }

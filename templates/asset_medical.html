@@ -1,23 +1,21 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1>Asset Medical ( {{rec_list_count}} {{user_id}})</h1>
+<div class="container">
+    <h1>Asset Medical ( {{med_rec_list_count}} )</h1>
 </div>
 
-
-
 <div class="row">
-    <div class="col-10">
+    <div class="col-12">
         <div class="table-responsive ">
             <table id="tab_Asset_medical" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
 
-                        {% for col in column_list %}
+                        {% for col in med_column_list %}
                         <th scope="col">{{col}}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rec in record_list %}
+                    {% for rec in med_record_list %}
 
                     <tr>
 
@@ -32,27 +30,25 @@
 
                             <!-- UPDATE button -->
                             <form action="animal_medical_upd_ins" method="POST">
-                                <input type="text" class="form-control hidden" name="mode" value="display_rec">
-                                <input type="text" class="form-control hidden" name="animal_reg_no"
+                                <input type="hidden" name="mode" value="display_rec">
+                                <input type="hidden" name="animal_reg_no"
                                     value="{{rec['animal_reg_no']}}">
-                                <input type="text" class="form-control hidden" name="line_id"
+                                <input type="hidden" name="line_id"
                                     value="{{rec['id']}}">
-                                <input type="text" class="form-control hidden" name="asset_id"
+                                <input type="hidden" name="asset_id"
                                     value="{{rec['asset_registry_id']}}">
-                                <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
-                                    type="submit">
-                                    <i class="fa fa-pencil-square-o"></i></button>
+                                <button type="submit">
+                                    <i class="fa fa-pencil-square-o"></i>Update</button>
                             </form>
                         </td>
                         <td>&nbsp;</td>
                         <td>
                             <!-- DELETE BUTTON -->
                             <form action="animal_medical_upd_ins" method="POST">
-                                <input type="text" class="form-control hidden" name="mode" value="delete">
-                                <input type="text" class="form-control hidden" name="line_id" value="{{rec['id']}}">
-                                <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                    <i class="fa fa-minus"></i></button>
+                                <input type="hidden" name="mode" value="delete">
+                                <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                <button type=" submit">
+                                    <i class="fa fa-minus"></i>Delete</button>
                             </form>
 
                         </td>

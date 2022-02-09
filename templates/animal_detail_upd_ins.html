@@ -1,96 +1,90 @@
-<form id="animal_details" class="flex input" href="animal_detail_upd_ins" method="POST">
+<form id="animal_details" class=" shadow p-1 input" href="animal_detail_upd_ins" method="POST">
     <h3>Animal Details : {{animal_reg_no}} {{asset_id}}</h3>
     <div class="form-row">
-        <div class="hidden">
-            <input type="text" name="id"                    
-                    {% if record_dict %} 
-                    value="{{record_dict.id}}" 
-                    {% else %}
-                    value="new"
-                    {% endif %}  
-            > 
-            <input type="text" name="mode" value="update">  
-        </div>
+
+
+
         <div class="form-group col-md-6 ">
             <label for="fname">Animal Reg No</label>
-            <input type="text" class="form-control" name="animal_reg_no"                    
-                    {% if record_dict %} value="{{record_dict.animal_reg_no}}" {% endif %}  
-            >
+            <input type="text" class="form-control" name="animal_reg_no" required="required" {% if record_dict %}
+                value="{{record_dict.animal_reg_no}}" {% endif %}>
 
-            <label for="asset_type">Type</label>
-            <select name="asset_type" class="form-control">
-                <option value="Merino">Merino</option>
-                <option value="Doper">Doper</option>
-                {% if record_dict %} 
-                <option selected value="{{record_dict.asset_type}}" > {{record_dict.asset_type}} </option>
+            <label for="asset_type" class="form-label">Type</label>
+            <input class="form-control" name="asset_type" list="asset_typeOptions" placeholder="Type to search..."
+                required="required">
+            <datalist id="asset_typeOptions">
+                {% if record_dict %}
+                <option selected value="{{record_dict.asset_type}}"> {{record_dict.asset_type}} </option>
                 {% endif %}
-            </select>
+                {% for x in type_dropdown %}
+                {% for y in x %}
+                <option value="{{y}}"></option>
+                {% endfor%}
+                {% endfor %}
+
+            </datalist>
 
             <label for="gender">Gender</label>
-            <select name="gender" class="form-control">
+            <select name="gender" class="form-control" required="required">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                {% if record_dict %} 
-                <option selected value="{{record_dict.gender}}" > {{record_dict.gender}} </option>
+                {% if record_dict %}
+                <option selected value="{{record_dict.gender}}"> {{record_dict.gender}} </option>
                 {% endif %}
             </select>
 
             <label for="father_id">Father ID</label>
-            <input type="text" class="form-control" name="father_id"
-            {% if record_dict %} value="{{record_dict.father_id}}" {% endif %}
-            >
+            <input type="number" class="form-control" name="father_id" {% if record_dict %}
+                value="{{record_dict.father_id}}" {% endif %}>
 
             <label for="father_note">Father note</label>
-            <input type="text" class="form-control" name="father_note"
-            {% if record_dict %} value="{{record_dict.father_note}}" {% endif %}
-            >
+            <input type="text" class="form-control" name="father_note" {% if record_dict %}
+                value="{{record_dict.father_note}}" {% endif %}>
 
         </div> <!-- end div col-left-->
 
         <div class="form-group col-md-6">
 
             <label for="group_name" class="form-label">Group</label>
-            <input class="form-control" name="group_name" list="groupOptions" placeholder="Type to search...">
-            <datalist  id="groupOptions">
-                <option value="Sheep">
-                <option value="Cattle">
-                <option value="Chickens">
-                <option value="Pigs">
-                <option value="Buck">
-                <option value="Horses">
-                <option value="Other">
-                {% if record_dict %} 
-                <option selected value="{{record_dict.group_name}}" > {{record_dict.group_name}} </option>
+            <input class="form-control" name="group_name" list="groupOptions" placeholder="Type to search..."
+                required="required">
+            <datalist id="groupOptions">
+                {% if record_dict %}
+                <option selected value="{{record_dict.group_name}}"> {{record_dict.group_name}} </option>
                 {% endif %}
+                {% for x in group_dropdown %}
+                <option value="{{x}}"></option>
+                {% endfor %}
+
             </datalist>
 
             <label for="date_of_birth">Date of Birth </label>
-            <input type="date" class="form-control"  name="date_of_birth" required="required"
-            {% if record_dict %} value="{{date_of_birth}}" {% endif %}
-            >
+            <input type="date" class="form-control" name="date_of_birth" required="required" {% if record_dict %}
+                value="{{date_of_birth}}" {% endif %}>
 
             <label for="asset_breeding_id">Breeding id</label>
-            <input type="text" class="form-control" name="asset_breeding_id"
-            {% if record_dict %} value="{{record_dict.asset_breeding_id}}" {% endif %}
-            >
+            <input type="text" class="form-control" name="asset_breeding_id" {% if record_dict %}
+                value="{{record_dict.asset_breeding_id}}" {% endif %}>
 
             <label for="mother_id">Mother ID</label>
-            <input type="text" class="form-control" name="mother_id"
-            {% if record_dict %} value="{{record_dict.mother_id}}" {% endif %}
-            >
+            <input type="number" class="form-control" name="mother_id" {% if record_dict %}
+                value="{{record_dict.mother_id}}" {% endif %}>
 
             <label for="mother_note">Mother note</label>
-            <input type="text" class="form-control" name="mother_note"
-            {% if record_dict %} value="{{record_dict.mother_note}}" {% endif %}
-            >
+            <input type="text" class="form-control" name="mother_note" {% if record_dict %}
+                value="{{record_dict.mother_note}}" {% endif %}>
 
         </div> <!-- end div col-right -->
 
-        <div class="row w-100">
-            <div class="col-10 my-1">
-                <button  type="submit">Save </button>
+        <div class="row w-100 ">
+            <div class="col-12  my-1 d-flex flex-row-reverse">
+                <button type="submit">Save </button>
+
+                <input type="hidden" name="id" {% if record_dict %} value="{{record_dict.id}}" {% else %} value="new"
+                    {% endif %}>
+                <input type="hidden" name="mode" value="update">
             </div>
-            
+
         </div>
     </div> <!-- end row 1 -->
 </form> <!-- END Animal Details -->

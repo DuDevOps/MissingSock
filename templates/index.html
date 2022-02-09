@@ -2,14 +2,14 @@
 <html lang="en">
 {% include "head.html" %}
 
-<body onload='render_maps_charts("{{loadHtml}}", {{loadJson}} )'>
+<body onload="render_maps_charts('{{loadHtml}}', '{{loadJson}}' )">
 
     {% include "header.html" %}
     <div class="container-fluid">
         <div class="row">
             {% include "navi.html" %}
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-12 ms-sm-auto col-lg-10 px-md-4 w-auto">
 
                 {% if loadHtml == "home" %}
                 {% include "login.html" %}
@@ -56,17 +56,21 @@
                 {% elif loadHtml == "dashboard" %}
                 {% include "dashboard.html" %}
 
-                {% elif loadHtml == "report_last_at_basestation" %}
-                {% include "report_last_at_basestation.html" %}
+                {% elif loadHtml == "report_overview" %}
+                {% include "report_overview.html" %}
 
-                {% elif loadHtml == "report_no_read_tag_hour" %}
-                {% include "report_no_read_tag_hour.html" %}
+                {% elif loadHtml == "report_tags" %}
+                {% include "report_tags.html" %}
 
-                {% elif loadHtml == "report_no_read_base_hour" %}
-                {% include "report_no_read_base_hour.html" %}
+                {% elif loadHtml == "report_base_station" %}
+                {% include "report_base_station.html" %}
 
+               
                 {% elif loadHtml == "my_profile" %}
                 {% include "my_profile.html" %}
+
+                {% elif loadHtml == "animal_profile_page" %}
+                {% include "animal_profile_page.html" %}
 
                 {% elif loadHtml == "animal_detail_upd_ins" %}
                 <div class="upd_ins_container ">

@@ -1,379 +1,67 @@
-body {
+header, footer, body  {
     font-family: Poppins;
-
-
-    /* User ID:	Poppins Regular 22px
-Table Headings:	Poppins Medium 14px
-Table Content:		Poppins Regular 14px
-Form Headings:	Poppins Regular 16px
-Form Fields:	Poppins Regular 14px
-Button Text:	Poppins Regular 16px UPPERCASE
-Blue Colour: #006fa9
-Light Grey: # edf0f5
-Normal Text:	#000000
-Active Status on text links:  #006fa9
-Button Background: #006fa9
-Button Text: #ffffff
-Footer Background: #343433 */
 }
 
-.hidden {
-    display: none ;
-}
-
-i {
-    margin:1,5% ;
-}
-
-/* HEADER */
-header {
-    font-family: Poppins;
+header, th{
+    color:white;
     background-color: #006fa9;
-    position: flex;
-    flex-direction: row;
-
-    color: white;
 }
-
-header .column-1 {
-    font-family: Poppins;
-    position: flex;
-    flex-direction: column;
-}
-
-header .column-1 .shortname {
-    font-family: Poppins;
-    font-size: xx-large;
-}
-
-header .column-1 .fullname {
-    font-size: small;
-}
-
-header .column-2 {
-    font-size: xx-large;
-    white-space: nowrap;
-    margin-top: auto;
-}
-
-
-
-/* =========== END : HEADER ============= */
-
-/* FOOTER */
 
 footer {
-    position: flex;
-    flex-direction: column;
-
-    background-color: rgb(68, 67, 67);
-    color: white;
-
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-
+    color:white;
+    background-color: #343433;
 }
 
-/* =========== END : FOOTER ============= */
-
-/* Navigation bar */
-nav {
-    background-color: #edf0f5;
-    /* light grey */
-
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-
+th {
+    font-family: Poppins;
+    font-size: 15px;
+    font-weight: 500;  /* Medium */
 }
 
-nav li.nav-item {
-    height: 1, 5%;
-    width: 80%;
-    padding-left: 10%;
-}
-
-nav h6 {
-    margin: 8%;
-}
-
-/* ---- Headings */
-nav h6 span,
-nav h6 span a {
-    color: black;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/* ---- sub headings */
-nav a.nav-link {
-    padding-left: 5%;
-    padding-top: 1%;
-    padding-bottom: 0px;
-    font-weight: 500;
-}
-
-/* ---- sub headings */
-nav a {
-    color: black;
-    font-size: 16px;
-    font-weight: 500;
-    /* semi bold */
-}
-
-
-/* Main section of body next to navigation bar */
-main {
-    background-color: white;
-
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-}
-
-main h1 {
-    font-size: 32px;
-    font-weight: 600;
-    /* semi-bold */
-}
-
-main table {
-    background-color: #edf0f5;
-    /* light grey */
-}
-
-main table thead {
-    color: white;
-    background-color: #006fa9;
-    /* blue */
-}
-
-main .row .col {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-button {
-    font-size: 22px;
-    color: white;
-    background-color: #006fa9;
-    /* blue */
+td{
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;  /* regular */
 }
 
 label {
-    font-weight: bold;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 400; /* regular */
+}
+
+input {
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400; /* regular */
+}
+
+button{
+    background-color: #006fa9 ;
+    color: #ffffff ;
+    font-size: 16px;
+    font-weight: 400; /* regular */
+}
+
+a {
+    font-family: Poppins;
+    color: black;
+    font-size: 16px;
+    font-weight: 500; /* semi bold */
+}
+
+a.nav-link {
+    padding-left: 5%;
+    padding-top: 1%;
+    padding-bottom: 0px;
+}
+
+li.nav-item{
+    height:100% ;
+}
+
+h6 {
+    color: black;
     font-size: 18px;
-}
-
-datalist option {
-    background-color: chocolate;
-}
-
-/* Main ->  login page */
-#login-page {
-    /* form id */
-    position: flex;
-}
-
-#login-page div {
-    box-shadow: 0 0rem 0rem rgba(0, 0, 0, 0);
-    /* remove shadow */
-}
-
-#login-page .login-div {
-    margin-top: 5%;
-    padding: 1% 5% 3%;
-    /* top right bottom */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-#login-page .login-div h1 {
-    margin: 1%;
-    text-align: center;
-}
-
-#login-page .login-div label {
-    margin-top: 2%;
-    margin-bottom: 1%;
-
     font-weight: 600;
 }
-
-#login-page .login-div input {
-    margin-bottom: 3%;
-}
-
-#login-page .login-div .forgot-link {
-    text-align: right;
-}
-
-#login-page .login-div .forgot-link a {
-    color: black;
-}
-
-#login-page .login-div button {
-    margin-top: 4%;
-}
-
-/* Main ->  Register page */
-#register-page {
-    background-color: white;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-#register-page .col-md-6 {
-    display: flex;
-    flex-direction: column;
-    padding-left: 10%;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    align-items: flex-start;
-
-}
-
-#register-page label {
-    font-weight: bold;
-}
-
-#register-page label,
-#register-page input,
-#register-page select {
-    font-size: 18px;
-}
-
-#register-page input,
-#register-page select {
-    border: 0px;
-    width: 70%;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-}
-
-#register-page button {
-    margin-top: auto;
-    margin-left: auto;
-    margin-right: 30%;
-}
-
-#register-page button,
-#login-page button {
-    font-size: 22px;
-
-}
-
-.form-signin {
-    width: 100%;
-    max-width: 330px;
-    padding: 15px;
-    margin: auto;
-}
-
-.form-signin .form-floating:focus-within {
-    z-index: 2;
-}
-
-.form-signin input[type="email"] {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
-/* ============= end ======== */
-
-/* DASHBOARD  */
-
-#dashboard-main-div {
-    background-color: white;
-    align-items: center;
-}
-
-#dashboard-main-div .dashboard-row {
-    width: 95%;
-    margin-top: 3%;
-    border-radius: 5px;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-#dashboard-main-div .dashboard-row-1 {
-    color: white;
-    max-height: 5%;
-    background-color: #006fa9;
-    /* blue */
-    padding: 3% 0% 3% 20%;
-    font-size: 18px;
-    height: 4%;
-}
-
-#dashboard-main-div .dashboard-row-2 {
-    position: flex;
-    align-items: center;
-    max-height: 200px;
-    max-width: 90%;
-
-    overflow: scroll;
-}
-
-#dashboard-main-div .dashboard-row-2 #tab_asset_registry {
-    max-height: 80%;
-    overflow: scroll;
-}
-
-#dashboard-main-div .dashboard-row-3 {
-    overflow: scroll;
-}
-
-
-/* ============= end DASHBOARD ======== */
-
-/* ============= rep_animal_register ======== */
-#accordionAssets button {
-    background-color: #006fa9;
-    /* blue */
-}
-
-/* ============= end rep_animal_register ======== */
-
-/* ============= new_animal_register ======== */
-.new_animal_div {
-    background-color: white;
-}
-
-.new_animal_div form {
-    padding: 1%;
-    width: 90%;
-    margin: 1.5%;
-    border-radius: 5px;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-.new_animal_div button {
-    width: 10%;
-    margin-left: 100% !important;
-}
-
-
-
-/* ============= end new_animal_register ======== */
-/* ============= Update/Insert Container ======== */
-.upd_ins_container {
-    margin: 1% !important;
-}
-
-.upd_ins_container > form {   /* > immidiate child selector */
-    
-    padding: 1%;
-    width: 90%;
-    margin: 1.5%;
-    border-radius: 5px;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    /* regular shadow */
-}
-
-/* ============= end new_animal_register ======== */

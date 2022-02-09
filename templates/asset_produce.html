@@ -1,150 +1,59 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 >Asset Produce ( {{rec_list_count}} )</h1>
-  
-    {% if method == "GET" %}
-  
-    <form action="asset_produce" method="POST">
-        <button class="btn btn-danger" type="submit"><i class="fa fa-pencil-square-o">EDIT</i></button>
-    </form>
-  
-    {% elif method == "POST" %}
-  
-    <div>
-        <form action="asset_produce" method="GET">
-            <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
-                <i class="fa fa-undo">RESET</i> </button>
-        </form>
-  
-    </div>
-    <div>
-        <form action="javascript:addRow_asset_produce('tab_Asset_produce',{{list_of_columns}})">
-            <button class="btn btn-primary data-toggle='button' aria-pressed='false'" type="submit">
-                <i class="fa fa-plus">New</i></button>
-        </form>
-    </div>
-  
-    {% endif %}
-  </div>
-  
-  
-  
-  <div class="row">
-    <div class="col-10">
+<div class="container">
+<div class="row" >
+    <h1>Asset Produce ( {{produce_rec_list_count}} )</h1>
+</div>
+
+<div class="row">
+    <div class="col-12">
         <div class="table-responsive ">
             <table id="tab_Asset_produce" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
-                        <!-- if post add 2 columns for buttons-->
-                        {% if method == "POST" %}
-                        <th>Upd</th>
-                        <th>Del</th>
-                        {% endif %}
-  
-                        {% for col in record_list[0] %}
-  
-                        <!-- filter columns ignore some columns -->
-                        {% if col == "href_open_street_map" %}
-                        <!-- do not display -->
-  
-                        {% else %}
+                        {% for col in produce_column_list %}
+
                         <th scope="col">{{col}}</th>
-                        {% endif %}
-  
+
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rec in record_list %}
-  
+                    {% for rec in produce_record_list %}
+
                     <tr>
-                        <!-- add 2 buttons if post request Update / Delete -->
-                        {% if method == "POST" %}
-                        <td class="ah ">
-  
-                            <!-- UPDATE button -->
-                            <form
-                                action="javascript:crud_asset_produce('PUT','{{rec['id']}}', {{list_of_columns}})"
-                                method="PUSH">
-                                <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
-                                    type="submit">
-                                    <i class="fa fa-pencil-square-o"></i></button>
-                            </form>
-                        </td>
-                        <td>
-                            <!-- DELETE BUTTON -->
-                            <form
-                                action="javascript:crud_asset_produce('DELETE', '{{rec['id']}}', {{list_of_columns}})"'
-                                method="delete">
-                                <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
-                                    type=" submit">
-                                <i class="fa fa-minus"></i></button>
-                            </form>
-  
-                        </td>
-                        {% endif %}
-                        <!-- end add buttons -->
-  
                         {% for col in rec %}
-  
-                        <!-- GENERAL filter columns exclude from table -->
-                        {% if col == "href_open_street_map" %}
-                        <!-- Exclude from Table -->
-  
-                        {% else %}
-                        <!-- for get add td only-->
-                        {% if method == "GET" %}
-                        {% if col == "id" %}
-                        <!-- special handle col-->
-                        <!-- do not display add  class="visually-hidden"  !!! does not work-->
                         <td>{{ rec[col] }} </td>
-                        {%else%}
-  
-                        <td>{{ rec[col] }} </td>
-                        {%endif%}
-                        <!-- special handle col-->
-  
-                        <!-- ======== POST =======-->
-                        <!-- if POST replace td with form input text-->
-                        {% else  %}
-  
-                        {% if col == "id" %}
-                        <!-- special handle col-->
-                        <!-- do not display ADD class="visually-hidden" -->
-  
-                        <!-- create unique id for each column -->
-                        {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
-                        <td id={{col_id}}>{{ rec[col] }} </td>
-  
-                        {% else %}
-  
-                        <td>
-                            <!-- create unique id for each column -->
-                            {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
-                            <form> <input id={{col_id}} type="text" value="{{rec[col]}}"></form>
-                        </td>
-                        {% endif %}
-                        <!-- special handle col-->
-  
-  
-  
-                        {% endif %}
-                        <!-- end method-->
-  
-                        {% endif %}
-                        <!-- end rec-->
-  
                         {% endfor %}
                         <!-- end loop COL -->
-  
-  
+                        <td>
+                            <!-- UPDATE button -->
+                            <form action="animal_produce_upd_ins" method="POST">
+                                <input type="hidden" name="mode" value="display_rec">
+                                <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                <input type="hidden" name="asset_registry_id" value="{{rec['asset_registry_id']}}">
+                                <button type="submit">
+                                    <i class="fa fa-pencil-square-o"></i> Update </button>
+                            </form>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <!-- DELETE BUTTON -->
+                            <form action="animal_produce_upd_ins" method="POST">
+                                <input type="hidden" name="mode" value="delete">
+                                <input type="hidden" name="line_id" value="{{rec['id']}}">                                
+                                <button type=" submit">
+                                    <i class="fa fa-minus"></i> Delete</button>
+                            </form>
+
+                        </td>
+                        <!-- END add 2 buttons -->
                     </tr>
-  
+
                     {% endfor %}
                     <!-- end loop list-->
-  
+
                 </tbody>
             </table>
         </div>
     </div>
-  
-  </div>
+
+</div>

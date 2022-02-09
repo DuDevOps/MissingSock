@@ -1,6 +1,6 @@
 from random import random
 from flask import  Flask, render_template, request, url_for, redirect, flash, jsonify
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import close_all_sessions
 
 import logging
@@ -15,12 +15,67 @@ import json
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
 from MissingSockDBQueries import MissingSock_sql
-from MissingSockDBQueries.MissingSock_orm_models import sql_result_to_dict, Users, Asset_registry, \
-    Asset_medical, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
-    Base_station_current, sql_result_column_list_to_dict   
+from MissingSockDBQueries.MissingSock_orm_models import Asset_medical, sql_result_to_dict, Users, Asset_registry, \
+    Asset_breeding, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
+    Base_station_current, sql_result_column_list_to_dict  
 
 from MissingSockDBQueries.MissingSock_database import db_session
 
+Animal_dropdown = {"Cattle":[
+	"Nguni",
+	"Afrikaner",
+	"Bonsmara",
+	"Brahman",
+	"Aberedeen Angus",
+	"limousin",
+	"Simmental",
+	"Ankole-Watusi",
+	"Charolais",
+	"Boran",
+	"Beefmaster" ] ,
+"Sheep":[ 	
+    "Merino",
+	"Dorper",
+	"Dohne Merino",
+	"Dormer",
+	"Black Headed Persian",
+	"Afrino",
+	"Suffolk" ],
+"Goats": [ 	
+    "Angora",
+	"Boer",
+	"Lamancha",
+	"Nubian",
+	"Obehasli",
+	"Saanen",
+	"Toggenburg" ],
+"Pigs":[	
+    "Chester White",
+	"Duroc",
+	"Hampshire",
+	"Landrance",
+	"Poland China",
+	"Spotted",
+	"Yorkshire"],
+"Horse":[	
+    "Abyssinian",
+	"Boerperd",
+	"Dongola",
+	"Nooitgedachter",
+	"Vlaamperd" ],
+"Antelope": [	
+    "Wildebees",
+	"Eland",
+	"Waterbuck",
+	"Springbok",
+	"SteenBok",
+	"Duiker",
+	"ReedBuck",
+	"Impala",
+	"Sable",
+	"Gemsbok",
+	"Kudu" ]
+}
 
 app = Flask(__name__)
 
@@ -253,12 +308,12 @@ def rep_animal_register():
         record['birth_month'] = birth.month
 
         # get medical record
-        asset_medical_result = Asset_medical.query.filter(Asset_medical.asset_registry_id == record['id']).all()
+        Asset_breeding_result = Asset_breeding.query.filter(Asset_breeding.asset_registry_id == record['id']).all()
         db_session.commit()
         #db_session.close()
-        asset_medical_dict = sql_result_to_dict(asset_medical_result)
+        Asset_breeding_dict = sql_result_to_dict(Asset_breeding_result)
 
-        record['asset_medical'] = asset_medical_dict
+        record['Asset_breeding'] = Asset_breeding_dict
 
         # get produce record
         asset_produce_result = Asset_produce.query.filter(Asset_produce.asset_registry_id == record['id']).all()
@@ -394,23 +449,23 @@ def asset_registry():
 
 @app.route("/animal_detail_upd_ins", methods=["GET","POST"]) 
 @login_required
-def animal_registration_upd_ins():
+def animal_detail_upd_ins():
 
     mode = request.form.get('mode')
-    asset_id = request.form.get('lineid')
-    animal_reg_no = request.form.get('animal_reg_no')
 
     if mode == "display" :
+        asset_id = request.form.get('asset_id')
+        animal_reg_no = request.form.get('animal_reg_no')
 
         sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
 
         record_dict = sql_result_to_dict(sql_result)
         date_of_birth = html_date(record_dict[0]["date_of_birth"])
 
-        return render_template("index.html", loadHtml="animal_detail_upd_ins", \
-            logged_in=current_user.is_authenticated, \
-            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,\
-            record_dict = record_dict[0], date_of_birth=date_of_birth, \
+        return render_template("index.html", loadHtml="animal_detail_upd_ins", 
+            logged_in=current_user.is_authenticated, 
+            asset_id=asset_id, animal_reg_no=animal_reg_no,
+            record_dict = record_dict[0], date_of_birth=date_of_birth, 
             user_id=current_user.id )
 
     if mode == "delete" :
@@ -462,7 +517,9 @@ def animal_registration_upd_ins():
     #  Default empty return 
     return render_template("index.html", loadHtml="animal_detail_upd_ins", \
                 logged_in=current_user.is_authenticated, \
-                asset_id=f"", animal_reg_no="",\
+                asset_id=f"", animal_reg_no="",
+                group_dropdown=Animal_dropdown.keys(),
+                type_dropdown=Animal_dropdown.values(),
                 user_id=current_user.id )
 
 
@@ -473,12 +530,11 @@ def animal_medical_upd_ins():
 
     if mode == "new_rec" : # req from asset_registry page
 
-        asset_id = request.form.get('Asset_id')
-        animal_reg_no = request.form.get('animal_reg_no')
+        asset_id = request.form.get('asset_id')
 
         return render_template("index.html", loadHtml="animal_medical_upd_ins", \
-            logged_in=current_user.is_authenticated, \
-            asset_id=asset_id, animal_reg_no=animal_reg_no, \
+            logged_in=current_user.is_authenticated, 
+            asset_id=asset_id, 
             user_id=current_user.id )
     
     if mode == "display_rec" : # req from asset_registry page
@@ -501,7 +557,7 @@ def animal_medical_upd_ins():
             user_id=current_user.id )
 
     if mode == "update" :
-        line_id = request.form.get('id')
+        line_id = request.form.get('line_id')
 
         record_upd = db_session.query(Asset_medical).filter(Asset_medical.id == line_id).first()
         
@@ -519,7 +575,7 @@ def animal_medical_upd_ins():
             record_upd = db_session.query(Asset_medical).filter(Asset_medical.reason  == random_animal_name).first()
         
         record_upd.users_id  = current_user.id
-        record_upd.asset_registry_id  = request.form.get('animal_reg_no')
+        record_upd.asset_registry_id  = request.form.get('asset_registry_id')
         record_upd.timestamp  = check_date(request.form.get('Timestamp'))
         record_upd.reason  = request.form.get('Reason')
         record_upd.medicine  = request.form.get('Medicine')
@@ -528,8 +584,8 @@ def animal_medical_upd_ins():
         
         db_session.commit()
 
-        # redirect to asset_registry list
-        return redirect(url_for('asset_medical', loadHtml="asset_medical", \
+        # redirect to asset_medical list
+        return redirect(url_for('asset_registry', loadHtml="asset_registry", \
             logged_in=current_user.is_authenticated))
 
     if mode == "delete" :
@@ -541,47 +597,166 @@ def animal_medical_upd_ins():
         db_session.delete(new_rec)
         db_session.commit()
 
-        # redirect to asset_registry list
-        return redirect(url_for('asset_medical', loadHtml="asset_medical", logged_in=current_user.is_authenticated))
+        # redirect to asset_medical list
+        return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
 
     
-
-
 @app.route("/animal_produce_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_produce_upd_ins():
-
-    asset_id = request.form.get('lineid')
-    animal_reg_no = request.form.get('animal_reg_no')
+                                                           
     mode = request.form.get('mode')
 
-    if mode == "display" :
-        return render_template("index.html", loadHtml="animal_produce_upd_ins", \
-            logged_in=current_user.is_authenticated, \
-            asset_id=f"(id:{asset_id})", animal_reg_no=animal_reg_no,
+    if mode == "new_rec":
+        asset_id = request.form.get('asset_id')
+        animal_reg_no = request.form.get('animal_reg_no')
+
+        return render_template("index.html", loadHtml="animal_produce_upd_ins", 
+            logged_in=current_user.is_authenticated, asset_id=asset_id,
+            animal_reg_no=animal_reg_no,
             user_id=current_user.id)
+
+    if mode == "display_rec" :
+        line_id = request.form.get('line_id')
+        animal_reg_no = request.form.get('animal_reg_no')
+
+        record_obj = db_session.query(Asset_produce).filter(Asset_produce.id == line_id).all()
+
+        record_display = sql_result_to_dict(record_obj)
+        
+        # Special handling for date
+        html_timestamp = html_date(record_display[0]["timestamp"])
+        asset_id = record_display[0]["asset_registry_id"]
+        
+        return render_template("index.html", loadHtml="animal_produce_upd_ins", 
+            logged_in=current_user.is_authenticated, html_timestamp=html_timestamp,
+            asset_id=asset_id, animal_reg_no=animal_reg_no, line_id=line_id,
+            record_display=record_display[0], user_id=current_user.id)
     
     if mode == "update" :
+        # insert new rec  or update existing rec
+        line_id = request.form.get('line_id')
+        
+        record_upd = db_session.query(Asset_produce).filter(Asset_produce.id == line_id).first()
+        
+        # check if record exitsts else new record : insert blank line and then update
+        if bool(record_upd) == False :
+            
+            app.logger.info(f"Insert : new record")
+            randnum = random()
+            new_rec = Asset_produce()
+            new_rec.users_id  = current_user.id
+            random_animal_name = f"{current_user.id}{randnum}"
+            new_rec.note  = random_animal_name
+            db_session.add(new_rec)
+            db_session.commit()
 
+            record_upd = db_session.query(Asset_produce).filter(Asset_produce.note  == random_animal_name).first()
+        
+        record_upd.users_id  = current_user.id
+        record_upd.asset_registry_id  = request.form.get('asset_registry_id')
+        record_upd.timestamp  = request.form.get('Timestamp')
+        record_upd.type  = request.form.get('Type')
+        record_upd.quantity  = request.form.get('Quantity')
+        record_upd.measurement  = request.form.get('Measurement')
+        record_upd.note  = request.form.get('Note')
+    
+        db_session.commit()
+
+        # redirect to asset_registry list
+        return redirect(url_for('asset_produce', loadHtml="asset_produce", \
+            logged_in=current_user.is_authenticated))
+
+
+    if mode == "delete" :
+        line_id = request.form.get('line_id')
+        
+        new_rec = db_session.query(Asset_produce).filter(Asset_produce.id == line_id).first()
+        
+        # delete record
+        db_session.delete(new_rec)
+        db_session.commit()
+
+        # redirect to asset_registry list
         return redirect(url_for('asset_produce', loadHtml="asset_produce", logged_in=current_user.is_authenticated))
-
 
 @app.route("/animal_breeding_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_breeding_upd_ins():
-
-    asset_id = request.form.get('lineid')
     mode = request.form.get('mode')
 
-    if mode == "display" :
-        return render_template("index.html", loadHtml="animal_produce_upd_ins", \
-            logged_in=current_user.is_authenticated, \
-            asset_id=asset_id,
-            user_id=current_user.id)
-    
-    if mode == "update" :
+    if mode == "new_rec" : # req from asset_breeding page
 
-        return redirect(url_for('asset_breeding', loadHtml="asset_breeding", logged_in=current_user.is_authenticated))
+        asset_id = request.form.get('asset_id')
+
+        return render_template("index.html", loadHtml="animal_breeding_upd_ins", \
+            logged_in=current_user.is_authenticated, 
+            asset_id=asset_id, 
+            user_id=current_user.id )
+    
+    if mode == "display_rec" : # req from asset_registry page
+        
+        line_id = request.form.get('line_id')
+
+        record_obj = db_session.query(Asset_breeding).filter(Asset_breeding.id == line_id).all()
+
+        record_display = sql_result_to_dict(record_obj)
+
+        asset_id = record_display[0]["asset_registry_id"]
+        
+        # Special handling for date
+        html_timestamp = html_date(record_display[0]["timestamp"])
+        
+        return render_template("index.html", loadHtml="animal_breeding_upd_ins", \
+            logged_in=current_user.is_authenticated, html_timestamp=html_timestamp, \
+            asset_id=asset_id, animal_reg_no="", \
+            record_display=record_display[0] ,\
+            user_id=current_user.id )
+
+    if mode == "update" :
+        line_id = request.form.get('line_id')
+
+        record_upd = db_session.query(Asset_breeding).filter(Asset_breeding.id == line_id).first()
+        
+        if bool(record_upd) == False :
+            # new record : insert blank line and then update
+            app.logger.info(f"Insert : new record")
+            randnum = random()
+            new_rec = Asset_breeding()
+            new_rec.users_id  = current_user.id
+            random_animal_name = f"{current_user.id}{randnum}"
+            new_rec.reason  = random_animal_name
+            db_session.add(new_rec)
+            db_session.commit()
+
+            record_upd = db_session.query(Asset_breeding).filter(Asset_breeding.reason  == random_animal_name).first()
+        
+        record_upd.users_id  = current_user.id
+        record_upd.breeding_number  = request.form.get('Breeding_number')
+        record_upd.start_date  = check_date(request.form.get('Start_date'))
+        record_upd.end_date  = check_date(request.form.get('End_date'))
+        record_upd.twin_number  = check_date(request.form.get('Twin_number'))
+        record_upd.pregant  = check_date(request.form.get('Pregnant'))
+        record_upd.asset_registry_father_id  = request.form.get('asset_registry_father_id')
+        record_upd.asset_registry_mother_id  = request.form.get('asset_registry_mother_id')
+        
+        db_session.commit()
+
+        # redirect to asset_breeding list
+        return redirect(url_for('Asset_breeding', loadHtml="Asset_breeding", \
+            logged_in=current_user.is_authenticated))
+
+    if mode == "delete" :
+        line_id = request.form.get('line_id')
+        
+        new_rec = db_session.query(Asset_breeding).filter(Asset_breeding.id == line_id).first()
+         
+        # delete record
+        db_session.delete(new_rec)
+        db_session.commit()
+
+        # redirect to asset_breeding list
+        return redirect(url_for('Asset_breeding', loadHtml="Asset_breeding", logged_in=current_user.is_authenticated))
 
 
 @app.route("/asset_medical", methods=["GET"]) 
@@ -595,8 +770,8 @@ def asset_medical():
             Asset_medical.medicine,
             Asset_medical.dosage,
             Asset_medical.note,
-            Asset_medical.asset_registry_id,
-            Asset_medical.users_id]
+            Asset_medical.asset_registry_id
+            ]
 
     # columns headings
     col_list = [
@@ -606,8 +781,7 @@ def asset_medical():
                 "medicine",
                 "dosage",
                 "note",
-                "asset_registry_id",
-                "user_id"
+                "asset_registry_id"
     ]
     try:
         sql_result = db_session.query(
@@ -616,113 +790,68 @@ def asset_medical():
     finally:
         # if table has no entries -> send to asset registry
         if len(sql_result) == 0 :
-            return redirect(url_for('asset_registry', \
-                loadHtml="asset_registry", \
-                logged_in=current_user.is_authenticated,\
+            return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
                 user_id=current_user.id))
 
     record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
 
-    return render_template("index.html", loadHtml="asset_medical", \
-        logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_dict), method=request.method,\
-        column_list=col_list)
+    return render_template("index.html", loadHtml="asset_medical", 
+        logged_in=current_user.is_authenticated, med_record_list=record_dict,
+        med_rec_list_count= len(record_dict),
+        med_column_list=col_list)
 
+#========================
 
-@app.route("/asset_breeding", methods=["GET","POST","PUSH","PUT","DELETE"]) 
+@app.route("/asset_breeding", methods=["GET"]) 
 @login_required
 def asset_breeding():
-    if request.method == "POST":
-        pass
 
-        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
-    if request.method == "PUT":
-
-        recv_rec = request.get_json()
-        
-        # Check if this is insert or update
-        if str(recv_rec['id'])[:4] == "ins_" :
-            db_action = "INSERT"
-        else :
-            db_action = "UPDATE"
-
-        if db_action == "UPDATE": # Update
-            recv_rec = request.get_json()
-            new_rec = db_session.query(Asset_breeding).filter(Asset_breeding.id == int(recv_rec['id'])).first()
-            db_session.commit()
-            #db_session.close()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                elif val == 'None':
-                    val = None
-                
-                # convert JSON str types to int
-                setattr(new_rec, key, val)
-
-            db_session.commit() 
-            #db_session.close()
-
-        if db_action == "INSERT":
-
-            recv_rec = request.get_json()
-            new_rec = Asset_breeding()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                
-                # convert JSON str types to int
-                if key == "id": # don't add ID for insert
-                    pass
-                elif key == "users_id":
-                    new_rec.users_id  = current_user.id
-                else:
-                    setattr(new_rec, key, val)
-
-            db_session.add(new_rec)
-            db_session.commit()
-
-    if request.method == "DELETE":
-        recv_rec = request.get_json()
-         
-        new_rec = db_session.query(Asset_breeding).filter(Asset_breeding.id == int(recv_rec['id'])).first()
-        
-        #
-        db_session.delete(new_rec)
-        db_session.commit() 
-    
     # Get all row at least 1 row must exist
+    list_of_columns = [Asset_breeding.id,
+            Asset_breeding.breeding_number,
+            Asset_breeding.start_date,
+            Asset_breeding.end_date,
+            Asset_breeding.twin_number,
+            Asset_breeding.pregnant,
+            Asset_breeding.asset_registry_father_id,
+            Asset_breeding.asset_registry_mother_id
+            ]
+
+    # columns headings
+    col_list = [
+                "id",
+                "breeding_number",
+                "start_date",
+                "end_date",
+                "twin_number",
+                "pregnant",
+                "asset_registry_father_id",
+                "asset_registry_mother_id"
+    ]
     try:
-        record_list = db_session.query(Asset_breeding).join(Asset_registry,or_(Asset_registry.id == Asset_breeding.asset_registry_father_id, Asset_registry.id == Asset_breeding.asset_registry_mother_id)).filter(Asset_registry.users_id == current_user.id).all()
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_breeding.users_id == current_user.id).all()
     finally:
-        # if table has no records add first default rec - else nothing works right
-        record_list = Asset_breeding.query.filter(Asset_breeding.users_id == current_user.id).all()
-        if len(record_list) == 0 :
-            new_rec = Asset_breeding()
-            new_rec.users_id  = current_user.id
-            
-            db_session.add(new_rec)
-            db_session.commit()
-            record_list = Asset_breeding.query.filter(Asset_breeding.users_id == current_user.id).all()
+        # if table has no entries -> send to asset registry
+        if len(sql_result) == 0 :
+            return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
+                user_id=current_user.id))
 
-    record_dict = sql_result_to_dict(record_list)
+    record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
-    try:
-        list_of_columns=list(record_dict[0].keys())
-        list_of_columns.remove('id')
-    except:
-        pass
 
-    return render_template("index.html", loadHtml="asset_breeding", \
-        logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), user_id=current_user.id, \
-            method=request.method, list_of_columns=list_of_columns)
+    return render_template("index.html", loadHtml="asset_breeding", 
+        logged_in=current_user.is_authenticated, breeding_record_list=record_dict,
+        breeding_rec_list_count= len(record_dict),
+        breeding_column_list=col_list)
 
+    # ==========================
 
 @app.route("/asset_offspring", methods=["GET","POST","PUSH","PUT","DELETE"]) 
 @login_required
@@ -819,182 +948,137 @@ def asset_offspring():
         logged_in=current_user.is_authenticated, record_list=record_dict,\
         rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
 
-@app.route("/asset_produce", methods=["GET","POST","PUSH","PUT","DELETE"]) 
+@app.route("/asset_produce", methods=["GET"]) 
 @login_required
 def asset_produce():
-    if request.method == "POST":
-        pass
-
-        # Insert/update both on PUT --- Push does not work on chemicloud fnw 
-    if request.method == "PUT":
-
-        recv_rec = request.get_json()
-        
-        # Check if this is insert or update
-        if str(recv_rec['id'])[:4] == "ins_" :
-            db_action = "INSERT"
-        else :
-            db_action = "UPDATE"
-
-        if db_action == "UPDATE": # Update
-            recv_rec = request.get_json()
-            new_rec = db_session.query(Asset_produce).filter(Asset_produce.id == int(recv_rec['id'])).first()
-            db_session.commit()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                elif val == 'None':
-                    val = None
-                
-                # convert JSON str types to int
-                setattr(new_rec, key, val)
-
-            db_session.commit()
-
-        if db_action == "INSERT":
-
-            recv_rec = request.get_json()
-            new_rec = Asset_produce()
-
-            for key, val in recv_rec.items():
-                # change all '' to None which will be added as Null
-                if len(val) == 0 :
-                    val = None
-                
-                # convert JSON str types to int
-                if key == "id": # don't add ID for insert
-                    pass
-                elif key == "users_id":
-                    new_rec.users_id  = current_user.id
-                else:
-                    setattr(new_rec, key, val)
-
-            db_session.add(new_rec)
-            db_session.commit()
-
-    if request.method == "DELETE":
-        recv_rec = request.get_json()
-         
-        new_rec = db_session.query(Asset_produce).filter(Asset_produce.id == int(recv_rec['id'])).first()
-        
-        #
-        db_session.delete(new_rec)
-        db_session.commit() 
-        #db_session.close()
-
-
+    
     # Get all row at least 1 row must exist
+    list_of_columns = [Asset_produce.id,
+            Asset_produce.timestamp,
+            Asset_produce.type,
+            Asset_produce.quantity,
+            Asset_produce.measurement,
+            Asset_produce.note,
+            Asset_produce.asset_registry_id,
+            Asset_produce.users_id]
+
+    # columns headings
+    col_list = [
+                "id",
+                "timestamp",
+                "type",
+                "quantity",
+                "measurement",
+                "note",
+                "asset_registry_id",
+                "user_id"
+    ]
     try:
-        record_list = db_session.query(Asset_produce).\
-            join(Asset_registry, Asset_registry.id == Asset_produce.asset_registry_id).\
-                filter(Asset_registry.users_id == current_user.id).all()
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_produce.users_id == current_user.id).all()
     finally:
-        # if table has no records add first default rec - else nothing works right
-        record_list = Asset_produce.query.filter(Asset_produce.users_id == current_user.id).all()
-        if len(record_list) == 0 :
-            new_rec = Asset_produce()
-            new_rec.users_id  = current_user.id
-            
-            db_session.add(new_rec)
-            db_session.commit()
-            record_list = Asset_produce.query.filter(Asset_produce.users_id == current_user.id).all()
+        # if table has no entries -> send to asset registry
+        if len(sql_result) == 0 :
+            return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
+                user_id=current_user.id))
 
-    record_dict = sql_result_to_dict(record_list)
-
-    try:
-        list_of_columns=list(record_dict[0].keys())
-        list_of_columns.remove('id')
-    except:
-        pass
-
-    db_session.commit()
-
-    return render_template("index.html", loadHtml="asset_produce", \
-        logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), method=request.method, list_of_columns=list_of_columns)
+    record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
 
+    return render_template("index.html", loadHtml="asset_produce", 
+        logged_in=current_user.is_authenticated, produce_record_list=record_dict,
+        produce_rec_list_count= len(record_dict), 
+        produce_column_list=col_list)
 
 @app.route("/dashboard")
 @login_required
-def dashboard(get_hours=24):
+def dashboard():
 
     # Get all row at least 1 row must exist
+    list_of_columns = [Asset_registry.id,
+            Asset_registry.animal_reg_no,
+            Asset_registry.group_name,
+            Asset_registry.breed_type,
+            Asset_registry.gender,
+            Asset_registry.date_of_birth,
+            Asset_registry.tag_id,
+            Asset_registry.father_id,
+            Asset_registry.mother_id]
+
+    # columns headings
+    col_list = [
+        "id",
+        "animal_reg_no",
+        "group_name",
+        "breed_type",
+        "gender",
+        "date_of_birth",
+        "tag_id",
+        "father_id",
+        "mother_id"
+        ]
+
     try:
-        record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_registry.users_id == current_user.id).all()
     finally:
-        # if table has no records add first default rec - else nothing works right
-        if len(record_list) == 0 :
-            new_rec = Asset_registry()
-            new_rec.users_id  = current_user.id
+        # if table has no entries -> send to new animal register
+        if len(sql_result) == 0 :
+            return redirect(url_for('new_animal_register', \
+                loadHtml="new_animal_register", \
+                logged_in=current_user.is_authenticated,\
+                user_id=current_user.id))
 
-            db_session.add(new_rec)
-            db_session.commit()
-            record_list = Asset_registry.query.filter(Asset_registry.users_id == current_user.id).all()
+    record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
+    # end - display registry
 
-    db_session.commit()
-    record_dict = sql_result_to_dict(record_list)
+    #====== start maps / charts =============
 
-    try:
-        list_of_columns=list(record_dict[0].keys())
-        list_of_columns.remove('id')
-    except:
-        pass
-
-    try :
-        hour = request.form["hours"]
-    except :
-        hour = 1
+    # get total tags for user
+    total_tags = db_session.query(Asset_registry).\
+        filter(and_(Asset_registry.users_id == current_user.id, Asset_registry.tag_id.isnot(None))).count()
     
-    if int(get_hours) > 1 :
-        hour = get_hours
+    # get current location for tags
+    hour_48 = datetime.now() - timedelta(hours=48)
+    tags_read_48 = db_session.query(Tag, Tag_current).\
+        filter(and_(Tag.id == Tag_current.id, 
+              Tag.users_id == current_user.id,
+              Tag_current.timestamp > hour_48)).\
+            count()
 
-    # info for row 3 map/chart
-
-    # Check if user has at least 1 tag
-    tag_list = db_session.query(Tag).filter(Tag.users_id == current_user.id).all()
-    tag_dict = sql_result_to_dict(tag_list)
-
-    if len(tag_dict) == 0 :
-        flash("Report not available - Please add at least Animal with a linked tag ")
-        return render_template("index.html", loadHtml="error_page", logged_in=current_user.is_authenticated, flash_type="no_tag")
- 
+    # get current location for tags
     
-    total_hours_1 = MissingSock_sql.count_tags_not_read_past_hours(1, current_user.id)
-
-    # find middle point for map
-    user_list = db_session.query(Users).filter(Users.id == current_user.id).all()
-    user_dict = sql_result_to_dict(user_list)
+    tag_list = db_session.query(Tag_current, Tag).\
+        filter(and_(Tag_current.id == Tag.id,
+        Tag.users_id == current_user.id)).all()
     
-    lat_middle = user_dict[0]['gps_lat']
-    long_middle = user_dict[0]['gps_long']
+    new_list = []
+    for x in tag_list:        
+        new_list.append(x[0])
 
-    # tag location + detail 
-    sql_return = MissingSock_sql.tags_last_location_by_userid(current_user.id)
-    
-    # load up for javascript in JSON format
-    # JSON.dumps convert dict to string
- 
+    tag_dict = sql_result_to_dict(new_list)
+   
+    loadJson = {}
+    loadJson['total_tags'] = total_tags
+    loadJson['tags'] = tag_dict
+    loadJson['tags_read'] = len(tag_dict)
+    loadJson['tags_read_48'] = tags_read_48
 
-    loadJson ="{"
-    loadJson += f'"total_tags": {len(tag_dict)} ,'
-    loadJson += f'"total_hours_1": {total_hours_1[0]["count"]} ,'
-    loadJson += '"middle_point": {' + f'"lat":"{str(lat_middle)}", "long":"{str(long_middle)}" ' + '},'
-    loadJson += f'"tags": {sql_return} ,'
-    loadJson += "}"
-    
-    timeNow = datetime.now().strftime("%d %B %Y %H:%M:%S")
+    # JSON.dumps convert dict to JSONstring
+    loadJson2 = json.dumps(loadJson)
 
-    return render_template("index.html", loadHtml="dashboard", \
-        logged_in=current_user.is_authenticated, record_list=record_dict,\
-        rec_list_count= len(record_list), method=request.method,\
-        list_of_columns=list_of_columns, \
-        loadJson=loadJson, \
-        tag_count=len(tag_dict), timeNow=timeNow)
+    # end - map / charts
 
+    return render_template("index.html", loadHtml="dashboard", 
+        logged_in=current_user.is_authenticated, 
+        user_id=current_user.id, record_list=record_dict,
+        rec_list_count= len(record_dict), method=request.method,
+             list_of_columns=col_list, loadJson=loadJson2)
 
 @app.route("/report_no_read_tag_hour", methods=["GET","POST"])
 @login_required
@@ -1050,7 +1134,6 @@ def report_no_read_tag_hour_1(get_hours=1):
      logged_in=current_user.is_authenticated, loadJson=loadJson , \
      tag_list=all_tags, total_tags=count, hour=hour)
 
-@app.route("/overview", methods=["GET","POST"])
 @app.route("/report_no_read_base_hour", methods=["GET","POST"])
 @login_required
 def report_no_read_base_hour_1(get_hours=1):
@@ -1126,7 +1209,299 @@ def report_no_read_base_hour_1(get_hours=1):
     loadJson += "}"     
          
 
-    return render_template("index.html", loadHtml="report_no_read_base_hour", logged_in=current_user.is_authenticated, loadJson=loadJson , base_list=all_base_current_dict, total_base=len(all_base_current_dict), hour=hour)
+    return render_template("index.html", loadHtml="report_overview", 
+    logged_in=current_user.is_authenticated, loadJson=loadJson , 
+    base_list=all_base_current_dict, 
+    total_base=len(all_base_current_dict), hour=hour)
+
+@app.route("/report_overview", methods=["GET","POST"])
+@login_required
+def report_overview():
+
+    if request.method == "GET":
+        fromDate = None       
+                      
+    if request.method == "POST":
+        fromDate = request.form.get('fromDate')
+        toDate = request.form.get('toDate')  
+
+    # get total tags for user
+    total_tags = db_session.query(Asset_registry).\
+        filter(and_(Asset_registry.users_id == current_user.id, Asset_registry.tag_id.isnot(None))).count()
+    
+    # get current location for tags
+    hour_48 = datetime.now() - timedelta(hours=48)
+    tags_read_48 = db_session.query(Tag, Tag_current).\
+        filter(and_(Tag.id == Tag_current.id, 
+              Tag.users_id == current_user.id,
+              Tag_current.timestamp > hour_48)).\
+            count()
+
+    # get current location for tags
+    if fromDate :
+        # fromDate_py = datetime.now() - timedelta(hours=48)
+        # toDate_py = datetime.now() - timedelta(hours=48)
+
+        tag_list = db_session.query(Tag_current, Tag).\
+            filter(and_(Tag_current.id == Tag.id,
+                Tag.users_id == current_user.id,
+              Tag_current.timestamp > fromDate,
+              Tag_current.timestamp < toDate )).all()
+    else:
+        tag_list = db_session.query(Tag_current, Tag).\
+            filter(and_(Tag_current.id == Tag.id,
+            Tag.users_id == current_user.id)).all()
+    
+    new_list = []
+    for x in tag_list:        
+        new_list.append(x[0])
+
+    tag_dict = sql_result_to_dict(new_list)
+   
+    loadJson = {}
+    loadJson['total_tags'] = total_tags
+    loadJson['tags'] = tag_dict
+    loadJson['tags_read'] = len(tag_dict)
+    loadJson['tags_read_48'] = tags_read_48
+
+    # JSON.dumps convert dict to JSONstring
+    loadJson2 = json.dumps(loadJson)
+
+    return render_template("index.html", 
+    loadHtml="report_overview",
+    logged_in=current_user.is_authenticated, 
+    loadJson=loadJson2 )
+
+    # ===================   end report_overview =========
+
+@app.route("/report_tags", methods=["GET","POST"])
+@login_required
+def report_tags():
+
+    if request.method == "GET":
+        fromDate = None
+        inTag = None
+                      
+    if request.method == "POST":
+        fromDate = request.form.get('fromDate')
+        toDate = request.form.get('toDate') 
+        inTag = request.form.get('tag_id')  
+
+    # get total tags for user
+    total_tags = db_session.query(Asset_registry).\
+        filter(and_(Asset_registry.users_id == current_user.id, Asset_registry.tag_id.isnot(None))).count()
+    
+    # get current location for tags
+    hour_48 = datetime.now() - timedelta(hours=48)
+    tags_read_48 = db_session.query(Tag, Tag_current).\
+        filter(and_(Tag.id == Tag_current.id, 
+              Tag.users_id == current_user.id,
+              Tag_current.timestamp > hour_48)).\
+            count()
+
+    # get current location for tags
+    if fromDate and inTag != "All":
+        
+        tag_list = db_session.query(Tag_current, Tag).\
+            filter(and_(Tag_current.id == Tag.id,
+                Tag.users_id == current_user.id,
+              Tag_current.timestamp > fromDate,
+              Tag_current.timestamp < toDate,
+              Tag_current.id == inTag )).all()
+    else:
+        tag_list = db_session.query(Tag_current, Tag).\
+            filter(and_(Tag_current.id == Tag.id,
+            Tag.users_id == current_user.id)).all()
+    
+    new_list = []
+    for x in tag_list:        
+        new_list.append(x[0])
+
+    tag_dict = sql_result_to_dict(new_list)
+
+    tags = []
+    for x in tag_list:        
+        tags.append(x[1])
+
+    tag_detail = sql_result_to_dict(tags)
+   
+    loadJson = {}
+    loadJson['total_tags'] = total_tags
+    loadJson['tags'] = tag_dict
+    loadJson['tags_read'] = len(tag_dict)
+    loadJson['tags_read_48'] = tags_read_48
+
+    # JSON.dumps convert dict to JSONstring
+    loadJson2 = json.dumps(loadJson)
+
+    return render_template("index.html", 
+    loadHtml="report_tags",
+    logged_in=current_user.is_authenticated, 
+    loadJson=loadJson2,
+    tags=tag_detail)
+
+    # ===================   end report_tags =========
+
+
+@app.route("/report_base_station", methods=["GET","POST"])
+@login_required
+def report_base_station():
+
+    if request.method == "GET":
+        fromDate = None
+        inBase = None
+                      
+    if request.method == "POST":
+        fromDate = request.form.get('fromDate')
+        toDate = request.form.get('toDate') 
+        inBase = request.form.get('tag_id')  
+
+    # get total tags for user
+    total_tags = db_session.query(Asset_registry).\
+        filter(and_(Asset_registry.users_id == current_user.id, 
+                 Asset_registry.tag_id.isnot(None))).count()
+    
+    # get total base_stations for user
+    total_base_stations = db_session.query(Base_station).\
+        filter(Base_station.users_id == current_user.id).count()
+    
+    # get count of (all) tags scanned at (all) basestation for the past 48 hours
+    hour_48 = datetime.now() - timedelta(hours=48)
+    tags_read_48 = db_session.query(Tag, Tag_current).\
+        filter(and_(Tag.id == Tag_current.id, 
+              Tag.users_id == current_user.id,
+              Tag_current.timestamp > hour_48)).\
+            count()
+
+    # get (current) location for base_stations
+    if fromDate and inBase != "All":
+        
+        tag_list = db_session.query(Tag_current, Tag).\
+            filter(and_(Tag_current.id == Tag.id,
+                Tag.users_id == current_user.id,
+              Tag_current.timestamp > fromDate,
+              Tag_current.timestamp < toDate,
+              Tag_current.id == inTag )).all()
+    else:
+        base_stations_current_location = db_session.\
+            query(Base_station_current, Base_station).\
+                filter(and_(Base_station_current.id == Base_station.id,
+                Base_station.users_id == current_user.id)).all()
+    
+    # split result of 1 table (base_station_current)
+   
+    base_station_current_list = []
+    for x in base_stations_current_location:        
+        base_station_current_list.append(x[0]) # 1st table result store in index 0
+
+    base_station_current_dict = sql_result_to_dict(base_station_current_list)
+
+    # get count of tags currently at each base_ station
+    count_tags_per_base_station_current = MissingSock_sql.cnt_tags_at_each_base_station(current_user.id)
+   
+    loadJson = {}
+    loadJson['total_tags'] = total_tags
+    loadJson['total_base_stations'] = total_base_stations
+    loadJson['base_stations'] = base_station_current_dict
+    
+    loadJson['tags_read_48_all_base_stations'] = tags_read_48
+    loadJson['count_tags_per_base_station_current'] = count_tags_per_base_station_current
+
+    # JSON.dumps convert dict to JSONstring
+    loadJson2 = json.dumps(loadJson)
+
+    return render_template("index.html", 
+    loadHtml="report_base_station",
+    logged_in=current_user.is_authenticated, 
+    loadJson=loadJson2 )
+
+    # ===================   end report_base_station =========
+
+@app.route("/animal_profile_page", methods=["GET","POST"])
+@login_required
+def animal_profile_page():
+
+    # animal_detail_upd_ins.html - update info 
+    asset_id = request.form.get('Animal_id')
+
+    sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
+    record_dict = sql_result_to_dict(sql_result)
+    date_of_birth = html_date(record_dict[0]["date_of_birth"])
+    animal_reg_no=record_dict[0]["animal_reg_no"]
+
+    
+    #======================================================================================
+    
+    # Asset_medical.html
+        # Get all row at least 1 row must exist
+    medical_list_of_columns = [Asset_medical.id, Asset_medical.timestamp,
+            Asset_medical.reason, Asset_medical.medicine,
+            Asset_medical.dosage, Asset_medical.note, 
+            Asset_medical.asset_registry_id, Asset_medical.users_id 
+    ]
+
+    # name in form used for columns
+    medical_formname_list = ["id", "timestamp", "reason", "medicine", "dosage",
+                "note", "asset_registry_id", "user_id"
+    ]
+
+    # columns headings
+    medical_col_list = ["id", "timestamp", "reason", "medicine", "dosage",
+                "note", "asset_registry_id", "user_id"
+    ]
+
+    try:
+        sql_result = db_session.query(
+            *medical_list_of_columns
+        ).filter(Asset_medical.asset_registry_id == asset_id).all()
+    finally:
+        # if table has no entries -> send to asset registry
+        medical_record_dict = [{'id':'0'}]
+
+    medical_record_dict = sql_result_column_list_to_dict(medical_formname_list, sql_result)
+
+    #======================================================================================
+
+    # Asset_produce
+
+    produce_list_of_columns = [Asset_produce.id,
+             Asset_produce.type, Asset_produce.timestamp, 
+             Asset_produce.quantity, Asset_produce.measurement,
+             Asset_produce.note 
+    ]
+
+    # name in form used for columns
+    produce_formname_list = ["id", "type", "timestamp", "quantity",
+           "measurement", "note"
+    ]
+
+    # columns headings
+    produce_col_list = ["id", "type", "timestamp", "quantity",
+           "measurement", "note"
+    ]
+
+    try:
+        sql_result = db_session.query(
+            *produce_list_of_columns
+        ).filter(Asset_produce.asset_registry_id == asset_id).all()
+    finally:
+        # if table has no entries -> send to asset registry
+        produce_record_dict = [{'id':'0'}]
+
+    produce_record_dict = sql_result_column_list_to_dict(produce_formname_list, sql_result)
+
+    #==================================================================================
+
+    return render_template("index.html", 
+    loadHtml="animal_profile_page", logged_in=current_user.is_authenticated,
+    record_dict = record_dict[0], date_of_birth=date_of_birth, asset_id=asset_id,
+    animal_reg_no=animal_reg_no,
+    med_record_list=medical_record_dict, med_column_list=medical_col_list, 
+     med_rec_list_count= len(medical_record_dict),  
+    produce_record_list=produce_record_dict, produce_column_list=produce_col_list,
+     produce_rec_list_count= len(produce_record_dict)  
+    )
+
 
 def check_null(val):
 

@@ -1,20 +1,15 @@
 <form id="animal_produce_upd_ins" class="flex input" href="animal_produce_upd_ins" method="POST">
-    <h3>Produce Details : {{animal_reg_no}} {{asset_id}} </h3>
-    <div class="hidden">
-        <input type="text" class="form-control" name="id">
-        <input type="text" class="form-control" name="asset_registry_id">
-        <input type="text" class="form-control" name="user_id">
-    </div>
+    <h3>Produce Details {%if record_display %} : {{animal_reg_no}} Asset Id:{{asset_id}} line:{{line_id}} {% endif %}
+    </h3>
+
     <div class="form-row">
         <div class="form-group col-md-6 ">
-            <label for="date">Date</label>
-            <input type="date" class="form-control" name="Date">
+            <label for="Timestamp">Date</label>
+            <input type="date" class="form-control" required="required" name="Timestamp" {%if record_display %}
+                value="{{html_timestamp}}" {% endif %}>
         </div> <!-- end div col-left-->
 
         <div class="form-group col-md-6">
-
-            <label for="Type">Type</label>
-            <input type="text" class="form-control" name="Type">
 
         </div> <!-- end div col-right -->
     </div>
@@ -22,41 +17,56 @@
 
     <div class="form-row">
         <div class="form-group col-md-4">
-            <label for="type">Type</label>
-            <select name="type" class="form-control">
+            <label for="Type">Type</label>
+            <select name="Type" required="required" class="form-control">
+                <option value="Eggs">Eggs</option>
+                <option value="Milk">Milk</option>
                 <option value="Wool">Wool</option>
                 <option value="Meat">Meat</option>
-                <option value="Eggs">Eggs</option>
                 <option value="Other">Other</option>
+                {%if record_display %}
+                <option value="{{record_display.type}}" selected> {{record_display.type}} </option>
+                {% endif %}
+
             </select>
         </div>
 
         <div class="form-group col-md-4">
             <label for="Measurement">Measurement</label>
-            <select name="Measurement" class="form-control">
+            <select name="Measurement" required="required" class="form-control">
                 <option value="Kg">Kg</option>
                 <option value="L">L</option>
                 <option value="Unit">Unit</option>
                 <option value="Other">Other</option>
+                {%if record_display %}
+                <option selected value="{{record_display.measurement}}">{{record_display.measurement}}</option>
+                {% endif %}
             </select>
         </div>
 
         <div class="form-group col-md-4">
             <label for="Quantity">Quantity</label>
-            <input type="text" class="form-control" name="Quantity">
+            <input type="number" class="form-control" required="required" name="Quantity" {%if record_display %}
+                value="{{record_display.quantity}}" {% endif %}>
         </div>
     </div> <!-- end row2 -->
 
     <div class="row w-100">
         <div class="col-10">
-            <label for="Notes">Notes</label>
-            <input type="text" class="form-control" name="Notes">
+            <label for="Note">Notes</label>
+            <input type="text" class="form-control" name="Note" {%if record_display %} value="{{record_display.note}}"
+                {% endif %}>
         </div>
         <div class="col-10  my-3">
             <button type="submit">Save </button>
         </div>
-        <input type="text" class="form-control hidden" name="mode" 
-                                    value="update">
+        <div class="hidden">
+            <input type="hidden" name="line_id" value="{{line_id}}">
+            <input type="hidden" name="asset_id" value="{{asset_id}}">
+            <input type="hidden" name="animal_registry_no" value="{{animal_registry_no}}">
+            <input type="hidden" name="mode" value="update">
         </div>
+
+    </div>
     </div> <!-- end row3 -->
 </form> <!-- END Animal produce -->

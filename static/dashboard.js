@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 /* globals Chart:false, feather:false */
 
-function render_maps_charts(loadHtml, loadJson) {
+function old_render_maps_charts(loadHtml, loadJson) {
 
   if (loadHtml == "dashboard") {
     var total_tags = loadJson.total_tags

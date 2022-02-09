@@ -1,0 +1,59 @@
+<div id="report_overview" class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+  <div class="row">
+
+    <div class="col-8 ">
+      <h1> Overview (Current Tracking)</h1>
+    </div>
+    
+    <div class="col-4">
+      <h5>User Id: {{user_id}}</h4>
+    </div>
+
+  </div> <!-- end row 1-->
+
+  <div class="row">
+    <div class="col-12" >
+
+    <form href="report_overview" method="POST"
+        class="flex input">
+      <div class="form-row">
+        
+        <div class="form-group col-md-3 ">
+          <label for="Timestamp">From</label>
+          <input type="datetime-local" class="form-control" required="required" name="fromDate">
+        </div>
+
+        <div class="form-group col-md-3 ">
+          <label for="Timestamp">To</label>
+          <input type="datetime-local" class="form-control" required="required" name="toDate">
+        </div>
+
+        <div class="form-group col-md-3 mt-auto ">
+          
+          <button class="pl-3" type="submit" name="sub_btn"> Run </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  </div> <!-- end row 1-->
+  <div class="row">
+    <div class="col-sm-9">
+      <div id="div_map_rep_overview" class="mh-900 w-90" style="width: 500px; height: 520px; "> </div>
+    </div> <!-- end map-->
+    <div class="col-sm-9 col-lg-3">
+      <div class="row mb-auto "">  
+        <canvas class="my-2 w-80 h-80" id="rep_overview_Chart_1"></canvas>
+        <label class="font-italic text-info font-weight-bold"> Base Stations Tag reads</label>
+      </div>
+      <div class="row mt-auto ">  
+        <canvas class="my-2 w-80 h-80" id="rep_overview_Chart_2"></canvas>
+        <label class="font-italic text-info font-weight-bold"> Base Stations Tag reads - 48 hour(s)</label>
+      </div>
+    </div> <!-- end  chart-->
+
+  </div>
+
+</div> <!-- end report_overview -->
