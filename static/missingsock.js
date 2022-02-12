@@ -77,3 +77,12 @@ function render_maps_charts(loadHtml, loadJson) {
     }
 
 }
+
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+})
+
+function toggle_class_show(div_id){
+    $("#"+div_id).toggle() ;
+}

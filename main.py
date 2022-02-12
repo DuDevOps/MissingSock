@@ -1360,10 +1360,18 @@ def report_base_station():
     total_tags = db_session.query(Asset_registry).\
         filter(and_(Asset_registry.users_id == current_user.id, 
                  Asset_registry.tag_id.isnot(None))).count()
+                
+    if total_tags == 0 :
+        return render_template("index.html", loadHtml="new_animal_register", \
+        logged_in=current_user.is_authenticated )
     
     # get total base_stations for user
     total_base_stations = db_session.query(Base_station).\
         filter(Base_station.users_id == current_user.id).count()
+    
+    if total_base_stations == 0 :
+        return render_template("index.html", loadHtml="new_animal_register", \
+        logged_in=current_user.is_authenticated )
     
     # get count of (all) tags scanned at (all) basestation for the past 48 hours
     hour_48 = datetime.now() - timedelta(hours=48)
