@@ -189,7 +189,14 @@ def logout():
     flash('user is now logged out ')
     return render_template("index.html", loadHtml="login_error")
 
+@app.route('/reset_password', methods=["GET","POST"] )
+@login_required
+def reset_password():
 
+    if request.method == "POST":
+        request.form.get('password')
+
+    return render_template("index.html", loadHtml="reset_password")
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -465,6 +472,8 @@ def animal_detail_upd_ins():
         return render_template("index.html", loadHtml="animal_detail_upd_ins", 
             logged_in=current_user.is_authenticated, 
             asset_id=asset_id, animal_reg_no=animal_reg_no,
+            group_dropdown=Animal_dropdown.keys(),
+                type_dropdown=Animal_dropdown,
             record_dict = record_dict[0], date_of_birth=date_of_birth, 
             user_id=current_user.id )
 
@@ -478,7 +487,8 @@ def animal_detail_upd_ins():
         db_session.commit()
 
         # redirect to asset_registry list
-        return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
+        return redirect(url_for('asset_registry', loadHtml="asset_registry", 
+        logged_in=current_user.is_authenticated))
 
     if mode == "update" :
         asset_id = request.form.get('id')
@@ -512,16 +522,16 @@ def animal_detail_upd_ins():
         db_session.commit()
 
         # redirect to asset_registry list
-        return redirect(url_for('asset_registry', loadHtml="asset_registry", logged_in=current_user.is_authenticated))
+        return redirect(url_for('asset_registry', 
+        loadHtml="asset_registry", logged_in=current_user.is_authenticated))
 
     #  Default empty return 
-    return render_template("index.html", loadHtml="animal_detail_upd_ins", \
-                logged_in=current_user.is_authenticated, \
+    return render_template("index.html", loadHtml="animal_detail_upd_ins", 
+                logged_in=current_user.is_authenticated, 
                 asset_id=f"", animal_reg_no="",
                 group_dropdown=Animal_dropdown.keys(),
-                type_dropdown=Animal_dropdown.values(),
+                type_dropdown=Animal_dropdown,
                 user_id=current_user.id )
-
 
 @app.route("/animal_medical_upd_ins", methods=["GET","POST"]) 
 @login_required
@@ -689,7 +699,7 @@ def animal_breeding_upd_ins():
 
         asset_id = request.form.get('asset_id')
 
-        return render_template("index.html", loadHtml="animal_breeding_upd_ins", \
+        return render_template("index.html", loadHtml="animal_breeding_upd_ins",
             logged_in=current_user.is_authenticated, 
             asset_id=asset_id, 
             user_id=current_user.id )
@@ -701,16 +711,15 @@ def animal_breeding_upd_ins():
         record_obj = db_session.query(Asset_breeding).filter(Asset_breeding.id == line_id).all()
 
         record_display = sql_result_to_dict(record_obj)
-
-        asset_id = record_display[0]["asset_registry_id"]
         
         # Special handling for date
-        html_timestamp = html_date(record_display[0]["timestamp"])
+        html_start_date = html_date(record_display[0]["start_date"])
+        html_end_date = html_date(record_display[0]["end_date"])
         
-        return render_template("index.html", loadHtml="animal_breeding_upd_ins", \
-            logged_in=current_user.is_authenticated, html_timestamp=html_timestamp, \
-            asset_id=asset_id, animal_reg_no="", \
-            record_display=record_display[0] ,\
+        return render_template("index.html", loadHtml="animal_breeding_upd_ins", 
+            logged_in=current_user.is_authenticated, 
+            html_start_date=html_start_date, 
+            html_end_date=html_end_date, record_display=record_display[0] ,
             user_id=current_user.id )
 
     if mode == "update" :

@@ -1,28 +1,22 @@
-<form id="animal_details" class=" shadow p-1 input" href="animal_detail_upd_ins" method="POST">
+<form id="animal_details" class="shadow input p-5" href="animal_detail_upd_ins" method="POST">
     <h3>Animal Details : {{animal_reg_no}} {{asset_id}}</h3>
     <div class="form-row">
-
-
 
         <div class="form-group col-md-6 ">
             <label for="fname">Animal Reg No</label>
             <input type="text" class="form-control" name="animal_reg_no" required="required" {% if record_dict %}
                 value="{{record_dict.animal_reg_no}}" {% endif %}>
 
-            <label for="asset_type" class="form-label">Type</label>
-            <input class="form-control" name="asset_type" list="asset_typeOptions" placeholder="Type to search..."
-                required="required">
-            <datalist id="asset_typeOptions">
-                {% if record_dict %}
-                <option selected value="{{record_dict.asset_type}}"> {{record_dict.asset_type}} </option>
-                {% endif %}
-                {% for x in type_dropdown %}
-                {% for y in x %}
-                <option value="{{y}}"></option>
-                {% endfor%}
+            <label for="type">Type</label>
+            <select name="type" class="form-control" required="required">
+                {% for name, value in type_dropdown.items() %}
+                <optgroup label="{{name}}">
+                    {% for item in value %}
+                    <option  value="{{item}}"> {{item}} </option>
+                    {% endfor %}
+                </optgroup>
                 {% endfor %}
-
-            </datalist>
+            </select>
 
             <label for="gender">Gender</label>
             <select name="gender" class="form-control" required="required">
@@ -34,29 +28,30 @@
             </select>
 
             <label for="father_id">Father ID</label>
-            <input type="number" class="form-control" name="father_id" {% if record_dict %}
-                value="{{record_dict.father_id}}" {% endif %}>
+            <input type="number" class="form-control" name="father_id" 
+            {% if record_dict %}
+            {% if record_dict.father_id|int != 0 %}
+                value="{{record_dict.father_id}}" 
+            {% endif %}
+            {% endif %}
+            >
 
             <label for="father_note">Father note</label>
-            <input type="text" class="form-control" name="father_note" {% if record_dict %}
-                value="{{record_dict.father_note}}" {% endif %}>
+            <input type="text" class="form-control" name="father_note"
+             {% if record_dict %}
+                value="{{record_dict.father_note}}" 
+            {% endif %}>
 
         </div> <!-- end div col-left-->
 
         <div class="form-group col-md-6">
 
-            <label for="group_name" class="form-label">Group</label>
-            <input class="form-control" name="group_name" list="groupOptions" placeholder="Type to search..."
-                required="required">
-            <datalist id="groupOptions">
-                {% if record_dict %}
-                <option selected value="{{record_dict.group_name}}"> {{record_dict.group_name}} </option>
-                {% endif %}
-                {% for x in group_dropdown %}
-                <option value="{{x}}"></option>
+            <label for="group_name">Group</label>
+            <select name="group_name" class="form-control" required="required">
+                {% for item in group_dropdown %}
+                <option selected value="{{item}}"> {{item}} </option>
                 {% endfor %}
-
-            </datalist>
+            </select>
 
             <label for="date_of_birth">Date of Birth </label>
             <input type="date" class="form-control" name="date_of_birth" required="required" {% if record_dict %}
@@ -67,8 +62,13 @@
                 value="{{record_dict.asset_breeding_id}}" {% endif %}>
 
             <label for="mother_id">Mother ID</label>
-            <input type="number" class="form-control" name="mother_id" {% if record_dict %}
-                value="{{record_dict.mother_id}}" {% endif %}>
+            <input type="number" class="form-control" name="mother_id" 
+            {% if record_dict %}
+            {% if record_dict.mother_id|int != 0 %}
+                value="{{record_dict.mother_id}}" 
+            {% endif %}
+            {% endif %}
+            >
 
             <label for="mother_note">Mother note</label>
             <input type="text" class="form-control" name="mother_note" {% if record_dict %}
@@ -77,8 +77,9 @@
         </div> <!-- end div col-right -->
 
         <div class="row w-100 ">
-            <div class="col-12  my-1 d-flex flex-row-reverse">
-                <button type="submit">Save </button>
+            <div class="col-10"></div>
+            <div class="col-2  my-1 d-flex flex-row-reverse">
+                <button type="submit">ADD MORE </button>
 
                 <input type="hidden" name="id" {% if record_dict %} value="{{record_dict.id}}" {% else %} value="new"
                     {% endif %}>

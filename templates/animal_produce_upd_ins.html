@@ -1,4 +1,4 @@
-<form id="animal_produce_upd_ins" class="flex input" href="animal_produce_upd_ins" method="POST">
+<form id="animal_produce_upd_ins" class="shadow input p-5 input" href="animal_produce_upd_ins" method="POST">
     <h3>Produce Details {%if record_display %} : {{animal_reg_no}} Asset Id:{{asset_id}} line:{{line_id}} {% endif %}
     </h3>
 
@@ -57,8 +57,9 @@
             <input type="text" class="form-control" name="Note" {%if record_display %} value="{{record_display.note}}"
                 {% endif %}>
         </div>
-        <div class="col-10  my-3">
-            <button type="submit">Save </button>
+        <div class="col-10"></div>
+        <div class="col-2  my-3">
+            <button type="submit">ADD MORE</button>
         </div>
         <div class="hidden">
             <input type="hidden" name="line_id" value="{{line_id}}">

@@ -1,0 +1,85 @@
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive ">
+            <table id="tab_asset_registry" class="table table-hover table-sm shadow">
+                <thead>
+                    <tr>
+                        {% for col in record_list[0] %}
+
+                        <!-- filter columns ignore some columns -->
+                        {% if col == "href_open_street_map" %}
+                        <!-- do not display -->
+
+                        {% else %}
+                        <th scope="col">{{col}}</th>
+                        {% endif %}
+
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in record_list %}
+
+                    <tr>
+                        {% for col in rec %}
+
+                        <!-- GENERAL filter columns exclude from table -->
+                        {% if col == "href_open_street_map" %}
+                        <!-- Exclude from Table -->
+
+                        {% elif col == "id" %}
+                        <!-- special handle col-->
+                        <!-- do not display add  class="visually-hidden"  !!! does not work-->
+                        <td>{{ rec[col] }} </td>
+
+                        {% else %}
+
+                        <td>{{ rec[col] }} </td>
+
+                        {% endif %}
+                        <!-- end method-->
+
+
+                        {% endfor %}
+                        <!-- end loop COL -->
+
+                        <!-- add 4 buttons if post request Update / Delete -->
+                        <td class="ah ">
+
+                            <!-- UPDATE button -->
+                            <form action="animal_profile_page" method="POST">
+                                <input type="hidden" name="Animal_id" 
+                                    value="{{rec['id']}}">
+                                <button type="submit">
+                                    <i class="fa fa-pencil-square-o"> Update</i></button>
+                            </form>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <!-- DELETE BUTTON -->
+                            <form action="animal_detail_upd_ins"
+                                method="POST">
+                                <input type="hidden" name="mode" 
+                                    value="delete">
+                                <input type="hidden" name="lineid" 
+                                    value="{{rec['id']}}">
+                                <button type=" submit">
+                                    <i class="fa fa-minus"></i> Delete</button>
+                            </form>
+
+                        </td>
+                        <!-- END add 4 buttons -->
+
+
+                    </tr>
+
+                    {% endfor %}
+                    <!-- end loop list-->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

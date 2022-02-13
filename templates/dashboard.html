@@ -1,8 +1,20 @@
 <div id="dashboard_id" class="container">
-  <h1>Dashboard</h1>
+  
+  <div class="row p-3 mt-1" style="background-color:#006fa9;">
+    <div class="col-sm-12 col-md-9 text-align-center" style="font-size:30px; color:white; ">
+      To scan you tags please download our app
+    </div>
 
-  <div class="row" >
-    {% include "asset_registry.html" %}
+    <div class="col-sm-12 col-md-3 ">
+      <a href=""><img src="static/images/Google_Play_180_54.png"> </img></a>
+    </div>
+  </div>
+
+  <div class="row pt-3">
+    <h1>Animal Registry</h1>
+    <div class=" container overflow-scroll"  >
+      {% include "asset_dashboard_tab.html" %}
+    </div>
   </div>
 
   <div class="row">
@@ -11,7 +23,7 @@
       <div id="div_map_rep_dashboard" class="mh-900 w-90" style="width: 500px; height: 520px; "> </div>
     </div> <!-- end map-->
     <div class="col-sm-9 col-lg-3">
-      <div class="row mb-auto ">  
+      <div class="row mb-auto ">
         <canvas class=" my-2 w-80 h-80" id="rep_dashboard_Chart_1"></canvas>
         <label class="font-italic text-info font-weight-bold"> Base Stations Tag reads</label>
       </div>
