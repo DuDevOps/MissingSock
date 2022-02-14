@@ -194,9 +194,11 @@ def logout():
 def reset_password():
 
     if request.method == "POST":
-        request.form.get('password')
+        user_email=request.form.get('email')
 
-    return render_template("index.html", loadHtml="reset_password")
+    return render_template("index.html", loadHtml="reset_password",
+        logged_in=current_user.is_authenticated,
+        user_email=user_email )
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -244,7 +246,8 @@ def register():
         flash(f"New user created for {request.form.get('email')}")
         return render_template("index.html", loadHtml="login_error")
 
-    return render_template("index.html", loadHtml="register", logged_in=current_user.is_authenticated)
+    return render_template("index.html", loadHtml="register", 
+    logged_in=current_user.is_authenticated)
 
 @app.route("/my_profile", methods=["GET","POST"])
 def my_profile():
