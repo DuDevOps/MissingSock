@@ -244,7 +244,7 @@ def register():
         login_user(new_user)
         
         flash(f"New user created for {request.form.get('email')}")
-        return render_template("index.html", loadHtml="login_error")
+        return render_template("index.html", loadHtml="login_success")
 
     return render_template("index.html", loadHtml="register", 
     logged_in=current_user.is_authenticated)
@@ -1127,7 +1127,10 @@ def dashboard():
         sql_result = db_session.query(
             *list_of_columns
         ).filter(Asset_registry.users_id == current_user.id).all()
-    finally:
+    except:
+        return render_template("index.html", loadHtml="new_animal_register", \
+        logged_in=current_user.is_authenticated )
+    else:
         # if table has no entries -> send to new animal register
         if len(sql_result) == 0 :
             return redirect(url_for('new_animal_register', \
