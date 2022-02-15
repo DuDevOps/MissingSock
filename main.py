@@ -178,7 +178,13 @@ def login():
         
         else:
             login_user(user)
-            return redirect(url_for('dashboard', loadHtml="animal_registry", logged_in=current_user.is_authenticated))
+
+            count_asset_registry = db_session.query(Asset_registry).filter(Asset_registry.users_id == user.id).count()
+            
+            if (count_asset_registry == 0 ) :
+                return redirect(url_for('animal_detail_upd_ins', loadHtml="animal_detail_upd_ins", logged_in=current_user.is_authenticated))
+            else:
+                return redirect(url_for('dashboard', loadHtml="animal_registry", logged_in=current_user.is_authenticated))
 
     return render_template("index.html", loadHtml="login")
 
@@ -243,7 +249,7 @@ def register():
 
         login_user(new_user)
         
-        flash(f"New user created for {request.form.get('email')}")
+        flash(f"New user created for {request.form.get('email')} / login to start")
         return render_template("index.html", loadHtml="login_success")
 
     return render_template("index.html", loadHtml="register", 
