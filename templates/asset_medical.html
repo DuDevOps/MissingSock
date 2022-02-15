@@ -2,16 +2,24 @@
     <h1>Asset Medical ( {{med_rec_list_count}} )</h1>
 </div>
 
-<div class="row">
-    <div class="col-12  shadow p-5">
+<div class="row shadow p-5">
+    <div class="col-12  ">
         <div class="table-responsive ">
             <table id="tab_Asset_medical" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
 
-                        {% for col in med_column_list %}
-                        <th scope="col">{{col}}</th>
+                        {% for col in med_col_header %}
+                            {% if col == "id" %}
+                            <!-- do not display  -->
+                            {% else %}
+                                <th scope="col">{{col}}</th>
+                            {% endif %}
                         {% endfor %}
+                        <th scope="col">Action</th>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col">&nbsp;</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -20,8 +28,12 @@
                     <tr>
 
                         {% for col in rec %}
+                            {% if col == "id" %}
+                                <!-- do not display  -->
+                            {% else %}
 
-                        <td>{{ rec[col] }} </td>
+                                <td>{{ rec[col] }} </td>
+                            {% endif %}
 
                         {% endfor %}
                         <!-- end loop COL -->
@@ -54,10 +66,6 @@
                         </td>
                         <!-- END add 2 buttons -->
 
-
-
-
-
                     </tr>
 
                     {% endfor %}
@@ -68,5 +76,16 @@
             </table>
         </div>
     </div>
+    <div class="col-12 mt-2">
+        <form class="d-flex flex-row-reverse" action="animal_medical_upd_ins" method="POST">
+            <input type="hidden" name="mode" value="new_rec">
+            <input type="hidden" name="asset_id" value="{{asset_id}}">
+            {% if button_display == "yes" %}
+            <button type=" submit">
+                <i class="fa fa-plus"></i>Add Medical Record</button>
+            {% endif %}
+        </form>
+    </div>
 
 </div>
+

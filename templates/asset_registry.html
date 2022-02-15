@@ -1,10 +1,7 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1>Asset Registry ( {{rec_list_count}} ) </h1>
+    <h1>Animal Registry ( {{rec_list_count}} ) </h1>
     <h3>User Id: {{user_id}}</h3>
-
 </div>
-
-
 
 <div class="row shadow p-3">
     <div class="col-12">
@@ -12,17 +9,22 @@
             <table id="tab_asset_registry" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
-                        {% for col in record_list[0] %}
+                        {% for col in col_header %}
 
                         <!-- filter columns ignore some columns -->
                         {% if col == "href_open_street_map" %}
                         <!-- do not display -->
+                        {% elif col == "id" %}
+                        <!-- Exclude from Table-->
 
                         {% else %}
                         <th scope="col">{{col}}</th>
                         {% endif %}
 
                         {% endfor %}
+                        <th scope="col"> Action</th>
+                        <th scope="col"> &nbsp; </th>
+                        <th scope="col"> &nbsp; </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,9 +38,7 @@
                         <!-- Exclude from Table -->
 
                         {% elif col == "id" %}
-                        <!-- special handle col-->
-                        <!-- do not display add  class="visually-hidden"  !!! does not work-->
-                        <td>{{ rec[col] }} </td>
+                        <!-- Exclude from Table-->
 
                         {% else %}
 

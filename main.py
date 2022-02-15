@@ -417,24 +417,37 @@ def asset_registry():
     list_of_columns = [Asset_registry.id,
             Asset_registry.animal_reg_no,
             Asset_registry.group_name,
-            Asset_registry.breed_type,
+            Asset_registry.asset_type,
             Asset_registry.gender,
             Asset_registry.date_of_birth,
             Asset_registry.tag_id,
             Asset_registry.father_id,
             Asset_registry.mother_id]
 
-    # columns headings
+    # columns dictonary name
     col_list = [
         "id",
         "animal_reg_no",
         "group_name",
-        "breed_type",
+        "asset_type",
         "gender",
         "date_of_birth",
         "tag_id",
         "father_id",
         "mother_id"
+        ]
+    
+    # columns dictonary name
+    col_header = [
+        "id",
+        "Animal Reg No",
+        "Group",
+        "Type",
+        "Gender",
+        "Date of Birth",
+        "Tag No",
+        "Father Id",
+        "Mother Id"
         ]
 
     try:
@@ -444,22 +457,26 @@ def asset_registry():
     finally:
         # if table has no entries -> send to new animal register
         if len(sql_result) == 0 :
-            return redirect(url_for('new_animal_register', \
-                loadHtml="new_animal_register", \
-                logged_in=current_user.is_authenticated,\
+            return redirect(url_for('new_animal_register', 
+                loadHtml="new_animal_register", 
+                logged_in=current_user.is_authenticated,
                 user_id=current_user.id))
 
     record_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
-    return render_template("index.html", loadHtml="asset_registry", \
-        logged_in=current_user.is_authenticated, \
-        user_id=current_user.id, record_list=record_dict,\
-        rec_list_count= len(record_dict), method=request.method,\
-             list_of_columns=col_list)
+    return render_template("index.html", loadHtml="asset_registry", 
+        logged_in=current_user.is_authenticated, 
+        user_id=current_user.id, record_list=record_dict,
+        rec_list_count= len(record_dict), method=request.method,
+             list_of_columns=col_list, col_header=col_header)
 
 @app.route("/animal_detail_upd_ins", methods=["GET","POST"]) 
 @login_required
 def animal_detail_upd_ins():
+
+    father_dict = get_father_dict()
+    mother_dict = get_mother_dict()
+    breeding_dict = get_breeding_dict()
 
     mode = request.form.get('mode')
 
@@ -476,8 +493,12 @@ def animal_detail_upd_ins():
             logged_in=current_user.is_authenticated, 
             asset_id=asset_id, animal_reg_no=animal_reg_no,
             group_dropdown=Animal_dropdown.keys(),
-                type_dropdown=Animal_dropdown,
-            record_dict = record_dict[0], date_of_birth=date_of_birth, 
+            type_dropdown=Animal_dropdown,
+            father_dict=father_dict,
+            mother_dict=mother_dict,
+            breeding_dict=breeding_dict,
+            record_dict = record_dict[0], date_of_birth=date_of_birth,
+
             user_id=current_user.id )
 
     if mode == "delete" :
@@ -534,6 +555,9 @@ def animal_detail_upd_ins():
                 asset_id=f"", animal_reg_no="",
                 group_dropdown=Animal_dropdown.keys(),
                 type_dropdown=Animal_dropdown,
+                father_dict=father_dict,
+                mother_dict=mother_dict,
+                breeding_dict=breeding_dict,
                 user_id=current_user.id )
 
 @app.route("/animal_medical_upd_ins", methods=["GET","POST"]) 
@@ -597,9 +621,22 @@ def animal_medical_upd_ins():
         
         db_session.commit()
 
+        # columns header name
+        col_header = [
+                "id",
+                "Asset Reg No",
+                "Date",
+                "Reason",
+                "Medicine",
+                "Dosage",
+                "Note"          
+            ]
+
         # redirect to asset_medical list
-        return redirect(url_for('asset_registry', loadHtml="asset_registry", \
-            logged_in=current_user.is_authenticated))
+        return redirect(url_for('asset_registry', 
+             loadHtml="asset_registry", 
+            logged_in=current_user.is_authenticated,
+            col_header=col_header))
 
     if mode == "delete" :
         line_id = request.form.get('line_id')
@@ -622,11 +659,10 @@ def animal_produce_upd_ins():
 
     if mode == "new_rec":
         asset_id = request.form.get('asset_id')
-        animal_reg_no = request.form.get('animal_reg_no')
 
         return render_template("index.html", loadHtml="animal_produce_upd_ins", 
-            logged_in=current_user.is_authenticated, asset_id=asset_id,
-            animal_reg_no=animal_reg_no,
+            logged_in=current_user.is_authenticated, 
+            asset_id=asset_id,
             user_id=current_user.id)
 
     if mode == "display_rec" :
@@ -667,7 +703,7 @@ def animal_produce_upd_ins():
             record_upd = db_session.query(Asset_produce).filter(Asset_produce.note  == random_animal_name).first()
         
         record_upd.users_id  = current_user.id
-        record_upd.asset_registry_id  = request.form.get('asset_registry_id')
+        record_upd.asset_registry_id  = request.form.get('asset_id')
         record_upd.timestamp  = request.form.get('Timestamp')
         record_upd.type  = request.form.get('Type')
         record_upd.quantity  = request.form.get('Quantity')
@@ -677,7 +713,8 @@ def animal_produce_upd_ins():
         db_session.commit()
 
         # redirect to asset_registry list
-        return redirect(url_for('asset_produce', loadHtml="asset_produce", \
+        return redirect(url_for('asset_produce', 
+            loadHtml="asset_produce", 
             logged_in=current_user.is_authenticated))
 
 
@@ -698,6 +735,10 @@ def animal_produce_upd_ins():
 def animal_breeding_upd_ins():
     mode = request.form.get('mode')
 
+    father_dict = get_father_dict()
+    mother_dict = get_mother_dict()
+    # =========================
+
     if mode == "new_rec" : # req from asset_breeding page
 
         asset_id = request.form.get('asset_id')
@@ -705,7 +746,9 @@ def animal_breeding_upd_ins():
         return render_template("index.html", loadHtml="animal_breeding_upd_ins",
             logged_in=current_user.is_authenticated, 
             asset_id=asset_id, 
-            user_id=current_user.id )
+            user_id=current_user.id,
+            mother_dict=mother_dict,
+            father_dict=father_dict )
     
     if mode == "display_rec" : # req from asset_registry page
         
@@ -723,7 +766,9 @@ def animal_breeding_upd_ins():
             logged_in=current_user.is_authenticated, 
             html_start_date=html_start_date, 
             html_end_date=html_end_date, record_display=record_display[0] ,
-            user_id=current_user.id )
+            user_id=current_user.id, 
+            mother_dict=mother_dict,
+            father_dict=father_dict)
 
     if mode == "update" :
         line_id = request.form.get('line_id')
@@ -737,25 +782,26 @@ def animal_breeding_upd_ins():
             new_rec = Asset_breeding()
             new_rec.users_id  = current_user.id
             random_animal_name = f"{current_user.id}{randnum}"
-            new_rec.reason  = random_animal_name
+            new_rec.notes  = random_animal_name
             db_session.add(new_rec)
             db_session.commit()
 
-            record_upd = db_session.query(Asset_breeding).filter(Asset_breeding.reason  == random_animal_name).first()
+            record_upd = db_session.query(Asset_breeding).filter(Asset_breeding.notes  == random_animal_name).first()
         
         record_upd.users_id  = current_user.id
         record_upd.breeding_number  = request.form.get('Breeding_number')
         record_upd.start_date  = check_date(request.form.get('Start_date'))
         record_upd.end_date  = check_date(request.form.get('End_date'))
-        record_upd.twin_number  = check_date(request.form.get('Twin_number'))
-        record_upd.pregant  = check_date(request.form.get('Pregnant'))
-        record_upd.asset_registry_father_id  = request.form.get('asset_registry_father_id')
-        record_upd.asset_registry_mother_id  = request.form.get('asset_registry_mother_id')
+        record_upd.pregnant  = check_date(request.form.get('Pregnant'))
+        record_upd.asset_registry_father_id  = request.form.get('Father_id')
+        record_upd.asset_registry_mother_id  = request.form.get('Mother_id')
+        record_upd.notes  = request.form.get('Notes')
         
+
         db_session.commit()
 
         # redirect to asset_breeding list
-        return redirect(url_for('Asset_breeding', loadHtml="Asset_breeding", \
+        return redirect(url_for('asset_breeding', loadHtml="Asset_breeding", \
             logged_in=current_user.is_authenticated))
 
     if mode == "delete" :
@@ -768,7 +814,7 @@ def animal_breeding_upd_ins():
         db_session.commit()
 
         # redirect to asset_breeding list
-        return redirect(url_for('Asset_breeding', loadHtml="Asset_breeding", logged_in=current_user.is_authenticated))
+        return redirect(url_for('asset_breeding', loadHtml="Asset_breeding", logged_in=current_user.is_authenticated))
 
 
 @app.route("/asset_medical", methods=["GET"]) 
@@ -777,24 +823,36 @@ def asset_medical():
 
     # Get all row at least 1 row must exist
     list_of_columns = [Asset_medical.id,
+            Asset_medical.asset_registry_id,
             Asset_medical.timestamp,
             Asset_medical.reason,
             Asset_medical.medicine,
             Asset_medical.dosage,
-            Asset_medical.note,
-            Asset_medical.asset_registry_id
+            Asset_medical.note
             ]
 
-    # columns headings
+    # columns dict name
     col_list = [
                 "id",
+                "asset_registry_id",
                 "timestamp",
                 "reason",
                 "medicine",
                 "dosage",
-                "note",
-                "asset_registry_id"
+                "note"
     ]
+
+     # columns header name
+    col_header = [
+                "id",
+                "Asset Reg No",
+                "Date",
+                "Reason",
+                "Medicine",
+                "Dosage",
+                "Note"          
+    ]
+
     try:
         sql_result = db_session.query(
             *list_of_columns
@@ -811,9 +869,11 @@ def asset_medical():
 
 
     return render_template("index.html", loadHtml="asset_medical", 
-        logged_in=current_user.is_authenticated, med_record_list=record_dict,
+        logged_in=current_user.is_authenticated, 
+        med_record_list=record_dict,
         med_rec_list_count= len(record_dict),
-        med_column_list=col_list)
+        med_col_header=col_header,
+        button_display="no")
 
 #========================
 
@@ -826,7 +886,6 @@ def asset_breeding():
             Asset_breeding.breeding_number,
             Asset_breeding.start_date,
             Asset_breeding.end_date,
-            Asset_breeding.twin_number,
             Asset_breeding.pregnant,
             Asset_breeding.asset_registry_father_id,
             Asset_breeding.asset_registry_mother_id
@@ -838,11 +897,22 @@ def asset_breeding():
                 "breeding_number",
                 "start_date",
                 "end_date",
-                "twin_number",
                 "pregnant",
                 "asset_registry_father_id",
                 "asset_registry_mother_id"
     ]
+
+    # columns headings
+    col_header = [
+                "id",
+                "Breeding Number",
+                "Start Date",
+                "End Date",
+                "Pregnant",
+                "Father id",
+                "Mother id"
+    ]
+
     try:
         sql_result = db_session.query(
             *list_of_columns
@@ -861,7 +931,8 @@ def asset_breeding():
     return render_template("index.html", loadHtml="asset_breeding", 
         logged_in=current_user.is_authenticated, breeding_record_list=record_dict,
         breeding_rec_list_count= len(record_dict),
-        breeding_column_list=col_list)
+        breeding_column_list=col_list, 
+        breeding_col_header=col_header)
 
     # ==========================
 
@@ -966,25 +1037,35 @@ def asset_produce():
     
     # Get all row at least 1 row must exist
     list_of_columns = [Asset_produce.id,
+            Asset_produce.asset_registry_id,
             Asset_produce.timestamp,
             Asset_produce.type,
-            Asset_produce.quantity,
             Asset_produce.measurement,
-            Asset_produce.note,
-            Asset_produce.asset_registry_id,
-            Asset_produce.users_id]
+            Asset_produce.quantity,
+            Asset_produce.note]
 
-    # columns headings
+    # columns dict names
     col_list = [
                 "id",
+                "asset_registry_id",
                 "timestamp",
                 "type",
-                "quantity",
                 "measurement",
-                "note",
-                "asset_registry_id",
-                "user_id"
+                "quantity",
+                "note"
     ]
+
+    # columns headers
+    col_header_list = [
+                "id",
+                "Asset Reg No",
+                "Date",
+                "Type",
+                "Measurement",
+                "Quantity",
+                "Notes"
+    ]
+
     try:
         sql_result = db_session.query(
             *list_of_columns
@@ -1001,9 +1082,11 @@ def asset_produce():
 
 
     return render_template("index.html", loadHtml="asset_produce", 
-        logged_in=current_user.is_authenticated, produce_record_list=record_dict,
-        produce_rec_list_count= len(record_dict), 
-        produce_column_list=col_list)
+        logged_in=current_user.is_authenticated, 
+        produce_record_list=record_dict,
+        produce_rec_list_count=len(record_dict), 
+        produce_column_list=col_list,
+        produce_col_header_list=col_header_list)
 
 @app.route("/dashboard")
 @login_required
@@ -1013,12 +1096,10 @@ def dashboard():
     list_of_columns = [Asset_registry.id,
             Asset_registry.animal_reg_no,
             Asset_registry.group_name,
-            Asset_registry.breed_type,
+            Asset_registry.asset_type,
             Asset_registry.gender,
-            Asset_registry.date_of_birth,
             Asset_registry.tag_id,
-            Asset_registry.father_id,
-            Asset_registry.mother_id]
+            Asset_registry.date_of_birth ]
 
     # columns headings
     col_list = [
@@ -1027,10 +1108,19 @@ def dashboard():
         "group_name",
         "breed_type",
         "gender",
-        "date_of_birth",
         "tag_id",
-        "father_id",
-        "mother_id"
+        "date_of_birth"
+        ]
+
+    # columns dictonary name
+    col_header = [
+        "id",
+        "Animal Reg No",
+        "Group",
+        "Type",
+        "Gender",        
+        "Tag No",
+        "Date of Birth"
         ]
 
     try:
@@ -1090,7 +1180,8 @@ def dashboard():
         logged_in=current_user.is_authenticated, 
         user_id=current_user.id, record_list=record_dict,
         rec_list_count= len(record_dict), method=request.method,
-             list_of_columns=col_list, loadJson=loadJson2)
+             list_of_columns=col_list, loadJson=loadJson2,
+             col_header=col_header )
 
 @app.route("/report_no_read_tag_hour", methods=["GET","POST"])
 @login_required
@@ -1453,21 +1544,36 @@ def animal_profile_page():
     #======================================================================================
     
     # Asset_medical.html
-        # Get all row at least 1 row must exist
-    medical_list_of_columns = [Asset_medical.id, Asset_medical.timestamp,
-            Asset_medical.reason, Asset_medical.medicine,
-            Asset_medical.dosage, Asset_medical.note, 
-            Asset_medical.asset_registry_id, Asset_medical.users_id 
+    # Get all row at least 1 row must exist
+    medical_list_of_columns = [Asset_medical.id,
+            Asset_medical.asset_registry_id,
+            Asset_medical.timestamp,
+            Asset_medical.reason,
+            Asset_medical.medicine,
+            Asset_medical.dosage,
+            Asset_medical.note
+            ]
+
+    # columns dict name
+    medical_dict_name_list = [
+                "id",
+                "asset_registry_id",
+                "timestamp",
+                "reason",
+                "medicine",
+                "dosage",
+                "note"
     ]
 
-    # name in form used for columns
-    medical_formname_list = ["id", "timestamp", "reason", "medicine", "dosage",
-                "note", "asset_registry_id", "user_id"
-    ]
-
-    # columns headings
-    medical_col_list = ["id", "timestamp", "reason", "medicine", "dosage",
-                "note", "asset_registry_id", "user_id"
+     # columns header name
+    medical_col_header = [
+                "id",
+                "Asset Reg No",
+                "Date",
+                "Reason",
+                "Medicine",
+                "Dosage",
+                "Note"          
     ]
 
     try:
@@ -1478,7 +1584,7 @@ def animal_profile_page():
         # if table has no entries -> send to asset registry
         medical_record_dict = [{'id':'0'}]
 
-    medical_record_dict = sql_result_column_list_to_dict(medical_formname_list, sql_result)
+    medical_record_dict = sql_result_column_list_to_dict(medical_dict_name_list, sql_result)
 
     #======================================================================================
 
@@ -1487,17 +1593,17 @@ def animal_profile_page():
     produce_list_of_columns = [Asset_produce.id,
              Asset_produce.type, Asset_produce.timestamp, 
              Asset_produce.quantity, Asset_produce.measurement,
-             Asset_produce.note 
+             Asset_produce.note, Asset_produce.asset_registry_id
     ]
 
     # name in form used for columns
-    produce_formname_list = ["id", "type", "timestamp", "quantity",
-           "measurement", "note"
+    produce_dict_name_list = ["id", "type", "timestamp", "quantity",
+           "measurement", "note", "asset_id"
     ]
 
     # columns headings
-    produce_col_list = ["id", "type", "timestamp", "quantity",
-           "measurement", "note"
+    produce_col_list = ["id", "Type", "Date", "Quantity",
+           "Measurement", "Note", "asset_id"
     ]
 
     try:
@@ -1505,21 +1611,25 @@ def animal_profile_page():
             *produce_list_of_columns
         ).filter(Asset_produce.asset_registry_id == asset_id).all()
     finally:
-        # if table has no entries -> send to asset registry
+        # if table has no entries -> send empty dict
         produce_record_dict = [{'id':'0'}]
 
-    produce_record_dict = sql_result_column_list_to_dict(produce_formname_list, sql_result)
+    produce_record_dict = sql_result_column_list_to_dict(produce_dict_name_list, sql_result)
 
     #==================================================================================
 
     return render_template("index.html", 
     loadHtml="animal_profile_page", logged_in=current_user.is_authenticated,
-    record_dict = record_dict[0], date_of_birth=date_of_birth, asset_id=asset_id,
-    animal_reg_no=animal_reg_no,
-    med_record_list=medical_record_dict, med_column_list=medical_col_list, 
-     med_rec_list_count= len(medical_record_dict),  
-    produce_record_list=produce_record_dict, produce_column_list=produce_col_list,
-     produce_rec_list_count= len(produce_record_dict)  
+     record_dict = record_dict[0], 
+     date_of_birth=date_of_birth, asset_id=asset_id,
+     animal_reg_no=animal_reg_no,
+    med_record_list=medical_record_dict, 
+    med_rec_list_count= len(medical_record_dict),  
+    med_col_header=medical_col_header, 
+     produce_record_list=produce_record_dict, 
+     produce_column_list=produce_col_list,
+     produce_rec_list_count= len(produce_record_dict) ,
+    button_display="yes" 
     )
 
 
@@ -1546,6 +1656,85 @@ def html_date(val):
     val = date_time_obj.strftime("%Y-%m-%d")
 
     return val
+
+def get_father_dict() :
+    # Father list
+
+    # Get all row at least 1 row must exist
+    list_of_columns = [Asset_registry.id,
+            Asset_registry.animal_reg_no
+            ]
+
+    # columns headings
+    col_list = [
+                "id",
+                "animal_reg_no"
+    ]
+    try:
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(and_(Asset_registry.users_id == current_user.id, 
+                Asset_registry.gender == "male" )).all()
+    except:
+        # if table has no entries -> send to asset registry
+        return {"id":0, "animal_reg_no": 0}
+
+    father_dict = sql_result_column_list_to_dict(col_list, sql_result)
+
+    return father_dict
+
+def get_mother_dict():
+
+    # Mother list
+
+    # Get all row at least 1 row must exist
+    list_of_columns = [Asset_registry.id,
+            Asset_registry.animal_reg_no
+            ]
+
+    # columns headings
+    col_list = [
+                "id",
+                "animal_reg_no"
+    ]
+    try:
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(and_(Asset_registry.users_id == current_user.id, 
+                Asset_registry.gender == "female" )).all()
+    except:
+        # if table has no entries -> send to asset registry
+        return {"id":0, "animal_reg_no": 0}
+
+    mother_dict = sql_result_column_list_to_dict(col_list, sql_result)
+
+    return mother_dict
+
+def get_breeding_dict():
+
+    # Mother list
+
+    # Get all row at least 1 row must exist
+    list_of_columns = [Asset_breeding.id,
+            Asset_breeding.breeding_number
+            ]
+
+    # columns headings
+    col_list = [
+                "id",
+                "breeding_number"
+    ]
+    try:
+        sql_result = db_session.query(
+            *list_of_columns
+        ).filter(Asset_breeding.users_id == current_user.id).all()
+    except:
+        return {"id":0, "breeding_number": 0}
+
+    mother_dict = sql_result_column_list_to_dict(col_list, sql_result)
+
+    return mother_dict
+
 
 if __name__ == "__main__":
 

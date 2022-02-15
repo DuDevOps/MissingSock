@@ -1,59 +1,84 @@
 <div class="container">
-<div class="row" >
-    <h1>Asset Produce ( {{produce_rec_list_count}} )</h1>
-</div>
+    <div class="row">
+        <h1>Asset Produce ( {{produce_rec_list_count}} )</h1>
+    </div> <!-- end row 1-->
 
-<div class="row">
-    <div class="col-12 shadow p-5">
-        <div class="table-responsive ">
-            <table id="tab_Asset_produce" class="table table-hover table-sm shadow">
-                <thead>
-                    <tr>
-                        {% for col in produce_column_list %}
+    <div class="row shadow p-5">
+        <div class="col-12">
+            <div class="table-responsive ">
+                <table id="tab_Asset_produce" 
+                       class="table table-hover table-sm shadow">
+                    <thead>
+                        <tr>
+                            {% for col in produce_column_list %}
+                            {% if col == "id" %}
+                            <!-- do not display -->
+                            {% elif col == "asset_id" %}
+                            <!-- do not display -->
+                            {% else %}
+                            <th scope="col">{{col}}</th>
+                            {% endif %}
+                            {% endfor %}
+                            <th scope="col">Action</th>
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in produce_record_list %}
 
-                        <th scope="col">{{col}}</th>
+                        <tr>
+                            {% for col in rec %}
+                                {% if col == "id" %}
+                                    <!-- do not display -->
+                                {% elif col == "asset_id" %}
+                                    <!-- do not display -->
+                                {% else %}
+                                    <td>{{ rec[col] }} </td>
+                                {% endif %}
+                            {% endfor %}
+                            <!-- end loop COL -->
+                            <td>
+                                <!-- UPDATE button -->
+                                <form action="animal_produce_upd_ins" method="POST">
+                                    <input type="hidden" name="mode" value="display_rec">
+                                    <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                    <input type="hidden" name="asset_registry_id" value="{{rec['asset_registry_id']}}">
+                                    <button type="submit">
+                                        <i class="fa fa-pencil-square-o"></i> Update </button>
+                                </form>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <!-- DELETE BUTTON -->
+                                <form action="animal_produce_upd_ins" method="POST">
+                                    <input type="hidden" name="mode" value="delete">
+                                    <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                    <button type=" submit">
+                                        <i class="fa fa-minus"></i> Delete</button>
+                                </form>
+
+                            </td>
+                            <!-- END add 2 buttons -->
+                        </tr>
 
                         {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rec in produce_record_list %}
+                        <!-- end loop produce_record_list-->
 
-                    <tr>
-                        {% for col in rec %}
-                        <td>{{ rec[col] }} </td>
-                        {% endfor %}
-                        <!-- end loop COL -->
-                        <td>
-                            <!-- UPDATE button -->
-                            <form action="animal_produce_upd_ins" method="POST">
-                                <input type="hidden" name="mode" value="display_rec">
-                                <input type="hidden" name="line_id" value="{{rec['id']}}">
-                                <input type="hidden" name="asset_registry_id" value="{{rec['asset_registry_id']}}">
-                                <button type="submit">
-                                    <i class="fa fa-pencil-square-o"></i> Update </button>
-                            </form>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>
-                            <!-- DELETE BUTTON -->
-                            <form action="animal_produce_upd_ins" method="POST">
-                                <input type="hidden" name="mode" value="delete">
-                                <input type="hidden" name="line_id" value="{{rec['id']}}">                                
-                                <button type=" submit">
-                                    <i class="fa fa-minus"></i> Delete</button>
-                            </form>
-
-                        </td>
-                        <!-- END add 2 buttons -->
-                    </tr>
-
-                    {% endfor %}
-                    <!-- end loop list-->
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-
-</div>
+        <div class="col-12">
+            <form class="d-flex flex-row-reverse" action="animal_produce_upd_ins" method="POST">
+                <input type="hidden" name="mode" value="new_rec">
+                <input type="hidden" name="asset_id" value="{{asset_id}}">
+            
+                {% if button_display == "yes" %}
+                <button type=" submit">
+                    <i class="fa fa-plus">Add Produce Record </i></button>
+                {% endif %}
+            </form>
+        </div>
+    </div> <!-- end row 2-->
+</div> <!-- end container -->

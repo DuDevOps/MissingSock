@@ -7,13 +7,20 @@
             <input type="text" class="form-control" name="Breeding_number" {% if record_display %}
                 value="{{record_display.breeding_number}}" {% endif %}>
 
-            <label for="Begin_date">Begin Date</label>
-            <input type="date" class="form-control" name="Begin_date" {% if html_start_date %}
+            <label for="Start_date">Begin Date</label>
+            <input type="date" class="form-control" 
+            name="Start_date" {% if html_start_date %}
                 value="{{html_start_date}}" {% endif %}>
 
-            <label for="father_id">Father ID:</label>
-            <input type="number" class="form-control" name="father_id" {% if record_display %}
-                value="{{record_display.asset_registry_father_id}}" {% endif %}>
+                <label for="Father_id">Father ID</label>
+                <select name="Father_id" class="form-control">
+                    {% for opt in father_dict %}
+                        <option value="{{opt.id}}">{{opt.id}} : {{opt.animal_reg_no}}</option>
+                    {% endfor %}
+                    {% if record_display %}
+                        <option selected value="{{record_display.asset_registry_father_id}}">{{record_display.asset_registry_father_id}}</option>
+                    {% endif %}
+                </select>
 
         </div> <!-- end div col-left-->
 
@@ -21,38 +28,53 @@
 
             <label for="Pregnant">Pregnant</label>
             <select name="Pregnant" class="form-control">
-                <option value="Yes">Yes</option>
                 <option value="No">No</option>
+                <option value="Yes">Yes</option>
                 {% if record_display %}
-                <option value="{{record_display.pregant}}">{{record_display.pregant}}</option>
+                <option selected value="{{record_display.pregant}}">{{record_display.pregant}}</option>
                 {% endif %}
             </select>
 
             <label for="End_date">End Date</label>
-            <input type="date" class="form-control" name="End_date" {% if html_end_date %} value="{{html_end_date}}"
+            <input type="date" class="form-control" 
+            name="End_date" {% if html_end_date %} value="{{html_end_date}}"
                 {% endif %}>
 
             <label for="Mother_id">Mother ID</label>
-            <input type="number" class="form-control" name="Mother_id" {% if record_display %}
-                value="{{record_display.asset_registry_mother_id}}" {% endif %}>
-
+            <select name="Mother_id" class="form-control">
+                {% for opt in mother_dict %}
+                    <option value="{{opt.id}}">{{opt.id}} : {{opt.animal_reg_no}}</option>
+                {% endfor %}
+                {% if record_display %}
+                    <option selected value="{{record_display.asset_registry_mother_id}}">{{record_display.asset_registry_mother_id}}</option>
+                {% endif %}
+            </select>
+            
+        
         </div> <!-- end div col-right -->
 
         <div class="row w-100">
             <div class="col-10">
                 <label for="Notes">Notes</label>
-                <input type="text" class="form-control" name="Notes">
+                <input type="text" class="form-control" 
+                name="Notes"
+                {% if record_display %}
+                    value="{{record_display.notes}}" 
+                {% endif %}
+                >
             </div>
-            <div class="hidden">
-                <input type="hidden" name="id">
-                <input type="hidden" name="user_id">
-            </div>
+            
         </div> <!-- end row -->
         <div class="row w-100">
             <div class="col-10"></div>
             <div class="col-2  my-3">
                 <button type="submit">SAVE</button>
             </div>
+            <input type="hidden" name="line_id" 
+                {% if record_display %}
+                    value="{{record_display.id}}"
+                {% endif %}
+            >
             <input type="hidden" name="mode" value="update">
         </div>
     </div>

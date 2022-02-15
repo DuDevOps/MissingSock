@@ -5,10 +5,12 @@
             <table id="tab_asset_registry" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
-                        {% for col in record_list[0] %}
+                        {% for col in col_header %}
 
                         <!-- filter columns ignore some columns -->
                         {% if col == "href_open_street_map" %}
+                        <!-- do not display -->
+                        {% elif col == "id" %}
                         <!-- do not display -->
 
                         {% else %}
@@ -16,6 +18,9 @@
                         {% endif %}
 
                         {% endfor %}
+                        <th  scope="col" >Action</th>
+                        <th  scope="col" >&nbsp;</th>
+                        <th  scope="col" >&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,9 +34,7 @@
                         <!-- Exclude from Table -->
 
                         {% elif col == "id" %}
-                        <!-- special handle col-->
-                        <!-- do not display add  class="visually-hidden"  !!! does not work-->
-                        <td>{{ rec[col] }} </td>
+                        <!-- Exclude from Table -->
 
                         {% else %}
 

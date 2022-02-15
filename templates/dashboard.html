@@ -1,8 +1,8 @@
-<div id="dashboard_id" class="container">
-  
-  <div class="row shadow p-1 mt-1" style="background-color:#006fa9;">
+<div id="dashboard_id" class="container ">
+
+  <div class="row shadow p-1 mt-2" style="background-color:#006fa9;">
     <div class="col-sm-12 col-md-9 text-align-center" style="font-size:30px; color:white; ">
-      To scan you tags please download our app
+      To scan your tags please download our app
     </div>
 
     <div class="col-sm-12 col-md-3 ">
@@ -10,10 +10,14 @@
     </div>
   </div>
 
-  <div class="row shadow p-3 mt-2">
+  <div class="row shadow p-3 mt-2 overflow-hidden" style="height:250px">
     <h1>Animal Registry</h1>
-    <div class=" container overflow-scroll"  >
-      {% include "asset_dashboard_tab.html" %}
+    <div class="container">
+      <div class="row overflow-auto" style="height:25%;">
+        <div class="col-12 " >
+          {% include "asset_dashboard_tab.html" %}
+        </div>
+      </div>
     </div>
   </div>
 

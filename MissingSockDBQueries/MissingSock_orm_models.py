@@ -85,6 +85,7 @@ class Asset_breeding(UserMixin, Base):
     asset_registry_father_id = Column(Integer, nullable=True)
     asset_registry_mother_id = Column(Integer, nullable=True)
     users_id = Column(Integer, nullable=True)
+    notes = Column(String(255), nullable=True)
   
 
 class Asset_offspring(UserMixin, Base):

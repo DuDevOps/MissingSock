@@ -9,9 +9,18 @@
                 <thead>
                     <tr>
 
-                        {% for col in breeding_column_list %}
+                        {% for col in breeding_col_header %}
+                        {% if col == "id" %}
+                        <!-- don't display -->
+
+                        {% else %}
                         <th scope="col">{{col}}</th>
+
+                        {% endif %}
                         {% endfor %}
+                        <th scope="col"> Action</th>
+                        <th scope="col"> &nbsp; </th>
+                        <th scope="col"> &nbsp; </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,8 +29,14 @@
                     <tr>
 
                         {% for col in rec %}
+                        {% if col == "id" %}
+                        <!-- don't display -->
+
+                        {% else %}
 
                         <td>{{ rec[col] }} </td>
+
+                        {% endif %}
 
                         {% endfor %}
                         <!-- end loop COL -->
@@ -62,18 +77,19 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="row">
-        <div class="col-10"></div>
+            <div class="col-10"></div>
+            
+                <div class="col-2">
+                <!-- Add new button -->
+                <form action="animal_breeding_upd_ins" method="POST">
+                    <input type="hidden" name="mode" value="new_rec">
 
-        <div class="col-2">
-            <!-- Add new button -->
-            <form action="animal_breeding_upd_ins" method="POST">
-                <input type="hidden" name="mode" value="new_rec">
-
-                <button type="submit">
-                    <i class="fa fa-plus"></i>ADD MORE</button>
-            </form>
-        </div>
+                    <button type="submit">
+                        <i class="fa fa-plus"></i>ADD MORE</button>
+                </form>
+                </div>
+            
         </div>
     </div>

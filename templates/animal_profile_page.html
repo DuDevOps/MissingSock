@@ -10,28 +10,14 @@
         <div class="col-12">
             {% include "asset_medical.html" %}
         </div>
-        <div class="col-12">
-            <form class="d-flex flex-row-reverse" action="animal_medical_upd_ins" method="POST">
-                <input type="hidden" name="mode" value="new_rec">
-                <input type="hidden" name="asset_id" value="{{asset_id}}">
-                <button type=" submit">
-                    <i class="fa fa-plus"></i>Add Medical Record</button>
-            </form>
-        </div>
+        
     </div>
 
     <div class="row animal_produce shadow-row">
         <div class="col-12">
             {% include "asset_produce.html" %}
         </div>
-        <div class="col-12">
-            <form class="d-flex flex-row-reverse" action="animal_produce_upd_ins" method="POST">
-                <input type="hidden" name="mode" value="new_rec">
-                <input type="hidden" name="asset_id" value="{{asset_id}}">
-                <button type=" submit">
-                    <i class="fa fa-plus">Add Produce Record </i></button>
-            </form>
-        </div>
+        
     </div>
 
 </div>
