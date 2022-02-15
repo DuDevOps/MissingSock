@@ -1,4 +1,4 @@
-<h1>Register</h1>
+<h1>My Profile</h1>
 
 <form id="register-page" class="flex  shadow p-5" href="my_profile" method="POST">
   <div class="form-row">
@@ -41,6 +41,7 @@
     </div> <!-- end div col-left-->
 
     <div id="col-right" class="form-group col-md-6">
+      
       <label for="Surname">Surname:</label>
       <input type="text" class="form-control"  
       name="surname" value="{{user_detail.surname}}">
@@ -61,10 +62,19 @@
              pattern="0-9]{2}.[0-9]{6}"
              value="{{user_detail.gps_long}}">
 
-      <a href="reset_password"  class="fw-bold p-3 fs-1">reset passwd ?</a>
+      <div class="col-12"></div>
 
-      <button class="w-25 btn btn-lg btn-primary" type="submit">Update </button>
-
+      <label for="passwd">Update Password</label>
+      <input type="password" class="form-control" 
+             name="updPasswd">
+      
+      <label for="passwd">Confirm Password</label>
+      <input type="password" class="form-control" 
+            name="confirmPasswd">
+      
+      <div class="d-flex ">
+      <button class="pt-auto w-25 btn btn-lg btn-primary" type="submit">Update </button>
+    </div>
 
 
     </div> <!-- end div col-right -->

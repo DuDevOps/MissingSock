@@ -120,10 +120,29 @@ class Tag_current(UserMixin, Base):
     timestamp = Column(DateTime, nullable=True)
     base_station_id = Column(Integer, nullable=True)
 
+class Tag_hist(UserMixin, Base):
+    __tablename__ = 'tag_hist'
+
+    id = Column(Integer, primary_key=True)
+    tag_id = Column(Integer, nullable=True)	
+    gps_lat = Column(String(20), nullable=False)
+    gps_long = Column(String(20), nullable=False)
+    timestamp = Column(DateTime, nullable=True)
+    base_station_id = Column(Integer, nullable=True)
+
 class Base_station_current(UserMixin, Base):
     __tablename__ = 'base_station_current'
 
     id = Column(Integer, primary_key=True)	
+    gps_lat = Column(String(20), nullable=False)
+    gps_long = Column(String(20), nullable=False)
+    timestamp = Column(DateTime, nullable=True)
+
+class Base_station_hist(UserMixin, Base):
+    __tablename__ = 'base_station_hist'
+
+    id = Column(Integer, primary_key=True)	
+    base_id = Column(Integer, nullable=False)
     gps_lat = Column(String(20), nullable=False)
     gps_long = Column(String(20), nullable=False)
     timestamp = Column(DateTime, nullable=True)

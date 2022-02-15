@@ -22,9 +22,11 @@
             <label for="Base_station">Base Station</label>
             <select name="Base_staion" required="required" class="form-control">
               <option value="All">All</option>
-              {%if Base_station_list %}
-              <option value="{{Base_station_list.id}}"> {{Base_station_list.id}} {{Base_station_list.nickname}}
-              </option>
+              {% if Base_station_list %}
+                {% for Base in Base_station_list %}
+                  <option value="{{Base.id}}"> {{Base.id}} {{Base.nickname}}
+                  </option>
+                {% endfor %}
               {% endif %}
 
             </select>

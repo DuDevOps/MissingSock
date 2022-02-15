@@ -17,7 +17,8 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from MissingSockDBQueries import MissingSock_sql
 from MissingSockDBQueries.MissingSock_orm_models import Asset_medical, sql_result_to_dict, Users, Asset_registry, \
     Asset_breeding, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
-    Base_station_current, sql_result_column_list_to_dict  
+    Base_station_current, sql_result_column_list_to_dict, Base_station_hist, \
+    Tag_hist 
 
 from MissingSockDBQueries.MissingSock_database import db_session
 
@@ -1466,7 +1467,7 @@ def report_base_station():
     if request.method == "POST":
         fromDate = request.form.get('fromDate')
         toDate = request.form.get('toDate') 
-        inBase = request.form.get('tag_id')  
+        inBase = request.form.get('Base_staion')  
 
     # get total tags for user
     total_tags = db_session.query(Asset_registry).\
@@ -1496,12 +1497,12 @@ def report_base_station():
     # get (current) location for base_stations
     if fromDate and inBase != "All":
         
-        tag_list = db_session.query(Tag_current, Tag).\
-            filter(and_(Tag_current.id == Tag.id,
-                Tag.users_id == current_user.id,
-              Tag_current.timestamp > fromDate,
-              Tag_current.timestamp < toDate,
-              Tag_current.id == inTag )).all()
+        base_stations_current_location = db_session.\
+            query(Base_station_hist, Base_station).\
+                filter(and_(Base_station_hist.base_id == Base_station.id,
+                Base_station.users_id == current_user.id,
+                Base_station_hist.base_id == inBase
+                )).all()
     else:
         base_stations_current_location = db_session.\
             query(Base_station_current, Base_station).\
@@ -1533,7 +1534,7 @@ def report_base_station():
     return render_template("index.html", 
     loadHtml="report_base_station",
     logged_in=current_user.is_authenticated, 
-    loadJson=loadJson2 )
+    loadJson=loadJson2, Base_station_list=base_station_current_dict )
 
     # ===================   end report_base_station =========
 
