@@ -1,4 +1,4 @@
-<h1> Farming Technology Solution Management</h1>
+<h2> Farming Technology Solution Management</h2>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 {% for message in messages %}
@@ -6,7 +6,7 @@
 {% if flash_type == "no_base_station" %}
 
 <div class="alert alert-warning w-50" role="alert">
-  <h4 class="alert-heading">Additional step needed</h4>
+  <h5 class="alert-heading">Additional step needed</h5>
   <p> {{ message }} </p>
   <hr>
 
@@ -16,7 +16,7 @@
 {% elif flash_type == "no_tag" %}
 
 <div class="alert alert-warning w-50" role="alert">
-  <h4 class="alert-heading">Additional step needed</h4>
+  <h5 class="alert-heading">Additional step needed</h5>
   <p> {{ message }} </p>
   <hr>
 
@@ -26,7 +26,7 @@
 {% elif flash_type == "dashboard_no_data" %}
 
 <div class="alert alert-warning w-50" role="alert">
-  <h4 class="alert-heading">Additional step needed</h4>
+  <h5 class="alert-heading">Additional step needed</h5>
   <p> {{ message }} </p>
   <hr>
 
@@ -35,7 +35,7 @@
 {% else %}
 
 <div class="alert alert-success w-50" role="alert">
-  <h4 class="alert-heading">Success!</h4>
+  <h5 class="alert-heading">Success!</h5>
   <p> {{ message }} </p>
   <hr>
 
@@ -49,7 +49,7 @@
 {% endif %}
 {% endwith %}
 <div class="container px-4 py-5" id="custom-cards">
-  <h2 class="pb-2 border-bottom">Features:</h2>
+  <h3 class="pb-2 border-bottom">Features:</h3>
 
   <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
     <div class="col">

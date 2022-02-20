@@ -1,17 +1,9 @@
-<form id="animal_medical_upd_ins" class="shadow input p-5 input" href="animal_medical_upd_ins" method="POST">
+<form id="animal_medical_upd_ins" 
+      class="shadow input p-5 input" 
+      href="animal_medical_upd_ins" method="POST">
+      
     <h3>Medical Details : Animal({{asset_id}}) {% if record_display %} Med Rec:{{record_display.id}} {%endif%} </h3>
     
-    <div class="hidden">
-        <input type="hidden" name="line_id" 
-            {% if record_display %} value="{{record_display.id}}" {% endif %}   > 
-        <input type="hidden" name="asset_registry_id" 
-            {% if record_display %} 
-                value="{{record_display.asset_registry_id}}"
-            {% else %}
-                value="{{asset_id}}"
-            {% endif %} 
-        > 
-    </div>
     <div class="form-row">
         <div class="form-group col-md-6 ">
             <label for="Timestamp">Date</label>
@@ -35,7 +27,7 @@
             >
 
             <label for="Dosage">Dosage</label>
-            <input type="number" class="form-control" name="Dosage" placeholder="10.0"
+            <input type="number" step="any" min=0 class="form-control" name="Dosage" placeholder="10.0"
                 {% if record_display %} value="{{record_display.dosage}}" {% endif %}
             >
 
@@ -52,6 +44,15 @@
                 <button  type="submit">SAVE </button>
             </div>
             <input type="hidden" name="mode" value="update">
+            <input type="hidden" name="line_id" 
+                    {% if record_display %} value="{{record_display.id}}" {% endif %}   > 
+            <input type="hidden" name="asset_id" 
+                    {% if record_display %} 
+                        value="{{record_display.asset_registry_id}}"
+                    {% else %}
+                        value="{{asset_id}}"
+                    {% endif %} 
+                > 
         </div>
         </div>
     </div> <!-- end row 1 -->

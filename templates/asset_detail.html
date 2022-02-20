@@ -2,31 +2,25 @@
 
 <div class="row">
     
-    <div class="  col-md-5 p-3 m-2">
-        <h5>Animal Reg No : {{record_dict.animal_reg_no}} </h5>
-
-        <h5>Type : {{record_dict.asset_type}} </h5>
-
-        <h5>Gender {{record_dict.gender}} </h5>
-
-        <h5>Father ID : {{record_dict.father_id}} </h5>
-        <h5>Father note : {{record_dict.father_note}} </h5>
+    <div class="col-md-5 p-3 m-2" >
+      <table>
+        <tr><td><h5>Animal Reg No :</h5></td>   <td></td><td><h5> {{record_dict.animal_reg_no}}</h5></td> </tr>
+        <tr><td><h5>Type :</h5></td>            <td></td><td><h5> {{record_dict.asset_type}}</h5></td> </tr>
+        <tr><td><h5>Gender:</h5></td>           <td></td><td><h5> {{record_dict.gender}}  </h5></td> </tr>
+        <tr><td><h5>Father ID : </h5></td>      <td></td><td><h5> {{record_dict.father_id}}</h5></td> </tr>
+        <tr><td><h5>Father note : </h5></td>    <td></td><td><h5> {{record_dict.father_note}} </h5></td> </tr>
+     </table>
 
     </div> <!-- end div col-left-->
 
     <div class="  col-md-5 p-3 m-2">
-
-        <h5>Group: {{record_dict.group_name}} </h5>
-
-        <h5>Date of Birth: {{date_of_birth}}</h5>
-
-        <h5>Breeding id: {{record_dict.asset_breeding_id}} </h5>
-
-
-        <h5>Mother ID: {{record_dict.mother_id}}</h5>
-        <h5>Mother note : {{record_dict.mother_note}}</h5>
-
-
+        <table>
+            <tr><td><h5>Group :</h5></td>   <td></td><td><h5> {{record_dict.group_name}}</h5></td> </tr>
+            <tr><td><h5>Date of Birth :</h5></td>            <td></td><td><h5> {{record_dict.date_of_birth}}</h5></td> </tr>
+            <tr><td><h5>Breeding id:</h5></td>           <td></td><td><h5> {{record_dict.asset_breeding_id}}  </h5></td> </tr>
+            <tr><td><h5>Mother ID: </h5></td>      <td></td><td><h5> {{record_dict.mother_id}}</h5></td> </tr>
+            <tr><td><h5>Mother note : </h5></td>    <td></td><td><h5> {{record_dict.mother_note}}</h5></td> </tr>
+         </table>
     </div> <!-- end div col-right -->
 
     <div class="col-12 d-flex flex-row-reverse">
@@ -41,5 +35,3 @@
         
     </div>
 </div> <!-- end row 1 -->
-</form> <!-- END Animal Details -->
-</div>

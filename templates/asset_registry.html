@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1>Animal Registry ( {{rec_list_count}} ) </h1>
-    <h3>User Id: {{user_id}}</h3>
+    <h2>Animal Registry ( {{rec_list_count}} ) </h2>
+    <h4>User Id: {{user_id}}</h4>
 </div>
 
 <div class="row shadow p-3">
@@ -56,7 +56,7 @@
 
                             <!-- UPDATE button -->
                             <form action="animal_profile_page" method="POST">
-                                <input type="hidden" name="Animal_id" 
+                                <input type="hidden" name="asset_id" 
                                     value="{{rec['id']}}">
                                 <button type="submit">
                                     <i class="fa fa-pencil-square-o"> Update</i></button>

@@ -76,6 +76,14 @@
                 {% endif %}
             >
             <input type="hidden" name="mode" value="update">
+            <input type="hidden" name="asset_id" 
+                {% if asset_id %}    
+                     value="{{asset_id}}"
+                {% else %}
+                     value="asset_breeding.html"
+                {% endif %}
+            >
+
         </div>
     </div>
     </div> <!-- end row 1 -->

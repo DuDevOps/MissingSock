@@ -5,7 +5,7 @@
             <table id="tab_asset_registry" class="table table-hover table-sm shadow">
                 <thead>
                     <tr>
-                        {% for col in col_header %}
+                        {% for col in dash_col_header %}
 
                         <!-- filter columns ignore some columns -->
                         {% if col == "href_open_street_map" %}
@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rec in record_list %}
+                    {% for rec in dash_record_list %}
 
                     <tr>
                         {% for col in rec %}

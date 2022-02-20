@@ -1,9 +1,9 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, Date, DateTime, Float
 from MissingSockDBQueries.MissingSock_database import Base
 from flask_login import UserMixin
 import json
 
-from datetime import datetime
+from datetime import datetime, date
 
 class Users(UserMixin, Base):
     __tablename__ = 'users'
@@ -49,7 +49,7 @@ class Asset_registry(UserMixin, Base):
     animal_reg_no = Column(String(255), nullable=True)
     asset_type = Column(String(255), nullable=True)
     group_name = Column(String(255), nullable=True)	
-    date_of_birth = Column(DateTime, nullable=False, default=datetime.utcnow)
+    date_of_birth = Column(Date, nullable=False, default=date.today)
     gender = Column(String(255), nullable=True)	
     breed_type = Column(String(255), nullable=True)
     father_id = Column(Integer, nullable=True)
@@ -64,7 +64,7 @@ class Asset_medical(UserMixin, Base):
     __tablename__ = 'asset_medical'
 
     id = Column(Integer, primary_key=True)	
-    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = Column(Date, nullable=False, default=date.today)
     reason = Column(String(255), nullable=True)	
     medicine = Column(String(255), nullable=True)
     dosage = Column(Float	, nullable=True)
@@ -78,8 +78,8 @@ class Asset_breeding(UserMixin, Base):
 
     id = Column(Integer, primary_key=True)	
     breeding_number = Column(String(255), nullable=False)
-    start_date = Column(DateTime, nullable=False, default=datetime.utcnow)
-    end_date = Column(DateTime, nullable=True, default=datetime.utcnow)
+    start_date = Column(Date, nullable=False, default=date.today)
+    end_date = Column(Date, nullable=True, default=date.today)
     twin_number	= Column(String(255), nullable=True)
     pregnant = Column(String(255), nullable=True)
     asset_registry_father_id = Column(Integer, nullable=True)
@@ -92,7 +92,7 @@ class Asset_offspring(UserMixin, Base):
     __tablename__ = 'asset_offspring'
 
     id = Column(Integer, primary_key=True)	
-    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = Column(Date, nullable=False, default=date.today)
     asset_father_id = Column(Integer, nullable=True)
     asset_mother_id = Column(Integer, nullable=True)
     asset_offspring_id = Column(Integer, nullable=True)
@@ -105,7 +105,7 @@ class Asset_produce(UserMixin, Base):
     id = Column(Integer, primary_key=True)	
     asset_registry_id = Column(Integer,  nullable=False)
     type = Column(String(255), nullable=False)
-    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = Column(Date, nullable=False, default=date.today)
     quantity = Column(Float	, nullable=False)	
     measurement = Column(String(255), nullable=False)
     note = Column(String(255), nullable=True)
@@ -117,7 +117,7 @@ class Tag_current(UserMixin, Base):
     id = Column(Integer, primary_key=True)	
     gps_lat = Column(String(20), nullable=False)
     gps_long = Column(String(20), nullable=False)
-    timestamp = Column(DateTime, nullable=True)
+    timestamp = Column(Date, nullable=True)
     base_station_id = Column(Integer, nullable=True)
 
 class Tag_hist(UserMixin, Base):
@@ -127,7 +127,7 @@ class Tag_hist(UserMixin, Base):
     tag_id = Column(Integer, nullable=True)	
     gps_lat = Column(String(20), nullable=False)
     gps_long = Column(String(20), nullable=False)
-    timestamp = Column(DateTime, nullable=True)
+    timestamp = Column(Date, nullable=True)
     base_station_id = Column(Integer, nullable=True)
 
 class Base_station_current(UserMixin, Base):

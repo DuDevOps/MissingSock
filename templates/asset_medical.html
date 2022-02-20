@@ -1,91 +1,89 @@
 <div class="container">
-    <h1>Asset Medical ( {{med_rec_list_count}} )</h1>
-</div>
+    <h2>Medical ( {{med_rec_list_count}} )</h2>
 
-<div class="row shadow p-5">
-    <div class="col-12  ">
-        <div class="table-responsive ">
-            <table id="tab_Asset_medical" class="table table-hover table-sm shadow">
-                <thead>
-                    <tr>
 
-                        {% for col in med_col_header %}
+    <div class="row shadow p-5">
+        <div class="col-12  ">
+            <div class="table-responsive ">
+                <table id="tab_Asset_medical" class="table table-hover table-sm shadow">
+                    <thead>
+                        <tr>
+
+                            {% for col in med_col_header %}
                             {% if col == "id" %}
                             <!-- do not display  -->
                             {% else %}
-                                <th scope="col">{{col}}</th>
+                            <th scope="col">{{col}}</th>
                             {% endif %}
-                        {% endfor %}
-                        <th scope="col">Action</th>
-                        <th scope="col">&nbsp;</th>
-                        <th scope="col">&nbsp;</th>
+                            {% endfor %}
+                            <th scope="col">Action</th>
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">&nbsp;</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rec in med_record_list %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in med_record_list %}
 
-                    <tr>
+                        <tr>
 
-                        {% for col in rec %}
+                            {% for col in rec %}
                             {% if col == "id" %}
-                                <!-- do not display  -->
+                            <!-- do not display  -->
                             {% else %}
 
-                                <td>{{ rec[col] }} </td>
+                            <td>{{ rec[col] }} </td>
                             {% endif %}
 
+                            {% endfor %}
+                            <!-- end loop COL -->
+                            <!-- add 2 buttons if post request Update / Delete -->
+                            <td class="ah ">
+
+                                <!-- UPDATE button -->
+                                <form action="animal_medical_upd_ins" method="POST">
+                                    <input type="hidden" name="mode" value="display_rec">
+                                    <input type="hidden" name="animal_reg_no" value="{{rec['animal_reg_no']}}">
+                                    <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                    <input type="hidden" name="asset_id" value="{{rec['asset_registry_id']}}">
+                                    <button type="submit">
+                                        <i class="fa fa-pencil-square-o"></i>Update</button>
+                                </form>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <!-- DELETE BUTTON -->
+                                <form action="animal_medical_upd_ins" method="POST">
+                                    <input type="hidden" name="mode" value="delete">
+                                    <input type="hidden" name="line_id" value="{{rec['id']}}">
+                                    <input type="hidden" name="asset_id" value="{{rec['asset_registry_id']}}">
+                                    <button type=" submit">
+                                        <i class="fa fa-minus"></i>Delete</button>
+                                </form>
+
+                            </td>
+                            <!-- END add 2 buttons -->
+
+                        </tr>
+
                         {% endfor %}
-                        <!-- end loop COL -->
-                        <!-- add 2 buttons if post request Update / Delete -->
-                        <td class="ah ">
-
-                            <!-- UPDATE button -->
-                            <form action="animal_medical_upd_ins" method="POST">
-                                <input type="hidden" name="mode" value="display_rec">
-                                <input type="hidden" name="animal_reg_no"
-                                    value="{{rec['animal_reg_no']}}">
-                                <input type="hidden" name="line_id"
-                                    value="{{rec['id']}}">
-                                <input type="hidden" name="asset_id"
-                                    value="{{rec['asset_registry_id']}}">
-                                <button type="submit">
-                                    <i class="fa fa-pencil-square-o"></i>Update</button>
-                            </form>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>
-                            <!-- DELETE BUTTON -->
-                            <form action="animal_medical_upd_ins" method="POST">
-                                <input type="hidden" name="mode" value="delete">
-                                <input type="hidden" name="line_id" value="{{rec['id']}}">
-                                <button type=" submit">
-                                    <i class="fa fa-minus"></i>Delete</button>
-                            </form>
-
-                        </td>
-                        <!-- END add 2 buttons -->
-
-                    </tr>
-
-                    {% endfor %}
-                    <!-- end loop list-->
+                        <!-- end loop list-->
 
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="col-12 mt-2">
-        <form class="d-flex flex-row-reverse" action="animal_medical_upd_ins" method="POST">
-            <input type="hidden" name="mode" value="new_rec">
-            <input type="hidden" name="asset_id" value="{{asset_id}}">
-            {% if button_display == "yes" %}
-            <button type=" submit">
-                <i class="fa fa-plus"></i>Add Medical Record</button>
-            {% endif %}
-        </form>
-    </div>
+        <div class="col-12 mt-2">
+            <form class="d-flex flex-row-reverse" action="animal_medical_upd_ins" method="POST">
+                <input type="hidden" name="mode" value="new_rec">
+                <input type="hidden" name="asset_id" value="{{asset_id}}">
+                {% if button_display == "yes" %}
+                <button type=" submit">
+                    <i class="fa fa-plus"></i>Add Medical Record</button>
+                {% endif %}
+            </form>
+        </div>
 
+    </div>
 </div>
-

@@ -1,150 +1,122 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 >Asset Offspring ( {{rec_list_count}} )</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <div class="table-responsive ">
+                <table id="tab_Asset_offspring" class="table table-hover table-sm shadow">
+                    <thead>
+                        <tr>
+                            <!-- if post add 2 columns for buttons-->
+                            {% if method == "POST" %}
+                            <th>Upd</th>
+                            <th>Del</th>
+                            {% endif %}
 
-  {% if method == "GET" %}
+                            {% for col in record_list[0] %}
 
-  <form action="asset_offspring" method="POST">
-      <button class="btn btn-danger" type="submit"><i class="fa fa-pencil-square-o">EDIT</i></button>
-  </form>
+                            <!-- filter columns ignore some columns -->
+                            {% if col == "href_open_street_map" %}
+                            <!-- do not display -->
 
-  {% elif method == "POST" %}
+                            {% else %}
+                            <th scope="col">{{col}}</th>
+                            {% endif %}
 
-  <div>
-      <form action="asset_offspring" method="GET">
-          <button class="btn btn-info  data-toggle='button' aria-pressed='false' " type="submit">
-              <i class="fa fa-undo">RESET</i> </button>
-      </form>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in record_list %}
 
-  </div>
-  <div>
-      <form action="javascript:addRow_asset_offspring('tab_Asset_offspring',{{list_of_columns}})">
-          <button class="btn btn-primary data-toggle='button' aria-pressed='false'" type="submit">
-              <i class="fa fa-plus">New</i></button>
-      </form>
-  </div>
+                        <tr>
+                            <!-- add 2 buttons if post request Update / Delete -->
+                            {% if method == "POST" %}
+                            <td class="ah ">
 
-  {% endif %}
-</div>
-
-
-
-<div class="row">
-  <div class="col-10">
-      <div class="table-responsive ">
-          <table id="tab_Asset_offspring" class="table table-hover table-sm shadow">
-              <thead>
-                  <tr>
-                      <!-- if post add 2 columns for buttons-->
-                      {% if method == "POST" %}
-                      <th>Upd</th>
-                      <th>Del</th>
-                      {% endif %}
-
-                      {% for col in record_list[0] %}
-
-                      <!-- filter columns ignore some columns -->
-                      {% if col == "href_open_street_map" %}
-                      <!-- do not display -->
-
-                      {% else %}
-                      <th scope="col">{{col}}</th>
-                      {% endif %}
-
-                      {% endfor %}
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for rec in record_list %}
-
-                  <tr>
-                      <!-- add 2 buttons if post request Update / Delete -->
-                      {% if method == "POST" %}
-                      <td class="ah ">
-
-                          <!-- UPDATE button -->
-                          <form
-                              action="javascript:crud_asset_offspring('PUT','{{rec['id']}}', {{list_of_columns}})"
-                              method="PUSH">
-                              <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
-                                  type="submit">
-                                  <i class="fa fa-pencil-square-o"></i></button>
-                          </form>
-                      </td>
-                      <td>
-                          <!-- DELETE BUTTON -->
-                          <form
-                              action="javascript:crud_asset_offspring('DELETE', '{{rec['id']}}', {{list_of_columns}})"'
+                                <!-- UPDATE button -->
+                                <form
+                                    action="javascript:crud_asset_offspring('PUT','{{rec['id']}}', {{list_of_columns}})"
+                                    method="PUSH">
+                                    <button class="btn btn-warning btn-sm data-toggle='button' aria-pressed='false'"
+                                        type="submit">
+                                        <i class="fa fa-pencil-square-o"></i></button>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- DELETE BUTTON -->
+                                <form
+                                    action="javascript:crud_asset_offspring('DELETE', '{{rec['id']}}', {{list_of_columns}})"'
                               method="delete">
                               <button class="btn btn-danger btn-sm data-toggle=' button' aria-pressed='false'"
                                   type=" submit">
-                              <i class="fa fa-minus"></i></button>
-                          </form>
+                                    <i class="fa fa-minus"></i></button>
+                                </form>
 
-                      </td>
-                      {% endif %}
-                      <!-- end add buttons -->
+                            </td>
+                            {% endif %}
+                            <!-- end add buttons -->
 
-                      {% for col in rec %}
+                            {% for col in rec %}
 
-                      <!-- GENERAL filter columns exclude from table -->
-                      {% if col == "href_open_street_map" %}
-                      <!-- Exclude from Table -->
+                            <!-- GENERAL filter columns exclude from table -->
+                            {% if col == "href_open_street_map" %}
+                            <!-- Exclude from Table -->
 
-                      {% else %}
-                      <!-- for get add td only-->
-                      {% if method == "GET" %}
-                      {% if col == "id" %}
-                      <!-- special handle col-->
-                      <!-- do not display add  class="visually-hidden"  !!! does not work-->
-                      <td>{{ rec[col] }} </td>
-                      {%else%}
+                            {% else %}
+                            <!-- for get add td only-->
+                            {% if method == "GET" %}
+                            {% if col == "id" %}
+                            <!-- special handle col-->
+                            <!-- do not display add  class="visually-hidden"  !!! does not work-->
+                            <td>{{ rec[col] }} </td>
+                            {%else%}
 
-                      <td>{{ rec[col] }} </td>
-                      {%endif%}
-                      <!-- special handle col-->
+                            <td>{{ rec[col] }} </td>
+                            {%endif%}
+                            <!-- special handle col-->
 
-                      <!-- ======== POST =======-->
-                      <!-- if POST replace td with form input text-->
-                      {% else  %}
+                            <!-- ======== POST =======-->
+                            <!-- if POST replace td with form input text-->
+                            {% else  %}
 
-                      {% if col == "id" %}
-                      <!-- special handle col-->
-                      <!-- do not display ADD class="visually-hidden" -->
+                            {% if col == "id" %}
+                            <!-- special handle col-->
+                            <!-- do not display ADD class="visually-hidden" -->
 
-                      <!-- create unique id for each column -->
-                      {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
-                      <td id={{col_id}}>{{ rec[col] }} </td>
+                            <!-- create unique id for each column -->
+                            {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
+                            <td id={{col_id}}>{{ rec[col] }} </td>
 
-                      {% else %}
+                            {% else %}
 
-                      <td>
-                          <!-- create unique id for each column -->
-                          {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
-                          <form> <input id={{col_id}} type="text" value="{{rec[col]}}"></form>
-                      </td>
-                      {% endif %}
-                      <!-- special handle col-->
-
-
-
-                      {% endif %}
-                      <!-- end method-->
-
-                      {% endif %}
-                      <!-- end rec-->
-
-                      {% endfor %}
-                      <!-- end loop COL -->
+                            <td>
+                                <!-- create unique id for each column -->
+                                {% set col_id = "input_text_" ~ col ~ "_" ~ rec['id']  %}
+                                <form> <input id={{col_id}} type="text" value="{{rec[col]}}"></form>
+                            </td>
+                            {% endif %}
+                            <!-- special handle col-->
 
 
-                  </tr>
 
-                  {% endfor %}
-                  <!-- end loop list-->
+                            {% endif %}
+                            <!-- end method-->
 
-              </tbody>
-          </table>
-      </div>
-  </div>
+                            {% endif %}
+                            <!-- end rec-->
 
+                            {% endfor %}
+                            <!-- end loop COL -->
+
+
+                        </tr>
+
+                        {% endfor %}
+                        <!-- end loop list-->
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 </div>
