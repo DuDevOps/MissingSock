@@ -1,35 +1,35 @@
 <nav id="sidebarMenu" class="col-lg-2 d-lg-block bg-light sidebar collapse ">
 
-  <div class="position-sticky pt-3">
+  <div class="position-sticky pt-2">
 
     <ul class="nav flex-column ">
 
       {% if not logged_in: %}
 
 
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="login"> <i class="fa fa-sign-in"></i> Login </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="register"> <i class="fa fa-registered"></i> Register </a>
       </li>
 
 
       {% else %}
     </ul>
-    <h6 class="sidebar-heading d-flex ">
+    <h6 class="sidebar-heading d-flex pt-2">
       <span>
         <a class="nav-top" href="dashboard"> <i class="fa fa-3x fa-home"></i> DashBoard </a>
       </span>
     </h6>
 
-    <h6 class="sidebar-heading d-flex ">
+    <h6 class="sidebar-heading d-flex pt-2">
       <span>
         <a class="nav-top" href="animal_detail_upd_ins">New Animal Register</a>
       </span>
     </h6>
 
-    <h6 class="sidebar-heading d-flex ">
+    <h6 class="sidebar-heading d-flex pt-2">
       <span>
 
         <a class="nav-top" href="asset_registry"> Animal Registry </a>
@@ -37,20 +37,20 @@
       </span>
     </h6>
 
-    <h6 class="sidebar-heading d-flex my-3">
+    <h6 class="sidebar-heading d-flex my-3 pt-2">
       <span>Reports</span>
     </h6>
 
     <ul class="nav flex-column ">
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="asset_medical"> Medical Records </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="asset_breeding"> Breeding History </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="asset_produce"> Produce Record
         </a>
       </li>
@@ -62,16 +62,16 @@
     </h6>
 
     <ul class="nav flex-column ">
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="report_overview"> Overview </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item pt-3">
         <a class="nav-link" href="report_tags"> Tags Location
         </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item pt-2">
         <a class="nav-link" href="report_base_station"> Base Station Location
         </a>
       </li>
@@ -83,10 +83,10 @@
     </h6>
 
     <ul class="nav flex-column ">
-      <li class="nav-item">
+      <li class="nav-item pt-1">
         <a class="nav-link" href="my_profile"> My Profile </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item pt-1">
         <a class="nav-link" href="logout"> Logout </a>
       </li>
     </ul>
