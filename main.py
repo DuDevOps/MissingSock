@@ -1244,7 +1244,7 @@ def dashboard():
         dash_rec_list_count= len(record_dict), 
              method=request.method,
              list_of_columns=col_list, loadJson=loadJson2,
-             col_header=col_header )
+             dash_col_header=col_header )
 
 @app.route("/report_no_read_tag_hour", methods=["GET","POST"])
 @login_required
