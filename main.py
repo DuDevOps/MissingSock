@@ -571,6 +571,7 @@ def animal_detail_upd_ins():
         record_upd.group_name  = request.form.get('group_name')
         record_upd.date_of_birth  = request.form.get('date_of_birth')
         record_upd.gender  = request.form.get('gender')
+        record_upd.asset_breeding_id  = request.form.get('asset_breeding_id')
         record_upd.father_id  = check_null(request.form.get('father_id'))
         record_upd.father_note  = request.form.get('father_note')
         record_upd.mother_id  = check_null(request.form.get('mother_id'))
