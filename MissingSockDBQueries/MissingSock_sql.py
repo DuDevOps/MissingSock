@@ -295,3 +295,36 @@ def cnt_tags_at_each_base_station(userid):
 
 def cnt_tags_at_each_base_station_dates(userid, fromDate, toDate):
     pass
+
+def delete_asset_medical_for_asset_id(asset_id):
+    sql_query = "delete "
+    sql_query += f"from asset_medical "
+    sql_query += f"where asset_registry_id = {asset_id} "
+    
+    result = run_commit_sql(sql_query)
+    return result
+
+def delete_asset_produce_for_asset_id(asset_id):
+    sql_query = "delete "
+    sql_query += f"from asset_produce "
+    sql_query += f"where asset_registry_id = {asset_id} "
+    
+    result = run_commit_sql(sql_query)
+    return result
+
+def delete_asset_breeding_for_asset_id(asset_id):
+    sql_query = "delete "
+    sql_query += f"from asset_breeding "
+    sql_query += f"where asset_registry_father_id = {asset_id} "
+    sql_query += f"or asset_registry_mother_id = {asset_id} "
+    
+    result = run_commit_sql(sql_query)
+    return result
+
+def delete_asset_registry_for_asset_id(asset_id):
+    sql_query = "delete "
+    sql_query += f"from asset_registry "
+    sql_query += f"where id = {asset_id} "
+    
+    result = run_commit_sql(sql_query)
+    return result

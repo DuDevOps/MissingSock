@@ -494,7 +494,6 @@ def animal_detail_upd_ins():
         sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
 
         record_dict = sql_result_to_dict(sql_result)
-        date_of_birth = html_date(record_dict[0]["date_of_birth"])
 
         return render_template("index.html", loadHtml="animal_detail_upd_ins", 
             logged_in=current_user.is_authenticated, 
@@ -504,42 +503,68 @@ def animal_detail_upd_ins():
             father_dict=father_dict,
             mother_dict=mother_dict,
             breeding_dict=breeding_dict,
-            record_dict = record_dict[0], date_of_birth=date_of_birth,
-
+            record_dict = record_dict[0],
             user_id=current_user.id )
 
     if mode == "delete" :
         asset_id = request.form.get('lineid')
         
-        new_rec = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
-         
-        # delete record
-        db_session.delete(new_rec)
-        db_session.commit()
+        # check and delete other tables
+        # Check Medical
+        del_return = MissingSock_sql.delete_asset_medical_for_asset_id(asset_id)
+        app.logger.info(f"del {asset_id} from medical {del_return}")
+
+        # Check Produce
+        del_return = MissingSock_sql.delete_asset_produce_for_asset_id(asset_id)
+        app.logger.info(f"del {asset_id} from produce {del_return}")
+
+        # Check Breeding
+        del_return = MissingSock_sql.delete_asset_breeding_for_asset_id(asset_id)
+        app.logger.info(f"del {asset_id} from breeding {del_return}")
+
+        # Finally delete record from asset_registry
+        del_return = MissingSock_sql.delete_asset_registry_for_asset_id(asset_id)
+        app.logger.info(f"del {asset_id} from registry {del_return}")
 
         # redirect animal_profile_page
-        return redirect(url_for('animal_profile_page', loadHtml="animal_profile_page", 
-        logged_in=current_user.is_authenticated,
-        asset_id=asset_id))
+        return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
+                user_id=current_user.id))
 
     if mode == "update" :
-        asset_id = request.form.get('id')
-
-        record_upd = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).first()
+        asset_id = request.form.get('asset_id')
+        print("enter update ")
         
-        if bool(record_upd) == False :
-            # new record : insert blank line and then update
-            app.logger.info(f"Insert : new record")
+        if asset_id == "newRec":
             randnum = random()
             new_rec = Asset_registry()
             new_rec.users_id  = current_user.id
             random_animal_name = f"{current_user.id}{randnum}"
             new_rec.animal_reg_no  = random_animal_name
-            db_session.add(new_rec)
-            db_session.commit()
+            
+            try:
+                db_session.add(new_rec)
+            except :
+                app.logger.error(f"Insert ERROR : new record !! error ")
+            else:
+                db_session.commit()
+                app.logger.error(f"Insert : new registry record")
+                
+                record_upd = db_session.query(Asset_registry).\
+                    filter(Asset_registry.animal_reg_no == random_animal_name).first()
+                asset_id = record_upd.id
 
-            record_upd = db_session.query(Asset_registry).filter(Asset_registry.animal_reg_no  == random_animal_name).first()
-        
+                print(f"558: asset_id = {asset_id}")
+
+                app.logger.error(f"Insert : new registry record {record_upd.id}")
+
+        else:
+            record_upd = db_session.query(Asset_registry).\
+                filter(Asset_registry.id == asset_id).first()
+            
+
+        print(f" 567 : record = {record_upd.animal_reg_no}")
         record_upd.users_id  = current_user.id
         record_upd.animal_reg_no  = request.form.get('animal_reg_no')
         record_upd.asset_type  = request.form.get('asset_type')
@@ -552,17 +577,17 @@ def animal_detail_upd_ins():
         record_upd.mother_note  = request.form.get('mother_note')
 
         db_session.commit()
-
+        
         # redirect animal_profile_page / code=307 force POST instead of GET
         return redirect(url_for('animal_profile_page', 
         loadHtml="animal_profile_page", 
         logged_in=current_user.is_authenticated,
-        asset_id=request.form.get('asset_id')), code=307)
+        asset_id=asset_id), code=307)
 
     #  Default empty return 
     return render_template("index.html", loadHtml="animal_detail_upd_ins", 
                 logged_in=current_user.is_authenticated, 
-                asset_id=f"", animal_reg_no="",
+                asset_id=f"newRec", animal_reg_no="",
                 group_dropdown=Animal_dropdown.keys(),
                 type_dropdown=Animal_dropdown,
                 father_dict=father_dict,
@@ -607,7 +632,7 @@ def animal_medical_upd_ins():
         
         if bool(record_upd) == False :
             # new record : insert blank line and then update
-            app.logger.info(f"Insert : new record")
+            app.logger.info(f"Insert : new medical record for {request.form.get('asset_id')}")
             randnum = random()
             new_rec = Asset_medical()
             new_rec.users_id  = current_user.id
@@ -684,13 +709,14 @@ def animal_produce_upd_ins():
     if mode == "update" :
         # insert new rec  or update existing rec
         line_id = request.form.get('line_id')
+        asset_id = request.form.get('asset_id')
         
         record_upd = db_session.query(Asset_produce).filter(Asset_produce.id == line_id).first()
         
         # check if record exitsts else new record : insert blank line and then update
         if bool(record_upd) == False :
             
-            app.logger.info(f"Insert : new record")
+            app.logger.info(f"Insert : new produce record for {request.form.get('asset_id')}")
             randnum = random()
             new_rec = Asset_produce()
             new_rec.users_id  = current_user.id
@@ -699,7 +725,9 @@ def animal_produce_upd_ins():
             db_session.add(new_rec)
             db_session.commit()
 
-            record_upd = db_session.query(Asset_produce).filter(Asset_produce.note  == random_animal_name).first()
+            record_upd = db_session.query(Asset_produce).\
+                filter(Asset_produce.note  == random_animal_name).\
+                    first()
         
         record_upd.users_id  = current_user.id
         record_upd.asset_registry_id  = request.form.get('asset_id')
@@ -712,10 +740,13 @@ def animal_produce_upd_ins():
         db_session.commit()
 
         # redirect animal_profile_page / code=307 force POST instead of GET
-        return redirect(url_for('animal_profile_page', 
-        loadHtml="animal_profile_page", 
-        logged_in=current_user.is_authenticated,
-        asset_id=request.form.get('asset_id')), code=307)
+        return redirect(url_for(
+                    'animal_profile_page', 
+                    loadHtml="animal_profile_page", 
+                    logged_in=current_user.is_authenticated,
+                    asset_id=asset_id, 
+                    code=307)
+                )
 
 
     if mode == "delete" :
@@ -1562,15 +1593,31 @@ def report_base_station():
 @app.route("/animal_profile_page", methods=["GET","POST"])
 @login_required
 def animal_profile_page():
-
     # animal_detail_upd_ins.html - update info 
-    asset_id = request.form.get('asset_id')
+    asset_id = request.args.get('asset_id', default='NoAssetId')
+    if asset_id == 'NoAssetId' :
+        # asset_id not in args try in form
+        asset_id = request.form.get('asset_id')
 
-    sql_result = db_session.query(Asset_registry).filter(Asset_registry.id == asset_id).all()
-    record_dict = sql_result_to_dict(sql_result)
-    animal_reg_no=record_dict[0]["animal_reg_no"]
+        if asset_id is None:
+            # no asset id in args or form - return to asser_registry
+            return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
+                user_id=current_user.id))
 
-    
+    try:
+        sql_result = db_session.query(Asset_registry).\
+        filter(Asset_registry.id == asset_id).all()
+    except:
+        return redirect(url_for('asset_registry', 
+                loadHtml="asset_registry", 
+                logged_in=current_user.is_authenticated,
+                user_id=current_user.id))
+    else:
+        record_dict = sql_result_to_dict(sql_result)
+        animal_reg_no=record_dict[0]["animal_reg_no"]
+
     #======================================================================================
     
     # Asset_medical.html
