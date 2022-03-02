@@ -65,3 +65,8 @@ h6 {
     font-size: 18px;
     font-weight: 600;
 }
+
+.asset_report {
+    max-height: 250px ;
+    overflow: auto;
+}

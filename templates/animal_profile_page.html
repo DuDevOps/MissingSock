@@ -1,6 +1,6 @@
 <div id="animal_profile_page" class="container mt-3" >
 
-    <div class="row mt-3">
+    <div class="row mt-3" >
         <h2>Animal Details </h2>
         <div class="col-12 shadow p-3 mt-2">
             {% include "asset_detail.html" %}
@@ -15,21 +15,15 @@
 
     <div class="row mt-3">
         <div class="col-12">
-            {% include "asset_produce.html" %}
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-12">
             {% include "asset_breeding.html" %}
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-12">
-            <h3>Offspring ({{dash_rec_list_count}})
+            <h3>Offspring Details ({{dash_rec_list_count}})
             </h3>
-            <div class="shadow p-5 ">
+            <div class="shadow p-5">
                 <div>
                     {% include "asset_dashboard_tab.html" %}
                 </div>
@@ -50,6 +44,12 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            {% include "asset_produce.html" %}
+        </div>
     </div>
 
 </div>
