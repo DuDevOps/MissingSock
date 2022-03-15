@@ -1436,6 +1436,7 @@ def report_overview():
     return render_template("index.html", 
     loadHtml="report_overview",
     logged_in=current_user.is_authenticated, 
+    user_id=current_user.id,
     loadJson=loadJson2 )
 
     # ===================   end report_overview =========
@@ -1468,19 +1469,21 @@ def report_tags():
     # get current location for tags
     if fromDate and inTag != "All":
         
-        tag_list = db_session.query(Tag_current, Tag).\
+        tag_list = db_session.query(Tag_current, Tag, Asset_registry).\
             filter(and_(Tag_current.id == Tag.id,
                 Tag.users_id == current_user.id,
+                Tag_current.id == Asset_registry.tag_id,
               Tag_current.timestamp > fromDate,
               Tag_current.timestamp < toDate,
               Tag_current.id == inTag )).all()
     else:
-        tag_list = db_session.query(Tag_current, Tag).\
+        tag_list = db_session.query(Tag_current, Tag, Asset_registry).\
             filter(and_(Tag_current.id == Tag.id,
-            Tag.users_id == current_user.id)).all()
+            Tag.users_id == current_user.id,
+            Tag_current.id == Asset_registry.tag_id)).all()
     
     new_list = []
-    for x in tag_list:        
+    for x in tag_list: 
         new_list.append(x[0])
 
     tag_dict = sql_result_to_dict(new_list)
@@ -1490,6 +1493,12 @@ def report_tags():
         tags.append(x[1])
 
     tag_detail = sql_result_to_dict(tags)
+
+    tags_asset = []
+    for x in tag_list:        
+        tags_asset.append(x[2])
+
+    tag_asset_detail = sql_result_to_dict(tags_asset)
    
     loadJson = {}
     loadJson['total_tags'] = total_tags
@@ -1502,9 +1511,11 @@ def report_tags():
 
     return render_template("index.html", 
     loadHtml="report_tags",
-    logged_in=current_user.is_authenticated, 
+    logged_in=current_user.is_authenticated,
+    user_id=current_user.id, 
     loadJson=loadJson2,
-    tags=tag_detail)
+    tags=tag_detail,
+    tags_asset_detail=tag_asset_detail )
 
     # ===================   end report_tags =========
 
@@ -1586,7 +1597,8 @@ def report_base_station():
 
     return render_template("index.html", 
     loadHtml="report_base_station",
-    logged_in=current_user.is_authenticated, 
+    logged_in=current_user.is_authenticated,
+    user_id=current_user.id, 
     loadJson=loadJson2, Base_station_list=base_station_current_dict )
 
     # ===================   end report_base_station =========

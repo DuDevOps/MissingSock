@@ -23,8 +23,8 @@
             <select name="tag_id" required="required" class="form-control">
               <option value="All">All</option>
               {%if tags %}
-                {% for tag in  tags %}
-                  <option value="{{tag.id}}"> <div class=" text-start ">{{tag.id}} {{tag.sync_tag_id}} {{tag.nickname}}</div> </option>
+                {% for asset in  tags_asset_detail %}
+                  <option value="{{asset.tag_id}}"> <div class=" text-start ">{{asset.tag_id}} {{asset.animal_reg_no}}</div> </option>
                 {% endfor %}
               {% endif %}
 

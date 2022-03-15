@@ -4,9 +4,9 @@
 
     <div class="row shadow p-5 ">
         <div class="col-12"  >
-            <div class="table-responsive asset_report">
+            <div class="table-responsive asset_report ">
                 <table id="tab_Asset_medical" 
-                        class="table table-hover table-sm shadow"
+                        class="table table-hover table-sm shadow fixed_header"
                         >
                     <thead>
                         <tr>
@@ -24,7 +24,8 @@
 
                         </tr>
                     </thead>
-                    <tbody class="overflow-scroll">
+                    
+                    <tbody >
                         {% for rec in med_record_list %}
 
                         <tr>
@@ -73,6 +74,7 @@
 
 
                     </tbody>
+                
                 </table>
             </div>
         </div>
