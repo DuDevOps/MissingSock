@@ -77,6 +77,18 @@
       </li>
 
     </ul>
+    {% if user_id == 91 or  user_id == 94 or user_id == 83 %}
+    <h6 class="sidebar-heading d-flex my-3">
+      <span> Admin </span>
+    </h6>
+
+    <ul class="nav flex-column ">
+      <li class="nav-item pt-1">
+        <a class="nav-link" href="display_tab_base_sync"> BASE SYNC Table last 50 Lines </a>
+      </li>
+      
+    </ul>
+  {% endif %}
 
     <h6 class="sidebar-heading d-flex my-3">
       <span> Profile</span>
@@ -90,7 +102,9 @@
         <a class="nav-link" href="logout"> Logout </a>
       </li>
     </ul>
+
     {% endif %}
+   
   </div>
 
 </nav>

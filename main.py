@@ -18,7 +18,7 @@ from MissingSockDBQueries import MissingSock_sql
 from MissingSockDBQueries.MissingSock_orm_models import Asset_medical, sql_result_to_dict, Users, Asset_registry, \
     Asset_breeding, Asset_breeding, Asset_offspring, Base_station, Tag, Asset_produce, Tag_current, \
     Base_station_current, sql_result_column_list_to_dict, Base_station_hist, \
-    Tag_hist 
+    Tag_hist, Base_sync
 
 from MissingSockDBQueries.MissingSock_database import db_session
 
@@ -1927,6 +1927,27 @@ def get_breeding_dict():
     mother_dict = sql_result_column_list_to_dict(col_list, sql_result)
 
     return mother_dict
+
+@app.route('/display_tab_base_sync')
+@login_required
+def display_tab_base_sync():
+    
+    base_sync_list=MissingSock_sql.last_50_base_sync()
+    base_current_list=MissingSock_sql.base_station_current()
+    tag_current_list=MissingSock_sql.tag_current()
+
+    print(f"{base_sync_list}")
+    
+        
+    return render_template("index.html", 
+        loadHtml="display_tab_base_sync",
+        logged_in=current_user.is_authenticated,
+        user_id=current_user.id,
+        base_sync_list=base_sync_list,
+        base_station_current_list=base_current_list,
+        tag_current_list=tag_current_list,
+        users_id = current_user.id
+        )
 
 
 if __name__ == "__main__":

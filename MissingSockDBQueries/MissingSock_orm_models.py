@@ -23,7 +23,17 @@ class Users(UserMixin, Base):
     gps_lat = Column(String(20), nullable=True)
     gps_long = Column(String(20), nullable=True) 
 
+class Base_sync(UserMixin, Base):
+    __tablename__ = 'base_sync'
 
+    id = Column(Integer, primary_key=True)
+    base_id = Column(String(255), nullable=False)
+    tag_id = Column(String(255), nullable=False)
+    gps_lat = Column(String(255), nullable=False)
+    gps_long = Column(String(255), nullable=False)
+    rssi = Column(String(255), nullable=False)
+    sync_id = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, nullable=True)
 
 class Base_station(UserMixin, Base):
     __tablename__ = 'base_station'

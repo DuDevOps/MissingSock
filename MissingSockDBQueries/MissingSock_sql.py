@@ -328,3 +328,27 @@ def delete_asset_registry_for_asset_id(asset_id):
     
     result = run_commit_sql(sql_query)
     return result
+
+def last_50_base_sync():
+    sql_query = "select * "
+    sql_query += f"from base_sync "
+    sql_query += f"order by timestamp desc limit 50 "
+    
+    result = run_sql(sql_query)
+    return result
+
+def base_station_current():
+    sql_query = "select * "
+    sql_query += f"from base_station_current "
+    sql_query += f"order by timestamp desc limit 50 "
+    
+    result = run_sql(sql_query)
+    return result
+
+def tag_current():
+    sql_query = "select * "
+    sql_query += f"from tag_current "
+    sql_query += f"order by timestamp desc limit 50 "
+    
+    result = run_sql(sql_query)
+    return result
