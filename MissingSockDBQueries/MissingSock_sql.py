@@ -332,7 +332,7 @@ def delete_asset_registry_for_asset_id(asset_id):
 def last_50_base_sync():
     sql_query = "select * "
     sql_query += f"from base_sync "
-    sql_query += f"order by timestamp desc limit 50 "
+    sql_query += f"order by timestamp desc limit 150 "
     
     result = run_sql(sql_query)
     return result
