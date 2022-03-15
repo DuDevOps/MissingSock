@@ -345,10 +345,26 @@ def base_station_current():
     result = run_sql(sql_query)
     return result
 
+def base_station():
+    sql_query = "select * "
+    sql_query += f"from base_station "
+    sql_query += f"order by 1  "
+    
+    result = run_sql(sql_query)
+    return result
+
 def tag_current():
     sql_query = "select * "
     sql_query += f"from tag_current "
     sql_query += f"order by timestamp desc limit 50 "
+    
+    result = run_sql(sql_query)
+    return result
+
+def tag():
+    sql_query = "select * "
+    sql_query += f"from tag "
+    sql_query += f"order by 1 "
     
     result = run_sql(sql_query)
     return result

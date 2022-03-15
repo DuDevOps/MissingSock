@@ -1935,6 +1935,8 @@ def display_tab_base_sync():
     base_sync_list=MissingSock_sql.last_50_base_sync()
     base_current_list=MissingSock_sql.base_station_current()
     tag_current_list=MissingSock_sql.tag_current()
+    base_station=MissingSock_sql.base_station()
+    tag=MissingSock_sql.tag()
 
     print(f"{base_sync_list}")
     
@@ -1946,6 +1948,8 @@ def display_tab_base_sync():
         base_sync_list=base_sync_list,
         base_station_current_list=base_current_list,
         tag_current_list=tag_current_list,
+        base_station_list=base_station,
+        tag_list=tag,
         users_id = current_user.id
         )
 

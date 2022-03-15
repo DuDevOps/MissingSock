@@ -90,3 +90,10 @@ h6 {
     height:150px;
     margin-bottom: 10px;
   }
+
+  #admin_section .divtable {
+    overflow:auto;
+    height:200px;
+    margin-bottom: 10px;
+    background-color:aliceblue;
+  }
