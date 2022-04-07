@@ -48,8 +48,11 @@ function show_map(map_div_id, map_lat,
     //                 parseFloat(gps_long)], 
     //                 mapIcon).addTo(map_dashboard);
 
-    var marker = L.marker([parseFloat(gps_lat), 
-      parseFloat(gps_long)]).addTo(map_dashboard);
+    var marker = L.marker(
+        [parseFloat(gps_lat), 
+        parseFloat(gps_long)],
+        "Test "
+        ).addTo(map_dashboard);
 
     // add on click popup
     //marker.bindPopup("Name :" + asset_name + \
